@@ -1,4 +1,4 @@
-\subsection{Расчет цикла при $\pi_{КНД} = <-<.LPCompressor.Pi>->, \pi_{КВД} = <-<.HPCompressor.Pi>->$}
+\subsection{Расчет цикла при $\pi_{кнд} = <-<.LPCompressor.Pi>->, \pi_{квд} = <-<.HPCompressor.Pi>->$}
 % Расчет ГТД носит итерационный характер, так как параметры газа на входе в камеру сгорания
 % за счет регенератора зависят от температуры на выходе из силовой турбины.
 % Таким образом, расчет, представленный ниже, относится к последней итерации для
@@ -6,68 +6,63 @@
 % турбины: $T_т = <FreeTurbineTOut>$.
 \begin{enumerate}
 	\item Определим давление за входным устройством:
-		$$p_{вх}^* = \sigma_{вх}  p_a = <-<.InletPipe.Sigma>-> \cdot <-<.GasSource.P>-> = <-<.InletPipe.POut>-> \/\ МПа$$
+		$$p_{вх}^* = \sigma_{вх}  p_a = <-<.InletPipe.Sigma | Round2>-> \cdot <-<.GasSource.P | DivideE6 | Round3>-> = <-<.InletPipe.POut | DivideE6 | Round3>-> \/\ МПа$$
 
 
 	\item Определим давление за КНД:
-		$$p_{КНД}^* = \pi_к p_{вх}^* = <-<.LPCompressor.PIn>-> \cdot <-<.LPCompressor.Pi>-> = <-<.LPCompressor.POut>-> \/\ МПа$$
-	\item Определим температуру газа за КНД, принимая показатель адиабаты воздуха $k_{в \/\ КНД} = <-<.LPCompressor.GasData.KMean>->$:
+		$$p_{кнд}^* = \pi_к p_{вх}^* = <-<.LPCompressor.Pi | Round1>-> \cdot <-<.LPCompressor.PIn | DivideE6 | Round3>-> = <-<.LPCompressor.POut | DivideE6 | Round3>-> \/\ МПа$$
+	\item Определим температуру газа за КНД, принимая показатель адиабаты воздуха $k_{в \/\ кнд} = <-<.LPCompressor.GasData.KMean | Round2>->$:
 		$$T_{КНД}^* = T_a 
 		\left[ 
 			1 + \frac{
 				\pi_к^{
 					\frac{
-						k_{в \/\ КНД} - 1
+						k_{в \/\ кнд} - 1
 					}{
-						k_{в \/\ КНД}
+						k_{в \/\ кнд}
 					}
 				} - 1
 			}{
 				\eta_к
 			}
 		\right] =
-			<-<.LPCompressor.TIn>-> 
+			<-<.LPCompressor.TIn | Round1>-> 
 		\left[
 			1 + \frac{
-				{<-<.LPCompressor.Pi>->}^{
+				{<-<.LPCompressor.Pi | Round1>->}^{
 					\frac{
-						<-<.LPCompressor.GasData.KMean>-> - 1
+						<-<.LPCompressor.GasData.KMean | Round2>-> - 1
 					}{
-						<-<.LPCompressor.GasData.KMean>->
+						<-<.LPCompressor.GasData.KMean | Round2>->
 					}
 				} - 1
 			}{
-				<-<.LPCompressor.Eta>->
+				<-<.LPCompressor.Eta | Round2>->
 			}
-		\right] = <-<.LPCompressor.TOut>-> \/\ К$$
+		\right] = <-<.LPCompressor.TOut | Round1>-> \/\ К$$
 	\item Используя найденный показатель адиабаты воздуха, определим теплоемкость воздуха в процессе сжатия воздуха в КНД:
-		$$c_{pв \/\ КНД} = \frac{
-			k_{в \/\ КНД}
+		$$c_{pв \/\ кнд} = \frac{
+			k_{в \/\ кнд}
 		}{
-			k_{в \/\ КНД} - 1
+			k_{в \/\ кнд} - 1
 		} R_в = \frac{
-			<-<.LPCompressor.GasData.KMean>->
+			<-<.LPCompressor.GasData.KMean | Round2>->
 		}{
-			<-<.LPCompressor.GasData.KMean>-> - 1
-		} \cdot <-<.LPCompressor.GasData.R>-> = <-<.LPCompressor.GasData.CpMean>-> \/\ Дж/кг$$
+			<-<.LPCompressor.GasData.KMean | Round2>-> - 1
+		} \cdot <-<.LPCompressor.GasData.R | Round1>-> = <-<.LPCompressor.GasData.CpMean | Round1>-> \/\ Дж/кг$$
 	\item Определим работу КНД:
-		$$L_{КНД} = c_{pв \/\ КНД} \left( T_{КНД}^* - T_a \right) =
-			<-<.LPCompressor.GasData.CpMean>-> \cdot \left(<-<.LPCompressor.TOut>-> - <-<.LPCompressor.TIn>->\right) =
-			<-<.LPCompressor.Labour>-> \cdot 10^6 \/\ Дж/кг $$
-	
-
-
+		$$L_{КНД} = c_{pв \/\ кнд} \left( T_{кнд}^* - T_a \right) =
+			<-<.LPCompressor.GasData.CpMean | Round1>-> \cdot \left(<-<.LPCompressor.TOut | Round1>-> - <-<.LPCompressor.TIn | Round1>->\right) =
+			<-<.LPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг $$
 
 	\item Определим давление перед КВД:
-		$$p_{0 \/\ КВД}^* = \sigma_{КНД} p_{КНД}^* = <-<.LPCompressorPipe.Sigma>-> \cdot <-<.LPCompressor.POut>-> = <-<.HPCompressor.PIn>-> \/\ МПа$$
-
-
+		$$p_{0 \/\ квд}^* = \sigma_{кнд} p_{кнд}^* = <-<.LPCompressorPipe.Sigma | Round2>-> \cdot <-<.LPCompressor.POut | DivideE6 | Round3>-> = <-<.HPCompressor.PIn | DivideE6 | Round3>-> \/\ МПа$$
 
 
 	\item Определим давление за КВД:
-		$$ p_{КВД}^* = \pi_{КВД} p_{0 \/\ КВД}^* = <-<.HPCompressor.PIn>-> \cdot <-<.HPCompressor.Pi>-> = <-<.HPCompressor.POut>-> \/\ МПа $$
-	\item Определим температуру газа за КВД, принимая показатель адиабаты воздуха $k_{в \/\ КВД} = <-<.HPCompressor.GasData.KMean>->$:
-		$$T_{КВД}^* = T_{КНД}^*
+		$$ p_{квд}^* = \pi_{квд} p_{0 \/\ квд}^* = <-<.HPCompressor.Pi | Round1>-> \cdot <-<.HPCompressor.PIn | DivideE6 | Round3>-> = <-<.HPCompressor.POut | DivideE6 | Round3>-> \/\ МПа $$
+	\item Определим температуру газа за КВД, принимая показатель адиабаты воздуха $k_{в \/\ КВД} = <-<.HPCompressor.GasData.KMean | Round2>->$:
+		$$T_{квд}^* = T_{кнд}^*
 		\left[ 
 			1 + \frac{
 				\pi_к^{
@@ -81,71 +76,68 @@
 				\eta_к
 			}
 		\right] =
-			<-<.HPCompressor.TIn>-> 
+			<-<.HPCompressor.TIn | Round1>-> 
 		\left[
 			1 + \frac{
-				{<-<.HPCompressor.Pi>->}^{
+				{<-<.HPCompressor.Pi | Round1>->}^{
 					\frac{
-						<-<.HPCompressor.GasData.KMean>-> - 1
+						<-<.HPCompressor.GasData.KMean | Round2>-> - 1
 					}{
-						<-<.HPCompressor.GasData.KMean>->
+						<-<.HPCompressor.GasData.KMean | Round2>->
 					}
 				} - 1
 			}{
-				<-<.HPCompressor.Eta>->
+				<-<.HPCompressor.Eta | Round2>->
 			}
-		\right] = <-<.HPCompressor.TOut>-> \/\ К$$
+		\right] = <-<.HPCompressor.TOut | Round1>-> \/\ К$$
 	\item Используя найденный показатель адиабаты воздуха, определим теплоемкость воздуха в процессе сжатия воздуха в КВД:
-		$$c_{pв \/\ КВД} = \frac{
-			k_{в \/\ КВД}
+		$$c_{pв \/\ квд} = \frac{
+			k_{в \/\ квд}
 		}{
-			k_{в \/\ КВД} - 1
+			k_{в \/\ квд} - 1
 		} R_в = \frac{
-			<-<.HPCompressor.GasData.KMean>->
+			<-<.HPCompressor.GasData.KMean | Round2>->
 		}{
-			<-<.HPCompressor.GasData.KMean>-> - 1
-		} \cdot <-<.HPCompressor.GasData.R>-> = <-<.HPCompressor.GasData.CpMean>-> \/\ Дж/кг$$
+			<-<.HPCompressor.GasData.KMean | Round2>-> - 1
+		} \cdot <-<.HPCompressor.GasData.R | Round1>-> = <-<.HPCompressor.GasData.CpMean | Round1>-> \/\ Дж/кг$$
 	\item Определим работу КВД:
-		$$L_{КВД} = c_{pв \/\ КВД} \left( T_{КВД}^* - T_{КНД}^* \right) =
-			<-<.HPCompressor.GasData.CpMean>-> \cdot \left(<-<.HPCompressor.TOut>-> - <-<.HPCompressor.TIn>->\right) =
-			<-<.HPCompressor.Labour>-> \cdot 10^6 \/\ Дж/кг = $$
-
-
-
+		$$L_{квд} = c_{pв \/\ квд} \left( T_{квд}^* - T_{кнд}^* \right) =
+			<-<.HPCompressor.GasData.CpMean | Round1>-> \cdot \left(<-<.HPCompressor.TOut | Round1>-> - <-<.HPCompressor.TIn | Round1>->\right) =
+			<-<.HPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг $$
 
 	\item Температура газа за камерой сгорания:
-		$$T_г^* = <-<.Burner.Tg>-> \/\ К$$
+		$$T_г^* = <-<.Burner.Tg | Round>-> \/\ К$$
 	\item Определим относительный расход топлива. Расчет носит итерационный характер. Ниже описана последняя итерация. Теплоемкость продуктов сгорания природного газа рассчитывается через показатель адиабаты и газовую постоянную газа. При этом газовая постоянная и истинный показатель адиабаты рассчитываются как средневзвешенное соответственных характеристик компонентов продуктов). При расчета приняты следующие значения:
 	\begin{enumerate} % список значений для расчета удельного расхода топлива
 		\item[1)] теплоемкость топлива:
-			$$c_{pm} = <-<.Burner.Fuel.C>-> \/\ Дж / (кг \cdot К);$$
+			$$c_{pm} = <-<.Burner.Fuel.C | Round1>-> \/\ Дж / (кг \cdot К);$$
 		\item[2)] температура подачи топлива:
-			$$T_m = <-<.Burner.Fuel.TInit>-> \/\ К;$$
+			$$T_m = <-<.Burner.Fuel.TInit | Round1>-> \/\ К;$$
 		\item[3)] температура определения теплофизических параметров веществ:
-			$$T_0 = <-<.Burner.Fuel.T0>-> \/\ К;$$
+			$$T_0 = <-<.Burner.Fuel.T0 | Round1>-> \/\ К;$$
 		\item[4)] истинная теплоемкость воздуха перед камерой сгорания:
-			$$c_{pв \/\ г}\left( T_{КВД} \right) = <-<.Burner.AirDataInlet.Cp>-> \/\ Дж/(кг \cdot К);$$
+			$$c_{pв \/\ г}\left( T_{КВД} \right) = <-<.Burner.AirDataInlet.Cp | Round1>-> \/\ Дж/(кг \cdot К);$$
 		\item[5)] истинная теплоемкость воздуха при температуре определения теплофизических параметров веществ:
-			$$c_{pв \/\ г}\left( T_0 \right) = <-<.Burner.AirData0.Cp>-> \/\ Дж/(кг \cdot К);$$
+			$$c_{pв \/\ г}\left( T_0 \right) = <-<.Burner.AirData0.Cp | Round1>-> \/\ Дж/(кг \cdot К);$$
 		\item[6)] низшая теплота сгорания топлива:
-			$$Q_н^р = <-<.Burner.Fuel.QLower>-> \cdot 10^3 \/\ Дж / (кг \cdot К);$$
+			$$Q_н^р = <-<.Burner.Fuel.QLower | DivideE3 | Round>-> \cdot 10^3 \/\ Дж / (кг \cdot К);$$
 		\item[7)] полнота сгорания:
-			$$\eta_г = <-<.Burner.Eta>->;$$
+			$$\eta_г = <-<.Burner.Eta | Round2>->;$$
 		\item[8)] масса воздуха, необходимая для сжигания 1 кг топлива:
-			$$l_0 = <-<.Burner.Fuel.L0>-> \/\ кг;$$
+			$$l_0 = <-<.Burner.Fuel.L0 | Round1>-> \/\ кг;$$
 	\end{enumerate}
 
 	\begin{enumerate}
-		\item Зададимся коэффициентом избытка воздуха: $$\alpha = <-<.Burner.Alpha>->;$$
+		\item Зададимся коэффициентом избытка воздуха: $$\alpha = <-<.Burner.Alpha | Round2>->;$$
 		\item Теплоемкость продуктов сгорания природного газа $c_{pг \/\ г}$ при данном значении коэффициента избытка воздуха при температуре $T_г$ составляет:
-			$$c_{pг \/\ г}\left( T_г \right) = <-<.Burner.GasDataOutlet.Cp>-> \/\ Дж/(кг \cdot К);$$
+			$$c_{pг \/\ г}\left( T_г \right) = <-<.Burner.GasDataOutlet.Cp | Round1>-> \/\ Дж/(кг \cdot К);$$
 		\item Теплоемкость продуктов сгорания природного газа $c_{pг \/\ г}$ при данном значении коэффициента избытка воздуха при температуре $T_0$ составляет:
-			$$c_{pг \/\ г}\left( T_0 \right) = <-<.Burner.GasData0.Cp>-> \/\ Дж / (кг \cdot К);$$
+			$$c_{pг \/\ г}\left( T_0 \right) = <-<.Burner.GasData0.Cp | Round1>-> \/\ Дж / (кг \cdot К);$$
 		\item Определим относительный расход топлива:
 			$$g_m = \frac{G_m}{G_в^г} =
 		\frac{
 			c_{pг \/\ г} \left( T_г \right) T_г -
-			c_{pв \/\ г} \left( T_{КВД} \right) T_{КВД} -
+			c_{pв \/\ г} \left( T_{квд} \right) T_{квд} -
 			\left[
 				\left(
 					c_{pг \/\ г}\left( T_0 \right) - c_{pв \/\ г}\left( T_0 \right)
@@ -162,184 +154,205 @@
 
 		$$=
 		\frac{
-			<-<.Burner.GasDataOutlet.Cp>-> \cdot <-<.Burner.Tg>-> -
-			<-<.Burner.GasDataOutlet.Cp>-> \cdot <-<.HPCompressor.TOut>-> -
+			<-<.Burner.GasDataOutlet.Cp | Round1>-> \cdot <-<.Burner.Tg | Round1>-> -
+			<-<.Burner.GasDataOutlet.Cp | Round1>-> \cdot <-<.HPCompressor.TOut | Round1>-> -
 			\left[
 				\left(
-					<-<.Burner.GasData0.Cp>-> - <-<.Burner.AirData0.Cp>->
-				\right) \cdot <-<.Burner.AirData0.T>->
+					<-<.Burner.GasData0.Cp | Round1>-> - <-<.Burner.AirData0.Cp | Round1>->
+				\right) \cdot <-<.Burner.AirData0.T | Round1>->
 			\right]
 		}{
-			<-<.Burner.Fuel.QLower>-> \cdot 10^3 \cdot <-<.Burner.Eta>-> -
+			<-<.Burner.Fuel.QLower | DivideE3 | Round>-> \cdot 10^3 \cdot <-<.Burner.Eta>-> -
 			\left[
-				<-<.Burner.GasDataOutlet.Cp>-> \cdot <-<.Burner.Tg>-> -
-				<-<.Burner.GasData0.Cp>-> \cdot <-<.Burner.AirData0.T>->
+				<-<.Burner.GasDataOutlet.Cp | Round1>-> \cdot <-<.Burner.Tg | Round1>-> -
+				<-<.Burner.GasData0.Cp | Round1>-> \cdot <-<.Burner.AirData0.T | Round1>->
 			\right] +
-			<-<.Burner.Fuel.C>-> \left( <-<.Burner.Fuel.TInit>-> - <-<.Burner.AirData0.T>-> \right)
-		} = <-<.Burner.FuelMassRateRel>->$$
+			<-<.Burner.Fuel.C | Round1>-> \left( <-<.Burner.Fuel.TInit | Round1>-> - <-<.Burner.AirData0.T | Round1>-> \right)
+		} = <-<.Burner.FuelMassRateRel | Round3>->$$
 		\item Определим коэффициент избытка воздуха:
 			$$\alpha^\prime = \frac{1}{g_m l_0} =
-		\frac{1}{<-<.Burner.FuelMassRateRel>-> \cdot <-<.Burner.Fuel.L0>->} = <-<.Burner.Alpha>->$$
+		\frac{1}{<-<.Burner.FuelMassRateRel | Round3>-> \cdot <-<.Burner.Fuel.L0 | Round1>->} = <-<.Burner.Alpha | Round2>->$$
 	\end{enumerate}
 
 	\item Определим удельный расход через ТВД:
-		$$g_{ТВД} = \left( 1 + g_m \right) \left( 1 - g_{ут} - g_{охл} \right) =
-			\left( 1 + <-<.Burner.FuelMassRateRel>-> \right) \left( 1 - <-<.HPTurbine.LeakMassRateRel>-> - <-<.HPTurbine.CoolMassRateRel>-> \right) = <-<.HPTurbine.MassRateRel>->$$
+		$$g_{твд} = \left( 1 + g_m \right) \left( 1 - g_{ут} - g_{охл} \right) =
+			\left( 1 + <-<.Burner.FuelMassRateRel | Round3>-> \right) \left( 1 - <-<.HPTurbine.LeakMassRateRel | Abs | Round3>-> - <-<.HPTurbine.CoolMassRateRel | Abs | Round3>-> \right) = <-<.HPTurbine.MassRateRel | Round3>->$$
 	\item Определим удельную работу ТВД:
-		$$L_{ТВД} = \frac{L_{КВД}}{g_{ТВД}\eta_{м \/\ ВД}} = \frac{<-<.HPCompressor.Labour>-> \cdot 10^6}{<-<.HPTurbine.MassRateRel>-> \cdot <-<.HPShaft.Eta>-> } = <-<.HPTurbine.Labour>-> \cdot 10^6 \/\ Дж/кг$$
+		$$L_{твд} = \frac{L_{квд}}{g_{твд}\eta_{м \/\ ВД}} = \frac{
+			<-<.HPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6
+		}{
+			<-<.HPTurbine.MassRateRel | Round3>-> \cdot <-<.HPShaft.Eta | Round3>->
+		} = <-<.HPTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг$$
 	\item Определим давление газа перед ТВД:
-		$$p_{г}^* = p_{ТНД}^* \sigma_г = <-<.HPCompressor.POut>-> \cdot <-<.Burner.Sigma>-> = <-<.HPTurbine.PIn>-> \/\ МПа$$
-	\item Определим среднюю теплоемкость газа в процессе расширения газа в турбине, принимая показатель адиабаты газа $k_{г \/\ ТВД} = <-<.HPTurbine.GasData.KMean>->$:
-		$$c_{pг \/\ ТВД} = \frac{k_{г \/\ ТВД}}{k_{г \/\ ТВД} - 1} R_г =
-			\frac{<-<.HPTurbine.GasData.KMean>->}{<-<.HPTurbine.GasData.KMean>-> - 1} \cdot <-<.HPTurbine.GasData.R>-> = <-<.HPTurbine.GasData.CpMean>-> \/\ Дж/(кг \cdot К) $$
+		$$p_{г}^* = p_{тнд}^* \sigma_г = <-<.HPCompressor.POut | DivideE6 | Round3>-> \cdot <-<.Burner.Sigma | Round2>-> = <-<.HPTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
+	\item Определим среднюю теплоемкость газа в процессе расширения газа в турбине, принимая показатель адиабаты газа $k_{г \/\ ТВД} = <-<.HPTurbine.GasData.KMean | Round2>->$:
+		$$c_{pг \/\ твд} = \frac{k_{г \/\ твд}}{k_{г \/\ твд} - 1} R_г =
+			\frac{
+				<-<.HPTurbine.GasData.KMean | Round2>->
+			}{
+				<-<.HPTurbine.GasData.KMean | Round2>-> - 1
+			} \cdot <-<.HPTurbine.GasData.R | Round1>-> = <-<.HPTurbine.GasData.CpMean | Round1>-> \/\ Дж/(кг \cdot К) $$
 	\item Определим давление воздуха за ТВД:
-		$$p_{ТВД}^* = p_г^*
+		$$p_{твд}^* = p_г^*
 			\left[
-				1 - \frac{L_{КВД}}{c_{pг \/\ ТВД} T_г \eta_{ТВД}}
-			\right] ^ \frac{k_{г \/\ ТВД}}{k_{г \/\ ТВД} - 1} =
-			<-<.HPTurbine.PIn>->
+				1 - \frac{L_{твд}}{c_{pг \/\ твд} T_г \eta_{твд}}
+			\right] ^ \frac{k_{г \/\ твд}}{k_{г \/\ твд} - 1} =
+			<-<.HPTurbine.PIn | DivideE6 | Round3>->
 			\left[
-				1 - \frac{<-<.HPCompressor.Labour>-> \cdot 10^6}
-				{<-<.HPTurbine.GasData.CpMean>-> \cdot <-<.HPTurbine.TIn>-> \cdot <-<.HPTurbine.Eta>->}
-			\right] ^ \frac{<-<.HPTurbine.GasData.KMean>->}{<-<.HPTurbine.GasData.KMean>-> - 1} =
-			 <-<.HPTurbine.POut>-> \/\ МПа$$
+				1 - \frac{<-<.HPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6}
+				{<-<.HPTurbine.GasData.CpMean | Round1>-> \cdot <-<.HPTurbine.TIn | Round1>-> \cdot <-<.HPTurbine.Eta | Round3>->}
+			\right] ^ \frac{<-<.HPTurbine.GasData.KMean | Round2>->}{<-<.HPTurbine.GasData.KMean | Round2>-> - 1} =
+			 <-<.HPTurbine.POut | DivideE6 | Round3>-> \/\ МПа$$
 	\item Определим температуру газа за ТВД:
-	 	$$T_{ТВД}^* = T_г^*
+	 	$$T_{твд}^* = T_г^*
 			 \left\lbrace
 			 	1 -
 			 	\left[
 			 		1 -
 			 			\left(
-			 				\frac{p_{ТВД}^*}{p_г^*}
-			 			\right) ^ \frac{k_{г \/\ ТВД}}{k_{г \/\ ТВД} - 1}
+			 				\frac{p_{твд}^*}{p_г^*}
+			 			\right) ^ \frac{k_{г \/\ твд}}{k_{г \/\ твд} - 1}
 			 	\right] \eta_{ТВД}
 			 \right\rbrace =
-			 <-<.HPTurbine.TIn>->
+			 <-<.HPTurbine.TIn | Round1>->
 			 \left\lbrace
 			 	1 -
 			 	\left[
 			 		1 -
 			 			\left(
-			 				\frac{<-<.HPTurbine.POut>->}{<-<.HPTurbine.PIn>->}
-			 			\right) ^ \frac{<-<.HPTurbine.GasData.KMean>->}{<-<.HPTurbine.GasData.KMean>-> - 1}
-			 	\right] \cdot <-<.HPTurbine.Eta>->
-			 \right\rbrace = <-<.HPTurbine.TOut>-> \/\ К$$
+			 				\frac{<-<.HPTurbine.POut | DivideE6 | Round3>->}{<-<.HPTurbine.PIn | DivideE6 | Round3>->}
+			 			\right) ^ \frac{<-<.HPTurbine.GasData.KMean | Round2>->}{<-<.HPTurbine.GasData.KMean | Round2>-> - 1}
+			 	\right] \cdot <-<.HPTurbine.Eta | Round3>->
+			 \right\rbrace = <-<.HPTurbine.TOut | Round1>-> \/\ К$$
 	\item Определим давление перед ТНД:
-		$$p_{0 \/\ ТНД}^* = p_{ТВД}^*\sigma_{ТВД} = <-<.HPTurbine.POut>-> \cdot <-<.HPTurbinePipe.Sigma>-> = <-<.LPTurbine.PIn>-> \/\ МПа$$
-
-
+		$$p_{0 \/\ ТНД}^* = p_{ТВД}^*\sigma_{ТВД} = <-<.HPTurbine.POut | DivideE6 | Round3>-> \cdot <-<.HPTurbinePipe.Sigma | Round2>-> = <-<.LPTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
 
 	\item Определим удельный расход через ТНД:
 		% $$g_{ТНД} = \left( 1 + g_m \right) \left( 1 - g_{ут} - g_{охл} \right) =
 		% 	\left( 1 + <-<.Burner.FuelMassRateRel>-> \right) \left( 1 - <-<.HPTurbine.LeakMassRateRel>-> - <-<.HPTurbine.CoolMassRateRel>-> \right) = <-<.HPTurbine.MassRateRel>->$$
 	\item Определим удельную работу ТНД:
-		$$L_{ТНД} = \frac{L_{КНД}}{g_{ТНД}\eta_{м \/\ НД}} = \frac{<-<.LPCompressor.Labour>-> \cdot 10^6}{<-<.LPTurbine.MassRateRel>-> \cdot <-<.LPShaft.Eta>-> } = <-<.LPTurbine.Labour>-> \cdot 10^6 \/\ Дж/кг$$
-	\item Определим среднюю теплоемкость газа в процессе расширения газа в турбине, принимая показатель адиабаты газа $k_{г \/\ ТНД} = <-<.LPTurbine.GasData.KMean>->$:
-		$$c_{pг \/\ ТВД} = \frac{k_{г \/\ ТВД}}{k_{г \/\ ТВД} - 1} R_г =
-			\frac{<-<.LPTurbine.GasData.KMean>->}{<-<.LPTurbine.GasData.KMean>-> - 1} \cdot <-<.LPTurbine.GasData.R>-> = <-<.LPTurbine.GasData.CpMean>-> \/\ Дж/(кг \cdot К) $$
-	\item Определим давление воздуха за ТНД:
-		$$p_{ТНД}^* = p_{0 \/\ ТНД}^*
+		$$L_{тнд} = \frac{L_{кнд}}{g_{тнд}\eta_{м \/\ нд}} = \frac{
+			<-<.LPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6
+		}{
+			<-<.LPTurbine.MassRateRel | Round3>-> \cdot <-<.LPShaft.Eta | Round2>->
+		} = <-<.LPTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг$$
+	\item Определим среднюю теплоемкость газа в процессе расширения газа в турбине, принимая показатель адиабаты газа $k_{г \/\ тнд} = <-<.LPTurbine.GasData.KMean | Round2>->$:
+		$$c_{pг \/\ твд} = \frac{k_{г \/\ ТВД}}{k_{г \/\ твд} - 1} R_г =
+			\frac{
+				<-<.LPTurbine.GasData.KMean | Round2>->
+			}{
+				<-<.LPTurbine.GasData.KMean | Round2>-> - 1
+			} \cdot <-<.LPTurbine.GasData.R | Round1>-> = <-<.LPTurbine.GasData.CpMean | Round1>-> \/\ Дж/(кг \cdot К) $$
+	\item Определим давление воздуха за тнд:
+		$$p_{тнд}^* = p_{0 \/\ тнд}^*
 			\left[
-				1 - \frac{L_{КНД}}{c_{pг \/\ ТНД} T_г \eta_{ТНД}}
-			\right] ^ \frac{k_{г \/\ ТНД}}{k_{г \/\ ТНД} - 1} =
-			<-<.LPTurbine.PIn>->
+				1 - \frac{L_{тнд}}{c_{pг \/\ тнд} T_г \eta_{тнд}}
+			\right] ^ \frac{k_{г \/\ тнд}}{k_{г \/\ тнд} - 1} =
+			<-<.LPTurbine.PIn | DivideE6 | Round3>->
 			\left[
-				1 - \frac{<-<.LPCompressor.Labour>-> \cdot 10^6}
-				{<-<.LPTurbine.GasData.CpMean>-> \cdot <-<.LPTurbine.TIn>-> \cdot <-<.LPTurbine.Eta>->}
-			\right] ^ \frac{<-<.LPTurbine.GasData.KMean>->}{<-<.LPTurbine.GasData.KMean>-> - 1} =
-			 <-<.LPTurbine.POut>-> \/\ МПа$$
+				1 - \frac{
+					<-<.LPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6
+				}
+				{
+					<-<.LPTurbine.GasData.CpMean | Round1>-> \cdot <-<.LPTurbine.TIn | Round1>-> \cdot <-<.LPTurbine.Eta | Round2>->
+				}
+			\right] ^ \frac{<-<.LPTurbine.GasData.KMean | Round2>->}{<-<.LPTurbine.GasData.KMean | Round2>-> - 1} =
+			 <-<.LPTurbine.POut | DivideE6 | Round3>-> \/\ МПа$$
 	\item Определим температуру газа за ТНД:
-	 	$$T_{ТНД}^* = T_{ТВД}^*
+	 	$$T_{тнд}^* = T_{твд}^*
 			 \left\lbrace
 			 	1 -
 			 	\left[
 			 		1 -
 			 			\left(
-			 				\frac{p_{ТНД}^*}{p_{ТНД \/\ 0}^*}
-			 			\right) ^ \frac{k_{г \/\ ТНД}}{k_{г \/\ ТНД} - 1}
-			 	\right] \eta_{ТНД}
+			 				\frac{p_{тнд}^*}{p_{тнд \/\ 0}^*}
+			 			\right) ^ \frac{k_{г \/\ тнд}}{k_{г \/\ тнд} - 1}
+			 	\right] \eta_{тнд}
 			 \right\rbrace =
-			 <-<.LPTurbine.TIn>->
+			 <-<.LPTurbine.TIn | Round1>->
 			 \left\lbrace
 			 	1 -
 			 	\left[
 			 		1 -
 			 			\left(
-			 				\frac{<-<.LPTurbine.POut>->}{<-<.LPTurbine.PIn>->}
-			 			\right) ^ \frac{<-<.LPTurbine.GasData.KMean>->}{<-<.LPTurbine.GasData.KMean>-> - 1}
-			 	\right] \cdot <-<.LPTurbine.Eta>->
-			 \right\rbrace = <-<.LPTurbine.TOut>-> \/\ К$$
+			 				\frac{<-<.LPTurbine.POut | DivideE6 | Round3>->}{<-<.LPTurbine.PIn | DivideE6 | Round3>->}
+			 			\right) ^ \frac{<-<.LPTurbine.GasData.KMean | Round2>->}{<-<.LPTurbine.GasData.KMean | Round2>-> - 1}
+			 	\right] \cdot <-<.LPTurbine.Eta | Round2>->
+			 \right\rbrace = <-<.LPTurbine.TOut | Round1>-> \/\ К$$
 	\item Определим давление перед свободной турбиной:
-		$$p_{0 \/\ ТС}^* = p_{ТНД}^*\sigma_{ТНД} = <-<.LPTurbine.POut>-> \cdot <-<.LPTurbinePipe.Sigma>-> = <-<.FreeTurbine.PIn>-> \/\ МПа$$
+		$$p_{0 \/\ тс}^* = p_{тнд}^*\sigma_{тнд} = <-<.LPTurbine.POut | DivideE6 | Round3>-> \cdot <-<.LPTurbinePipe.Sigma | Round2>-> = <-<.FreeTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
 
 
 	\item Определим удельный расход через силовую турбину:
 		% $$g_{ТС} = \left( 1 + g_m \right) \left( 1 - g_{ут} - g_{охл} \right) =
 		% 	\left( 1 + <-<.Burner.FuelMassRateRel>-> \right) \left( 1 - <-<.HPTurbine.LeakMassRateRel>-> - <-<.HPTurbine.CoolMassRateRel>-> \right) = <-<.HPTurbine.MassRateRel>->$$
-	\item Определим давление торможения на выходе из свободной турбины $p_{ТС}^*$:
-		$$p_{ТС}^* = p_a / \sigma_{вых} = <-<.GasSource.P>-> \cdot <-<.OutletPipe.Sigma>-> = <-<.FreeTurbine.POut>-> \/\ МПа$$
+	\item Определим давление торможения на выходе из свободной турбины $p_{тс}^*$:
+		$$p_{тс}^* = p_a / \sigma_{вых} = <-<.GasSource.P | DivideE6 | Round3>-> \cdot <-<.OutletPipe.Sigma | Round2>-> = <-<.FreeTurbine.POut | DivideE6 | Round3>-> \/\ МПа$$
 	\item Зададим значение приведенной скорости на выходе из свободной турбины:
-		$$\lambda_{вых} = <-<.FreeTurbine.LambdaOut>->$$
-	\item Определим статическое давление на выходе из свободной турбины, принимая показатель адиабаты газа на выходе из свбодной турбины $k_{СТ \/\ вых} = <-<.FreeTurbine.OutletGasData.K>->$:
-		$$p_{ТС} = \frac{
-			p_{ТС}^*
+		$$\lambda_{вых} = <-<.FreeTurbine.LambdaOut | Round2>->$$
+	\item Определим статическое давление на выходе из свободной турбины, принимая показатель адиабаты газа на выходе из свбодной турбины $k_{тс \/\ вых} = <-<.FreeTurbine.OutletGasData.K | Round2>->$:
+		$$p_{тс} = \frac{
+			p_{тс}^*
 		}{
-			\pi \left( \lambda_{вых}, \/\ k_{СТ \/\ вых} \right)
+			\pi \left( \lambda_{вых}, \/\ k_{тс \/\ вых} \right)
 		} = \frac{
-			<-<.FreeTurbine.POut>->
+			<-<.FreeTurbine.POut | DivideE6 | Round3>->
 		}{
-			\pi \left( <-<.FreeTurbine.LambdaOut>->, \/\ <-<.FreeTurbine.OutletGasData.K>-> \right)
+			\pi \left( <-<.FreeTurbine.LambdaOut | Round2>->, \/\ <-<.FreeTurbine.OutletGasData.K | Round2>-> \right)
 		}$$
-	\item Определим статическую температуру на выходе из силовой турбины, принимая показатель адиабаты газа $k_{г \/\ ТС} = <-<.FreeTurbine.GasData.KMean>->$::
-		$$T_{СТ} = T_{ТНД}^*
+	\item Определим статическую температуру на выходе из силовой турбины, принимая показатель адиабаты газа $k_{г \/\ тс} = <-<.FreeTurbine.GasData.KMean | Round2>->$::
+		$$T_{тс} = T_{тнд}^*
 		 \left\lbrace
 		 	1 -
 		 	\left[
 		 		1 -
 		 			\left(
-		 				\frac{p_{0 \/\ СТ}^*}{p_{ТС}}
-		 			\right) ^ \frac{k_{г \/\ ТС}}{k_{г \/\ ТС} - 1}
-		 	\right] \eta_т
+		 				\frac{p_{0 \/\ тс}^*}{p_{тс}}
+		 			\right) ^ \frac{k_{г \/\ тс}}{k_{г \/\ тс} - 1}
+		 	\right] \eta_{тс}
 		 \right\rbrace =
-		 <-<.FreeTurbine.TIn>->
+		 <-<.FreeTurbine.TIn | Round1>->
 		 \left\lbrace
 		 	1 -
 		 	\left[
 		 		1 -
 		 			\left(
-		 				\frac{<-<.FreeTurbine.PIn>->}{<-<.FreeTurbine.POutStat>->}
-		 			\right) ^ \frac{<-<.FreeTurbine.GasData.KMean>->}{<-<.FreeTurbine.GasData.KMean>-> - 1}
-		 	\right] \cdot <-<.FreeTurbine.Eta>->
-		 \right\rbrace = <-<.FreeTurbine.TOutStat>-> \/\ К$$
+		 				\frac{
+		 					<-<.FreeTurbine.PIn | DivideE6 | Round3>->
+		 				}{
+		 					<-<.FreeTurbine.POutStat | DivideE6 | Round3>->
+		 				}
+		 			\right) ^ \frac{<-<.FreeTurbine.GasData.KMean | Round2>->}{<-<.FreeTurbine.GasData.KMean | Round2>-> - 1}
+		 	\right] \cdot <-<.FreeTurbine.Eta | Round2>->
+		 \right\rbrace = <-<.FreeTurbine.TOutStat | Round1>-> \/\ К$$
 	\item Определим температуру торможения на выходе из силовой турбины:
-		$$T_{СТ}^* = 
-			\frac{T_{СТ}}{\tau\left( \lambda_{вых}, \/\ k_{СТ \/\ вых} \right)} = 
-			\frac{T_{СТ}}{\tau\left( <-<.FreeTurbine.LambdaOut>->, \/\ <-<.FreeTurbine.OutletGasData.K>-> \right)} =
-			= <-<.FreeTurbine.TOut>-> \/\ К$$
+		$$T_{тс}^* = 
+			\frac{T_{тс}}{\tau\left( \lambda_{вых}, \/\ k_{СТ \/\ вых} \right)} = 
+			\frac{T_{тс}}{\tau\left( <-<.FreeTurbine.LambdaOut | Round2>->, \/\ <-<.FreeTurbine.OutletGasData.K | Round2>-> \right)} =
+			= <-<.FreeTurbine.TOut | Round1>-> \/\ К$$
 	\item Определим значение теплоемкости газа в свободной турбине:
-		$$c_{p \/\ ТС} = 
-			\frac{k_{г \/\ ТС}}{k_{г \/\ ТС} - 1} = 
-			\frac{<-<.FreeTurbine.GasData.KMean>->}{<-<.FreeTurbine.GasData.KMean>-> - 1} = <-<.FreeTurbine.GasData.CpMean>-> \/\ Дж / \left( кг \cdot К \right)$$
+		$$c_{p \/\ тс} = 
+			\frac{k_{г \/\ тс}}{k_{г \/\ тс} - 1} = 
+			\frac{<-<.FreeTurbine.GasData.KMean | Round2>->}{<-<.FreeTurbine.GasData.KMean | Round2>-> - 1} = <-<.FreeTurbine.GasData.CpMean | Round1>-> \/\ Дж / \left( кг \cdot К \right)$$
 	\item Определим удельную работу силовой турбины:
-		$$L_{ТС} = c_{p \/\ ТС} \left( T_{ТНД}^* - T_{СТ}^* \right) = 
-			<-<.FreeTurbine.GasData.CpMean>-> \left( <-<.FreeTurbine.TIn>-> - <-<.FreeTurbine.TOut>-> \right) = 
-			<-<.FreeTurbine.Labour>-> \/\ Дж/кг$$
-
+		$$L_{тс} = c_{p \/\ тс} \left( T_{тнд}^* - T_{тс}^* \right) = 
+			<-<.FreeTurbine.GasData.CpMean | Round1>-> \left( <-<.FreeTurbine.TIn | Round1>-> - <-<.FreeTurbine.TOut | Round1>-> \right) = 
+			<-<.FreeTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6\/\ Дж/кг$$
 
 	\item Определим удельную мощность ГТД:
-		$$N_{e \/\ уд} = L_{ТС} \/\ g_{ТС} =
-			<-<.FreeTurbine.Labour>-> \cdot 10^6 \cdot <-<.FreeTurbine.MassRateRel>-> =
-			<-<.EngineLabour>-> \cdot 10^6 Дж/кг$$
+		$$N_{e \/\ уд} = L_{тс} \/\ g_{тс} =
+			<-<.FreeTurbine.Labour | DivideE6 | Round2>-> \cdot 10^6 \cdot <-<.FreeTurbine.MassRateRel | Round2>-> =
+			<-<.EngineLabour | DivideE6 | Round3>-> \cdot 10^6 Дж/кг$$
 	\item Определим экономичность ГТД:
-		$$C_e = \frac{3600}{N_{e уд}} g_{ТС} =
-			\frac{3600}{<-<.FreeTurbine.Labour>-> \cdot 10^6} \cdot <-<.FreeTurbine.MassRateRel>-> =
-			<-<.Ce>-> \cdot кг/\left( кВт/ч \right)$$
+		$$C_e = \frac{3600}{N_{e уд}} g_{тс} =
+			\frac{3600}{<-<.FreeTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6} \cdot <-<.FreeTurbine.MassRateRel | Round2>-> =
+			<-<.Ce | Round3>-> \cdot кг/\left( кВт/ч \right)$$
 	\item Определим КПД ГТД:
 		$$\eta_e = \frac{3600}{C_e Q_н^р} =
-			\frac{3600}{<-<.Ce>-> \cdot <-<.Burner.Fuel.QLower>-> }
-			= <.Eta>$$
+			\frac{3600}{<-<.Ce | Round3>-> \cdot <-<.Burner.Fuel.QLower | DivideE6 | Round3>-> }
+			= <-<.Eta | Round3>->$$
 	\item Определим расход воздуха:
 		$$G_в = \frac{N_e}{N_{e \/\ уд}} =
-			\frac{<-<.Ne>->}{<-<.EngineLabour>->} =
-			<-<.MassRate>-> кг/с$$
+			\frac{<-<.Ne | DivideE3 | Round>-> \cdot 10^3}{<-<.EngineLabour | DivideE6 | Round3>->} =
+			<-<.MassRate | Round1>-> кг/с$$
 \end{enumerate}
