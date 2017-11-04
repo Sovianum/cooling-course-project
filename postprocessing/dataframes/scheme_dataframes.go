@@ -1,68 +1,68 @@
 package dataframes
 
 import (
-	"github.com/Sovianum/turbocycle/library/schemes"
-	"github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
+	"github.com/Sovianum/turbocycle/impl/engine/states"
+	"github.com/Sovianum/turbocycle/library/schemes"
 )
-
 
 func NewThreeShaftsDF(power float64, scheme schemes.ThreeShaftsScheme) ThreeShaftsDF {
 	var gasSourceState = scheme.GasSource().ComplexGasOutput().GetState().(states.ComplexGasPortState)
 
 	return ThreeShaftsDF{
-		GasSource:NewGasDF(gasSourceState.PStag, gasSourceState.TStag, gasSourceState.Gas),
-		InletPipe:NewPressureDropDF(scheme.InletPressureDrop()),
+		GasSource: NewGasDF(gasSourceState.PStag, gasSourceState.TStag, gasSourceState.Gas),
+		InletPipe: NewPressureDropDF(scheme.InletPressureDrop()),
 
-		LPCompressor:NewCompressorDF(scheme.LowPressureCompressor()),
-		LPCompressorPipe:NewPressureDropDF(scheme.MiddlePressureCompressorPipe()),
-		LPTurbine:NewTurbineDFFromBlockedTurbine(
+		LPCompressor:     NewCompressorDF(scheme.LowPressureCompressor()),
+		LPCompressorPipe: NewPressureDropDF(scheme.MiddlePressureCompressorPipe()),
+		LPTurbine: NewTurbineDFFromBlockedTurbine(
 			scheme.MiddlePressureCascade().Turbine().(constructive.BlockedTurbineNode),
 		),
-		LPTurbinePipe:NewPressureDropDF(scheme.MiddlePressureTurbinePipe()),
-		LPShaft:NewShaftDF(scheme.MiddlePressureCascade().Transmission()),
+		LPTurbinePipe: NewPressureDropDF(scheme.MiddlePressureTurbinePipe()),
+		LPShaft:       NewShaftDF(scheme.MiddlePressureCascade().Transmission()),
 
-		HPCompressor:NewCompressorDF(scheme.HighPressureCompressor()),
-		HPTurbine:NewTurbineDFFromBlockedTurbine(
+		HPCompressor: NewCompressorDF(scheme.HighPressureCompressor()),
+		HPTurbine: NewTurbineDFFromBlockedTurbine(
 			scheme.GasGenerator().TurboCascade().Turbine().(constructive.BlockedTurbineNode),
 		),
-		HPTurbinePipe:NewPressureDropDF(scheme.HighPressureTurbinePipe()),
-		HPShaft:NewShaftDF(scheme.MiddlePressureCascade().Transmission()),
+		HPTurbinePipe: NewPressureDropDF(scheme.HighPressureTurbinePipe()),
+		HPShaft:       NewShaftDF(scheme.MiddlePressureCascade().Transmission()),
 
-		Burner:NewBurnerDF(scheme.GasGenerator().Burner()),
-		FreeTurbine:NewTurbineDFFromFreeTurbine(scheme.FreeTurbineBlock().FreeTurbine()),
+		Burner:      NewBurnerDF(scheme.GasGenerator().Burner()),
+		FreeTurbine: NewTurbineDFFromFreeTurbine(scheme.FreeTurbineBlock().FreeTurbine()),
+		OutletPipe:NewPressureDropDF(scheme.FreeTurbineBlock().OutletPressureLoss()),
 
-		EngineLabour:scheme.FreeTurbineBlock().FreeTurbine().LSpecific(),
-		Ce:schemes.GetSpecificFuelRate(scheme),
-		MassRate:schemes.GetMassRate(power, scheme),
-		Eta:schemes.GetEfficiency(scheme),
-		Ne:power,
+		EngineLabour: scheme.FreeTurbineBlock().FreeTurbine().LSpecific(),
+		Ce:           schemes.GetSpecificFuelRate(scheme),
+		MassRate:     schemes.GetMassRate(power, scheme),
+		Eta:          schemes.GetEfficiency(scheme),
+		Ne:           power,
 	}
 }
 
 type ThreeShaftsDF struct {
-	GasSource   GasDF
-	InletPipe   PressureDropDF
+	GasSource GasDF          `json:"gas_source"`
+	InletPipe PressureDropDF `json:"inlet_pipe"`
 
-	LPCompressor     CompressorDF
-	LPCompressorPipe PressureDropDF
-	LPTurbine        TurbineDF
-	LPTurbinePipe    PressureDropDF
-	LPShaft          ShaftDF
+	LPCompressor     CompressorDF   `json:"lp_compressor"`
+	LPCompressorPipe PressureDropDF `json:"lp_compressor_pipe"`
+	LPTurbine        TurbineDF      `json:"lp_turbine"`
+	LPTurbinePipe    PressureDropDF `json:"lp_turbine_pipe"`
+	LPShaft          ShaftDF        `json:"lp_shaft"`
 
-	HPCompressor  CompressorDF
-	HPTurbine     TurbineDF
-	HPTurbinePipe PressureDropDF
-	HPShaft       ShaftDF
+	HPCompressor  CompressorDF   `json:"hp_compressor"`
+	HPTurbine     TurbineDF      `json:"hp_turbine"`
+	HPTurbinePipe PressureDropDF `json:"hp_turbine_pipe"`
+	HPShaft       ShaftDF        `json:"hp_shaft"`
 
-	Burner BurnerDF
+	Burner BurnerDF `json:"burner"`
 
-	FreeTurbine TurbineDF
-	OutletPipe  PressureDropDF
+	FreeTurbine TurbineDF      `json:"free_turbine"`
+	OutletPipe  PressureDropDF `json:"outlet_pipe"`
 
-	EngineLabour float64
-	Ce           float64
-	MassRate     float64
-	Eta          float64
-	Ne           float64
+	EngineLabour float64 `json:"engine_labour"`
+	Ce           float64 `json:"ce"`
+	MassRate     float64 `json:"mass_rate"`
+	Eta          float64 `json:"eta"`
+	Ne           float64 `json:"ne"`
 }

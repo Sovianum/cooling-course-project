@@ -20,12 +20,12 @@ func NewGasDF(p, t float64, gas gases.Gas) GasDF {
 }
 
 type GasDF struct {
-	T       float64
-	P       float64
-	Density float64
-	K       float64
-	Cp      float64
-	R       float64
+	T       float64 `json:"t"`
+	P       float64 `json:"p"`
+	Density float64 `json:"density"`
+	K       float64 `json:"k"`
+	Cp      float64 `json:"cp"`
+	R       float64 `json:"r"`
 }
 
 func NewGasMeanDF(p, t1, t2 float64, gas gases.Gas) GasMeanDF {
@@ -40,12 +40,12 @@ func NewGasMeanDF(p, t1, t2 float64, gas gases.Gas) GasMeanDF {
 }
 
 type GasMeanDF struct {
-	T1     float64
-	T2     float64
-	P      float64
-	KMean  float64
-	CpMean float64
-	R      float64
+	T1     float64 `json:"t_1"`
+	T2     float64 `json:"t_2"`
+	P      float64 `json:"p"`
+	KMean  float64 `json:"k_mean"`
+	CpMean float64 `json:"cp_mean"`
+	R      float64 `json:"r"`
 }
 
 func NewCompressorDF(node constructive.CompressorNode) CompressorDF {
@@ -70,38 +70,38 @@ func NewCompressorDF(node constructive.CompressorNode) CompressorDF {
 }
 
 type CompressorDF struct {
-	PIn  float64
-	POut float64
+	PIn  float64 `json:"p_in"`
+	POut float64 `json:"p_out"`
 
-	TIn  float64
-	TOut float64
+	TIn  float64 `json:"t_in"`
+	TOut float64 `json:"t_out"`
 
-	Pi  float64
-	Eta float64
+	Pi  float64 `json:"pi"`
+	Eta float64 `json:"eta"`
 
-	Labour float64
+	Labour float64 `json:"labour"`
 
-	GasData GasMeanDF
+	GasData GasMeanDF `json:"gas_data"`
 }
 
 func NewPressureDropDF(node constructive.PressureLossNode) PressureDropDF {
 	return PressureDropDF{
-		PIn:node.PStagIn(),
-		POut:node.PStagOut(),
-		TIn:node.TStagIn(),
-		TOut:node.TStagOut(),
-		Sigma:node.Sigma(),
+		PIn:   node.PStagIn(),
+		POut:  node.PStagOut(),
+		TIn:   node.TStagIn(),
+		TOut:  node.TStagOut(),
+		Sigma: node.Sigma(),
 	}
 }
 
 type PressureDropDF struct {
-	PIn  float64
-	POut float64
+	PIn  float64 `json:"p_in"`
+	POut float64 `json:"p_out"`
 
-	TIn  float64
-	TOut float64
+	TIn  float64 `json:"t_in"`
+	TOut float64 `json:"t_out"`
 
-	Sigma float64
+	Sigma float64 `json:"sigma"`
 }
 
 func NewRegeneratorNode(node constructive.RegeneratorNode) RegeneratorDF {
@@ -126,15 +126,15 @@ func NewRegeneratorNode(node constructive.RegeneratorNode) RegeneratorDF {
 }
 
 type RegeneratorDF struct {
-	PColdIn  float64
-	PColdOut float64
-	PHotIn   float64
-	PHotOut  float64
+	PColdIn  float64 `json:"p_cold_in"`
+	PColdOut float64 `json:"p_cold_out"`
+	PHotIn   float64 `json:"p_hot_in"`
+	PHotOut  float64 `json:"p_hot_out"`
 
-	TColdIn  float64
-	TColdOut float64
-	THotIn   float64
-	THotOut  float64
+	TColdIn  float64 `json:"t_cold_in"`
+	TColdOut float64 `json:"t_cold_out"`
+	THotIn   float64 `json:"t_hot_in"`
+	THotOut  float64 `json:"t_hot_out"`
 
 	Sigma float64
 }
@@ -150,11 +150,11 @@ func NewFuelDF(TInit, T0 float64, fuel fuel.GasFuel) FuelDF {
 }
 
 type FuelDF struct {
-	C      float64
-	TInit  float64
-	T0     float64
-	QLower float64
-	L0     float64
+	C      float64 `json:"c"`
+	TInit  float64 `json:"t_init"`
+	T0     float64 `json:"t_0"`
+	QLower float64 `json:"q_lower"`
+	L0     float64 `json:"l_0"`
 }
 
 func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
@@ -185,18 +185,18 @@ func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
 }
 
 type BurnerDF struct {
-	Tg              float64
-	Eta             float64
-	Alpha           float64
-	FuelMassRateRel float64
-	Sigma           float64
+	Tg              float64 `json:"tg"`
+	Eta             float64 `json:"eta"`
+	Alpha           float64 `json:"alpha"`
+	FuelMassRateRel float64 `json:"fuel_mass_rate_rel"`
+	Sigma           float64 `json:"sigma"`
 
-	Fuel FuelDF
+	Fuel FuelDF `json:"fuel"`
 
-	AirDataInlet  GasDF
-	AirData0      GasDF
-	GasData0      GasDF
-	GasDataOutlet GasDF
+	AirDataInlet  GasDF `json:"air_data_inlet"`
+	AirData0      GasDF `json:"air_data_0"`
+	GasData0      GasDF `json:"gas_data_0"`
+	GasDataOutlet GasDF `json:"gas_data_outlet"`
 }
 
 func NewTurbineDFFromBlockedTurbine(node constructive.BlockedTurbineNode) TurbineDF {
@@ -266,26 +266,26 @@ func NewTurbineDFFromFreeTurbine(node constructive.FreeTurbineNode) TurbineDF {
 }
 
 type TurbineDF struct {
-	PIn  float64
-	POut float64
+	PIn  float64 `json:"p_in"`
+	POut float64 `json:"p_out"`
 
-	TIn  float64
-	TOut float64
+	TIn  float64 `json:"t_in"`
+	TOut float64 `json:"t_out"`
 
-	InletGasData  GasDF
-	OutletGasData GasDF
-	GasData       GasMeanDF
+	InletGasData  GasDF     `json:"inlet_gas_data"`
+	OutletGasData GasDF     `json:"outlet_gas_data"`
+	GasData       GasMeanDF `json:"gas_data"`
 
-	MassRateRel     float64
-	LeakMassRateRel float64
-	CoolMassRateRel float64
+	MassRateRel     float64 `json:"mass_rate_rel"`
+	LeakMassRateRel float64 `json:"leak_mass_rate_rel"`
+	CoolMassRateRel float64 `json:"cool_mass_rate_rel"`
 
-	LambdaOut float64
-	POutStat  float64
-	TOutStat  float64
+	LambdaOut float64 `json:"lambda_out"`
+	POutStat  float64 `json:"p_out_stat"`
+	TOutStat  float64 `json:"t_out_stat"`
 
-	Labour float64
-	Eta    float64
+	Labour float64 `json:"labour"`
+	Eta    float64 `json:"eta"`
 }
 
 func NewShaftDF(node constructive.TransmissionNode) ShaftDF {
@@ -295,5 +295,5 @@ func NewShaftDF(node constructive.TransmissionNode) ShaftDF {
 }
 
 type ShaftDF struct {
-	Eta float64
+	Eta float64 `json:"eta"`
 }
