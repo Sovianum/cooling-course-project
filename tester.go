@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"text/template"
 
-	"github.com/Sovianum/cooling-course-project/core/postprocessing/dataframes"
+	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 )
 
 const (
