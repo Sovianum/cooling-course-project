@@ -57,16 +57,32 @@ func GetInitedThreeShaftsCoolRegeneratorScheme() schemes.ThreeShaftsCoolingRegen
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
 		etaMiddlePressureComp, piCompTotal*piCompFactor,
-		etaMiddlePressureTurbine, lambdaOut, func(node constructive.TurbineNode) float64 {
+		etaMiddlePressureTurbine, lambdaOut,
+		func(node constructive.TurbineNode) float64 {
 			return dgMiddlePressureTurbine
-		}, etaMMiddleCascade, precision,
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		etaMMiddleCascade, precision,
 	)
 	var regenerativeGasGenerator = compose.NewRegenerativeGasGeneratorNode(
 		etaHighPressureComp, 1/piCompFactor, fuel.GetCH4(),
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
-		etaHighPressureTurbine, lambdaOut, func(node constructive.TurbineNode) float64 {
+		etaHighPressureTurbine, lambdaOut,
+		func(node constructive.TurbineNode) float64 {
 			return dgHighPressureTurbine
-		}, regeneratorSigma, regeneratorPipeSigma, etaM, precision,
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		regeneratorSigma, regeneratorPipeSigma, etaM, precision,
 	)
 	var middlePressureCompressorPipe = constructive.NewPressureLossNode(middlePressureCompressorPipeSigma)
 	var cooler = constructive.NewCoolerNode(coolerTOut, coolerSigma)
@@ -74,9 +90,17 @@ func GetInitedThreeShaftsCoolRegeneratorScheme() schemes.ThreeShaftsCoolingRegen
 	var middlePressureTurbinePipe = constructive.NewPressureLossNode(middlePressureTurbinePipeSigma)
 	var freeTurbineBlock = compose.NewFreeTurbineBlock(
 		pAtm,
-		etaFreeTurbine, lambdaOut, precision, func(node constructive.TurbineNode) float64 {
+		etaFreeTurbine, lambdaOut, precision,
+		func(node constructive.TurbineNode) float64 {
 			return dgFreeTurbine
-		}, freeTurbinePressureLossSigma,
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		freeTurbinePressureLossSigma,
 	)
 
 	return schemes.NewThreeShaftsCoolingRegeneratorScheme(

@@ -54,15 +54,30 @@ func GetInitedThreeShaftsCoolingScheme() schemes.ThreeShaftsCoolerScheme {
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
 		etaMiddlePressureComp, piCompTotal*piCompFactor,
-		etaMiddlePressureTurbine, lambdaOut, func(node constructive.TurbineNode) float64 {
+		etaMiddlePressureTurbine, lambdaOut,
+		func(node constructive.TurbineNode) float64 {
 			return dgMiddlePressureTurbine
-		}, etaMMiddleCascade, precision,
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		etaMMiddleCascade, precision,
 	)
 	var gasGenerator = compose.NewGasGeneratorNode(
 		etaHighPressureComp, 1/piCompFactor, fuel.GetCH4(),
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
-		etaCompTurbine, lambdaOut, func(node constructive.TurbineNode) float64 {
+		etaCompTurbine, lambdaOut,
+		func(node constructive.TurbineNode) float64 {
 			return dgHighPressureTurbine
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
 		},
 		etaM, precision,
 	)
@@ -72,9 +87,17 @@ func GetInitedThreeShaftsCoolingScheme() schemes.ThreeShaftsCoolerScheme {
 	var middlePressureTurbinePipe = constructive.NewPressureLossNode(middlePressureTurbinePipeSigma)
 	var freeTurbineBlock = compose.NewFreeTurbineBlock(
 		pAtm,
-		etaFreeTurbine, lambdaOut, precision, func(node constructive.TurbineNode) float64 {
+		etaFreeTurbine, lambdaOut, precision,
+		func(node constructive.TurbineNode) float64 {
 			return dgFreeTurbine
-		}, freeTurbinePressureLossSigma,
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		freeTurbinePressureLossSigma,
 	)
 
 	return schemes.NewThreeShaftsCoolingScheme(

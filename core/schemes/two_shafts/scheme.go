@@ -41,17 +41,32 @@ func GetInitedTwoShaftsScheme() schemes.TwoShaftsScheme {
 	var gasGenerator = compose.NewGasGeneratorNode(
 		etaComp, piComp, fuel.GetCH4(),
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
-		etaCompTurbine, lambdaOut, func(node constructive.TurbineNode) float64 {
-			return dgCompTurbine
+		etaCompTurbine, lambdaOut,
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
 		},
 		etaM, precision,
 	)
 	var compressorTurbinePipe = constructive.NewPressureLossNode(sigmaCompTurbinePipe)
 	var freeTurbineBlock = compose.NewFreeTurbineBlock(
 		pAtm,
-		etaFreeTurbine, lambdaOut, precision, func(node constructive.TurbineNode) float64 {
+		etaFreeTurbine, lambdaOut, precision,
+		func(node constructive.TurbineNode) float64 {
 			return dgFreeTurbine
-		}, freeTurbinePressureLossSigma,
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		freeTurbinePressureLossSigma,
 	)
 
 	return schemes.NewTwoShaftsScheme(gasSource, inletPressureDrop, gasGenerator, compressorTurbinePipe, freeTurbineBlock)
