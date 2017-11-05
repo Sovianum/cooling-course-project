@@ -4,7 +4,16 @@ import (
 	"text/template"
 	"fmt"
 	"math"
+	"github.com/Sovianum/turbocycle/common"
 )
+
+func GetTemplate(name, content string, funcMap template.FuncMap) (*template.Template, error) {
+	return template.
+	New(name).
+		Delims("<-<", ">->").
+		Funcs(funcMap).
+		Parse(content)
+}
 
 func GetFuncMap() template.FuncMap {
 	return template.FuncMap{
@@ -40,6 +49,12 @@ func GetFuncMap() template.FuncMap {
 		},
 		"Abs": func(value float64) float64 {
 			return math.Abs(value)
+		},
+		"Degree": func(value float64) float64 {
+			return common.ToDegrees(value)
+		},
+		"Radian": func(value float64) float64 {
+			return common.ToRadians(value)
 		},
 	}
 }
