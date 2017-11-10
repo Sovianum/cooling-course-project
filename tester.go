@@ -2,7 +2,6 @@ package main
 
 import (
 	"io/ioutil"
-	"text/template"
 
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"os"
@@ -16,23 +15,23 @@ const (
 )
 
 func main() {
+	testMain()
+}
+
+func testMain() {
 	var f, err = ioutil.ReadFile(filePath)
 	if err != nil {
 		panic(err)
 	}
 
 	var funcMap = templ2.GetFuncMap()
+	var templ, tErr = templ2.GetTemplate("mean", string(f), funcMap)
 
-	var templ, tErr = template.
-		New("cycle").
-		Delims("<-<", ">->").
-		Funcs(funcMap).
-		Parse(string(f))
 	if tErr != nil {
 		panic(tErr)
 	}
 
-	var data = getDf()
+	var data = getCycleDf()
 	//err = templ.Execute(ioutil.Discard, data)
 	err = templ.Execute(os.Stdout, data)
 	if err != nil {
@@ -40,7 +39,7 @@ func main() {
 	}
 }
 
-func getDf() *dataframes.ThreeShaftsDF {
+func getCycleDf() *dataframes.ThreeShaftsDF {
 	var scheme = three_shafts.GetInitedThreeShaftsScheme()
 	var pi = 10.
 	var piFactor = 0.5

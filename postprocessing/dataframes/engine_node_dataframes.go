@@ -164,7 +164,7 @@ func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
 	var inletGas = inletGasState.Gas
 	var outletGas = outletGasState.Gas
 
-	return BurnerDF{
+	var df = BurnerDF{
 		Tg:              node.TStagOut(),
 		Eta:             node.Eta(),
 		Alpha:           node.Alpha(),
@@ -182,6 +182,13 @@ func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
 		GasData0:      NewGasDF(inletGasState.PStag, t0, outletGas),
 		GasDataOutlet: NewGasDF(outletGasState.PStag, outletGasState.TStag, outletGasState.Gas),
 	}
+
+	df.A = df.GasDataOutlet.Cp * df.Tg - df.AirDataInlet.Cp * inletGasState.TStag
+	df.B = (df.GasData0.Cp - df.AirData0.Cp) * t0
+	df.C = df.GasDataOutlet.Cp * df.Tg - df.GasData0.Cp * t0
+	df.D = df.Fuel.C * (node.TFuel() - t0)
+
+	return df
 }
 
 type BurnerDF struct {
@@ -190,6 +197,11 @@ type BurnerDF struct {
 	Alpha           float64 `json:"alpha"`
 	FuelMassRateRel float64 `json:"fuel_mass_rate_rel"`
 	Sigma           float64 `json:"sigma"`
+
+	A float64
+	B float64
+	C float64
+	D float64
 
 	Fuel FuelDF `json:"fuel"`
 

@@ -19,6 +19,10 @@ const (
 )
 
 func main() {
+	saveData()
+}
+
+func saveData() {
 	if err := saveThreeShaftsSchemeData(
 		three_shafts.GetInitedThreeShaftsScheme(),
 		8, 0.1, 120,

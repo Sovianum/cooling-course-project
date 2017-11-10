@@ -2,21 +2,26 @@
 Для данного проекта выбрана одноступенчатая турбина.
 Зададим параметры, необходимые для поступенчатого расчета турбины:
 
-% \begin{center}
-% 	\begin{tabular}{|p{7cm}|c|c|c|}
-% 		\hline
-% 		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
-% 			Реактивность ступени & $\rho$ & - & \\ \hline
-% 			Радиальный зазор & $\delta_r$ & - & $<DeltaR>$ \\ \hline
-% 			Относительная длина лопатки статора & $\left( \frac{l}{D} \right)_1$ & - & $<StatorLRel>$ \\ \hline
-% 			Удлинение лопатки статора & $\left( \frac{l}{b_a} \right)_{СА}$ & - & $<StatorElongation>$ \\ \hline
-% 			Удлинение лопатки ротора & $\left( \frac{l}{b_a} \right)_{РК}$ & - & $<RotorElongation>$ \\ \hline
-% 			Относительная ширина зазора между лопатками ротора и лопатками статора & $\left( \frac{\delta}{b_a} \right)_{СА}$ & - & $<StatorDeltaRel>$ \\ \hline
-% 			Угол раскрытия на втулке & $\gamma_{вт}$ & \degree & $<GammaIn>$ \\ \hline
-% 			Угол раскрытия на периферии & $\gamma_{пер}$ & \degree & $<GammaOut>$ \\ \hline
+\begin{center}
+	\begin{longtable}{|p{4cm}|c|c|c|}
+		\hline
+		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+			Реактивность ступени & $\rho$ & - & <-<.Reactivity | Round1>->  \\ \hline
+			Радиальный зазор & $\delta_r$ & м & $<-<.DeltaR | MultiplyE3 | Round2>-> \cdot 10^{-3}$ \\ \hline
+			Относительная длина лопатки статора & $\left( \frac{l}{D} \right)_1$ & - & $<-<.StatorGeom.LRelOut | Round2>->$ \\ \hline
+			Удлинение лопатки статора & $\left( \frac{l}{b_a} \right)_{СА}$ & - & $<-<.StatorGeom.Elongation | Round2>->$ \\ \hline
+			Удлинение лопатки ротора & $\left( \frac{l}{b_a} \right)_{РК}$ & - & $<-<.RotorGeom.Elongation | Round2>->$ \\ \hline
+			Относительная ширина зазора между лопатками ротора и лопатками статора & $\left( \frac{\delta}{b_a} \right)_{СА}$ & - & $<-<.StatorGeom.DeltaRel | Round2>->$ \\ \hline
+			Угол раскрытия на втулке & $\gamma_{в}$ & \degree & $<-<.StatorGeom.GammaIn | Abs | Degree | Round1>->$ \\ \hline
+			Угол раскрытия на периферии & $\gamma_{п}$ & \degree & $<-<.StatorGeom.GammaOut | Abs | Degree | Round1>->$ \\ \hline
+			Удельная работа турбины & $H_т$ & Дж/кг & $<-<.Ht | DivideE6 | Round3>-> \cdot 10^6$ \\ \hline
+			Коэффициент скорости статора & $\phi$ & - & <-<.Phi | Round2>-> \\ \hline
+			Коэффициент скорости ротора & $\psi$ & - & <-<.Psi | Round2>-> \\ \hline
+			Направление скорости на выходе из СА & $\alpha_1$ & $\degree$ & <-<.InletTriangle.Alpha | Degree | Round1>-> \\ \hline 
+	\end{longtable}
+\end{center}
 
-% 	\end{tabular}
-% \end{center}
+\clearpage
 
 \begin{enumerate}
 	\item Определим теплоперепад на сопловом аппарате:
@@ -97,13 +102,15 @@
 				\pi \cdot <-<.RotorGeom.DMeanIn | Round3>-> \cdot <-<.RPM | Round1>->
 			}{60} = <-<.InletTriangle.U | Round1>-> \/\ м/с$$
 	\item Определим относительную скорость на входе в РК:
-		$$w_1 = \sqrt{c_1^2 + u_1^2 - 2 c_1 u_1 \cos \alpha_1} =
-			\sqrt{
+		$$w_1 = \sqrt{c_1^2 + u_1^2 - 2 c_1 u_1 \cos \alpha_1} =$$
+		$$
+			=\sqrt{
 				{<-<.InletTriangle.C | Round1>->}^2 + 
 				{<-<.InletTriangle.U | Round1>->}^2 - 
 				2 \cdot <-<.InletTriangle.C | Round1>-> \cdot <-<.InletTriangle.U | Round1>-> \cdot 
 				\cos <-<.InletTriangle.Alpha | Degree | Round1>-> \degree
-			} = <-<.InletTriangle.W>-> \/\ м/с$$
+			} = <-<.InletTriangle.W | Round1>-> \/\ м/с
+		$$
 	\item Определим температуру торможения в относительном движении на входе в РК:
 		$$T_{w1} = T_1 + \frac{w_1^2}{2c_{p г}} = 
 			<-<.T1 | Round1>-> + 
@@ -132,7 +139,6 @@
 	 		}{
 	 			<-<.T1Prime | Round1>->
 	 		} = <-<.Hr | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг$$
-
 	\item Определим расстояние в осевом направлении между выходными кромками лопаток СА и выходными кромками лопаток РК:
 		$$x = \frac{
 		 	\frac{\delta_a}{ \left( \frac{l}{b_a} \right)_1 }	+
@@ -154,7 +160,7 @@
 		 	} 
 		}{
 			1 - \frac{
-				\tan <-<.StatorGeom.GammaOut | Degree | Round1>-> + \tan <-<.StatorGeom.GammaIn | Degree | Round1>->
+				\tan <-<.StatorGeom.GammaOut | Degree | Round1>-> \degree + \tan <-<.StatorGeom.GammaIn | Abs | Degree | Round1>-> \degree
 			}{
 				2 \cdot <-<.RotorGeom.Elongation | Round2>->
 			}
@@ -162,24 +168,27 @@
 			<-<.X | Round3>-> \/\ м
 		$$
 	 \item Определим средний диаметра на выходе из РК:
-		 $$D_2 = D_1 + \frac{\tan \gamma_1 - \tan \gamma_2}{2} x =
+		 $$D_2 = D_1 + \frac{\tan \gamma_п - \tan \gamma_в}{2} x =
 	   		<-<.StatorGeom.DMeanOut | Round3>-> + 
 	   		\frac{
-	   			\tan <-<.StatorGeom.GammaIn | Degree | Round1>-> \degree - 
-	   			\tan <-<.StatorGeom.GammaOut | Degree | Round1>-> \degree
+	   			\tan <-<.StatorGeom.GammaOut | Abs | Degree | Round1>-> \degree - 
+	   			\tan <-<.StatorGeom.GammaIn | Degree | Round1>-> \degree
 	   		}{2} \cdot <-<.X | Round3>-> =
    		<-<.RotorGeom.DMeanOut | Round3>-> \/\ м$$
 	 \item Определим длину лопатки на выходе из РК:
 		 $$l_2 = 
 		 	D_1 \left( \frac{l}{D} \right)_1 + 
-		 	\frac{\tan \gamma_1 + \tan \gamma_2}{2} x =
-		 	<-<.StatorGeom.DMeanOut | Round3>-> \cdot 
-		 	<-<.StatorGeom.Elongation | Round2>-> + 
+		 	\frac{\tan \gamma_п + \tan \gamma_в}{2} x =
+	 	$$
+	 	$$
+	 		= <-<.StatorGeom.DMeanOut | Round3>-> \cdot 
+		 	<-<.StatorGeom.LRelOut | Round2>-> + 
 		 	\frac{
-		 		\tan <-<.StatorGeom.GammaIn | Degree | Round1>-> \degree + 
-		 		\tan <-<.StatorGeom.GammaOut | Degree | Round1>-> \degree
+		 		\tan <-<.StatorGeom.GammaOut | Abs | Degree | Round1>-> \degree + 
+		 		\tan <-<.StatorGeom.GammaIn | Degree | Round1>-> \degree
 		 	}{2} \cdot <-<.X | Round3>-> =
-		 		<-<.RotorGeom.LOut | Round3>-> \/\ м$$
+		 		<-<.RotorGeom.LOut | Round3>-> \/\ м
+	 	$$
 	 \item Определим относительную длину лопаток на выходе из РК:
 		 $$\left( \frac{l}{D} \right)_2 = \frac{l_2}{D_2} = 
 		 	\frac{
@@ -187,7 +196,6 @@
 		 	}{
 		 		<-<.RotorGeom.DMeanOut | Round3>->
 		 	} = <-<.RotorGeom.LRelOut | Round2>->$$
-
 	 \item Определим окружную скорость на среднем диаметре на выходе из РК:
 		 $$u_2 = \frac{\pi D_2 n}{60} = 
 		 	\frac{
@@ -196,33 +204,39 @@
 		 		\cdot <-<.RPM | Round1>->
 		 	}{60} = <-<.OutletTriangle.U | Round1>-> \/\ м/с$$
 	 \item Определим адиабатическую относительную скорость истечения газа из РК:
-	 	$$w_{2 ад} = \sqrt{w_1^2 + 2H_л + \left( u_2^2 - u_1^2 \right)} =
-	 		\sqrt{
+	 	$$w_{2 ад} = \sqrt{w_1^2 + 2H_л + \left( u_2^2 - u_1^2 \right)} =$$
+	 	$$
+	 		= \sqrt{
 	 			{<-<.InletTriangle.W | Round1>->}^2 + 
 	 			2 \cdot <-<.Hr | DivideE6 | Round3>-> \cdot 10^6 + 
 	 			\left( {<-<.OutletTriangle.U | Round1>->}^2 - {<-<.InletTriangle.U | Round1>->}^2 \right)
-	 		} = <-<.W2Ad | Round1>-> \/\ м/с$$
+	 		} = <-<.W2Ad | Round1>-> \/\ м/с
+	 	$$
 	 \item Определим относительную скорость истечения газа из РК:
 	 	$$w_2 = \psi w_{2 ад} =
 	 		<-<.Psi | Round2>-> \cdot <-<.W2Ad | Round1>-> = 
 	 		<-<.OutletTriangle.W | Round1>-> \/\ м/с$$
 	 \item Определим статическую температуру на выходе из РК:
-		 $$T_2 = T_1 + \frac{
-		 	\left(
-		 		w_1^2  - w_2^2
-		 	\right) + \left(
-		 		u_2^2 - u_1^2
-		 	\right)
-		 }{2 c_{p г}} =
-		 <-<.T1 | Round1>-> + \frac{
-		 	\left(
-		 		{<-<.InletTriangle.W | Round1>->}^2  - {<-<.OutletTriangle.W | Round1>->}^2 
-		 	\right) + 
-		 	\left( 
-		 		{<-<.InletTriangle.U | Round1>->}^2  - {<-<.OutletTriangle.U | Round1>->}^2
-		 	\right)
-		 }{2 \cdot <-<.RotorGas.CpMean | Round1>->} = 
-		 <-<.T2 | Round1>-> \/\ К$$
+		 $$
+			 T_2 = T_1 + \frac{
+			 	\left(
+			 		w_1^2  - w_2^2
+			 	\right) + \left(
+			 		u_2^2 - u_1^2
+			 	\right)
+			 }{2 c_{p г}} =
+		 $$
+		 $$
+		 	= <-<.T1 | Round1>-> + \frac{
+			 	\left(
+			 		{<-<.InletTriangle.W | Round1>->}^2  - {<-<.OutletTriangle.W | Round1>->}^2 
+			 	\right) + 
+			 	\left( 
+			 		{<-<.InletTriangle.U | Round1>->}^2  - {<-<.OutletTriangle.U | Round1>->}^2
+			 	\right)
+		 	}{2 \cdot <-<.RotorGas.CpMean | Round1>->} = 
+		 		<-<.T2 | Round1>-> \/\ К
+		 $$
 	 \item Определим статическую температуру при адиабатическом процессе в РК:
 		 $$T_2^\prime = T_1 + \frac{
 		 	\left(
@@ -232,15 +246,18 @@
 		 		u_2^2 - u_1^2
 		 	\right)
 		 }{2 c_{p г}} =
-		 <-<.T1 | Round1>-> + \frac{
-		 	\left(
-		 		{<-<.InletTriangle.W | Round1>->}^2  - {<-<.W2Ad | Round1>->}^2 
-		 	\right) + 
-		 	\left( 
-		 		{<-<.InletTriangle.U | Round1>->}^2  - {<-<.OutletTriangle.U | Round1>->}^2
-		 	\right)
-		 }{2 \cdot <-<.RotorGas.CpMean | Round1>->} = 
-		 <-<.T2Prime | Round1>-> \/\ К$$
+		$$
+		$$
+			= <-<.T1 | Round1>-> + \frac{
+			 	\left(
+			 		{<-<.InletTriangle.W | Round1>->}^2  - {<-<.W2Ad | Round1>->}^2 
+			 	\right) + 
+			 	\left( 
+			 		{<-<.InletTriangle.U | Round1>->}^2  - {<-<.OutletTriangle.U | Round1>->}^2
+			 	\right)
+			}{2 \cdot <-<.RotorGas.CpMean | Round1>->} = 
+			<-<.T2Prime | Round1>-> \/\ К
+		$$
 	 \item Определим давление на выходе из РК:
 	 	$$p_2 = p_1 
 	 		\left( 
@@ -269,7 +286,7 @@
 	 			}{
 	 				<-<.RotorGas.KMean | Round2>-> - 1
 	 			}
-	 		} = <-<.P2 | DivideE6 | Round1>-> \/\ МПа$$
+	 		} = <-<.P2 | DivideE6 | Round3>-> \/\ МПа$$
 	 \item Определим угол в относительном движении на выходе из РК:
 	 	$$\beta_2 = \arcsin\frac{c_{2a}}{w_2} = 
 	 	\arcsin\frac{
@@ -306,16 +323,16 @@
 	 		} = <-<.Pi | Round2>-> $$
 	 \item Определим осевую составляющую скорости газа за турбиной:
 	 	$$c_{2a} = c_2 \sin \alpha_2 = 
-	 		<-<.OutletTriangle.C | Round1>-> 
-	 		\sin <-<.OutletTriangle.Alpha | Degree | Round1>-> = 
+	 		<-<.OutletTriangle.C | Round1>-> \cdot
+	 		\sin <-<.OutletTriangle.Alpha | Degree | Round1>-> \degree = 
 	 		<-<.OutletTriangle.CA | Round1>-> \/\ м/с$$
 	 \item Опрдеелим плотность газа за турбиной:
-	 	$$\rho_2 = \frac{G}{c_2a \pi D_2 l_2} = 
+	 	$$\rho_2 = \frac{G}{\pi \cdot c_{2a} \cdot D_2 \cdot l_2} = 
 	 	\frac{
 	 		<-<.MassRate | Round1>->
 	 	}{
-	 		<-<.OutletTriangle.CA | Round1>-> \cdot 
 	 		\pi \cdot 
+	 		<-<.OutletTriangle.CA | Round1>-> \cdot 
 	 		<-<.RotorGeom.DMeanOut | Round3>-> \cdot 
 	 		<-<.RotorGeom.LOut | Round3>->
 	 	} = <-<.Rho2 | Round2>-> \/\ кг/м^3$$
@@ -334,11 +351,14 @@
 	 \item Определим удельные потери на статоре:
 		 $$h_c = \left( \frac{1}{\phi^2} - 1 \right) \frac{c_1^2}{2} =
 		 \left( 
-		 	\frac{1}{
-		 		{<-<.Phi | Round2>-> }^2} - 1 
-		 	\right) \frac{
-		 		{<-<.InletTriangle.C | Round1>->}^2
-		 	}{2} = <-<.LossStator | DivideE3 | Round2>-> \cdot 10^3 \/\ Дж/кг$$
+		 	\frac{
+		 		1
+		 	}{
+		 		{<-<.Phi | Round2>-> }^2
+		 	} - 1 
+	 	\right) \frac{
+	 		{<-<.InletTriangle.C | Round1>->}^2
+	 	}{2} = <-<.LossStator | DivideE3 | Round2>-> \cdot 10^3 \/\ Дж/кг$$
 	 \item Определим удельные потери на роторе:
 	 	$$h_р = 
 	 		\left( 
@@ -373,14 +393,15 @@
 	 	\left[ 
 	 		1 + <-<.RotorGeom.LRelOut | Round2>-> 
 	 	\right] \frac{
-	 		<-<.DeltaR | Round2>->
+	 		<-<.DeltaR | MultiplyE3 | Round2>-> \cdot 10^{-3}
 	 	}{
 	 		<-<.RotorGeom.LOut | Round3>->
 	 	} \cdot <-<.Lu | DivideE3 | Round>-> \cdot 10^3 =
 	 	<-<.LossRadial | DivideE3 | Round2>-> \cdot 10^3 \/\ Дж/кг$$
 	 \item Определим удельные потери на вентиляцию:
-	 	$$h_{вент} = 1.07 D_2^2 \left( \frac{u_2}{100} \right)^3 \rho_2 \cdot 1000 =
-	 		1.07 \cdot {<-<.RotorGeom.DMeanOut | Round3>->}^2 
+	 	$$h_{вент} = 1.07 D_2^2 \left( \frac{u_2}{100} \right)^3 \rho_2 \cdot 1000 =$$
+	 	$$
+	 		=1.07 \cdot {<-<.RotorGeom.DMeanOut | Round3>->}^2 
 	 			\left( 
 		 			\frac{
 		 				<-<.OutletTriangle.U | Round1>->
@@ -389,17 +410,20 @@
 		 			} 
 	 			\right)^3 
 	 			\cdot <-<.Rho2 | Round2>-> 
-	 			\cdot 1000 = <-<.LossVent | DivideE3 | Round2>-> \cdot 10^3 \/\ Дж/кг$$
+	 			\cdot 1000 = <-<.LossVent | DivideE3 | Round2>-> \cdot 10^3 \/\ Дж/кг
+	 	$$
 	 \item Определим температуру торможения за РК:
-	 	$$T_2^* = T_2 + \frac{h_з + h_{вент} + h_{вых}}{c_{pг}} =
-	 	<-<.T2 | Round1>-> + 
-	 	\frac{
-	 		<-<.LossRadial | DivideE3 | Round2>-> \cdot 10^3 + 
-	 		<-<.LossVent | DivideE3 | Round2>-> \cdot 10^3 + 
-	 		<-<.LossOutflow | DivideE3 | Round2>-> \cdot 10^3
-	 	}{
-	 		<-<.RotorGas.CpMean | Round1>->
-	 	} = <-<.T2Stag | Round1>-> \/\ К$$
+	 	$$T_2^* = T_2 + \frac{h_з + h_{вент} + h_{вых}}{c_{pг}} =$$
+	 	$$
+	 		<-<.T2 | Round1>-> + 
+		 	\frac{
+		 		<-<.LossRadial | DivideE3 | Round2>-> \cdot 10^3 + 
+		 		<-<.LossVent | DivideE3 | Round2>-> \cdot 10^3 + 
+		 		<-<.LossOutflow | DivideE3 | Round2>-> \cdot 10^3
+		 	}{
+		 		<-<.RotorGas.CpMean | Round1>->
+		 	} = <-<.T2Stag | Round1>-> \/\ К
+	 	$$
 	 \item Определим давление торможения за РК:
 	 	$$p_2^* = p_2 
 	 		\left( 
@@ -464,7 +488,9 @@
 	 					k_г
 	 				} 
 	 		\right] =
-	 	<-<.Gas.CpMean | Round1>-> \cdot <-<.Tg | Round1>-> 
+	 	$$
+	 	$$
+	 		= <-<.Gas.CpMean | Round1>-> \cdot <-<.Tg | Round1>-> 
 	 		\left[ 1 - 
 	 			\left( 
 	 				\frac{
@@ -477,7 +503,8 @@
 	 			}{
 	 				<-<.RotorGas.KMean | Round2>->
 	 			} 
-	 		\right] = <-<.HtStag | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг $$
+	 		\right] = <-<.HtStag | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг 
+	 	$$
 	 \item Определим КПД турбины по параметрам торможения:
 	 $$\eta_т = \frac{L_т}{H_т^*} =
 	 	\frac{
