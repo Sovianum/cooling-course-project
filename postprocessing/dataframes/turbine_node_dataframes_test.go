@@ -2,7 +2,7 @@ package dataframes
 
 import (
 	"github.com/stretchr/testify/suite"
-	"github.com/Sovianum/turbocycle/helpers/gases"
+	"github.com/Sovianum/turbocycle/material/gases"
 	"math"
 	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
 	"github.com/Sovianum/turbocycle/impl/turbine/geometry"

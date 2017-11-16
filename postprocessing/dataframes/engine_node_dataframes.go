@@ -1,8 +1,8 @@
 package dataframes
 
 import (
-	"github.com/Sovianum/turbocycle/helpers/fuel"
-	"github.com/Sovianum/turbocycle/helpers/gases"
+	"github.com/Sovianum/turbocycle/material/fuel"
+	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/impl/engine/states"

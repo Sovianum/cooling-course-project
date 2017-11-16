@@ -1,0 +1,117 @@
+\subsection{Расчет профиля температур}
+
+\begin{enumerate}
+	\item Определим коэффициент теплоотдачи от газа на входной кромке лопатки $\alpha_{г.вх.кр.}$:
+		$$
+			\alpha_{г.вх.кр.} = 0.74 \frac{
+				\lambda_г
+			}{
+				d_{вх.кр.}
+			}\sqrt{
+				\frac{
+					G_г \cdot d_{вх.кр.}
+				}{
+					\pi \cdot D_{ср} \cdot l \cdot \sin \alpha_0 \cdot \mu_г
+				}
+			} =
+			0.74 \frac{
+				\lambda_г
+			}{
+				d_{вх.кр.}
+			}\sqrt{
+				\frac{
+					G_г \cdot d_{вх.кр.}
+				}{
+					\pi \cdot D_{ср} \cdot l \cdot \sin \alpha_0 \cdot \mu_г
+				}
+			} = Вт/\left( м^2 \cdot К\right)
+		$$
+	\item Определим коэффициент теплоотдачи на спинке на расстоянии $\frac{1}{3} b_a$ $\alpha_{г.вых.кр.}$:
+		$$
+			\alpha_{г.вых.кр.} = 1.5 \alpha_г = 1.5 \alpha_г = Вт/\left( м^2 \cdot К\right)
+		$$
+	\item Определим коэффициент теплоотдачи на остальной выпуклой части (спинке) $\alpha_{г.сп.}$:
+		$$
+			\alpha_{г.сп.} = 0.6 \alpha_г = 0.6 \alpha_г = Вт/\left( м^2 \cdot К\right)
+		$$
+	\item Определим коэффициет теплоотдачи на вокнутой части профиля (корыте) $\alpha_{г.кор.}$:
+		$$
+			\alpha_{г.кор.} = \alpha_г = \alpha_г = Вт/\left( м^2 \cdot К\right)
+		$$
+	\item Определим коэффициент теплоотдачи от стенки к охлаждающему воздуху \alpha_{в}:
+		$$
+			\alpha_{в} = 0.02 \cdot \frac{
+				\lambda_{в}
+			}{
+				2\delta
+			} \left( 
+				\frac{
+					G_в
+				}{
+					l
+				} \cdot \frac{
+					1
+				}{
+					\mu_{в}
+				}
+			\right)^{0.8} = 
+			0.02 \cdot \frac{
+				\lambda_{в}
+			}{
+				2\delta
+			} \left( 
+				\frac{
+					G_в
+				}{
+					l
+				} \cdot \frac{
+					1
+				}{
+					\mu_{в}
+				}
+			\right)^{0.8} = Вт/\left( м^2 \cdot К\right)
+		$$
+	\item Уравнение теплообмена между охлаждающим воздухом и газом имеет вид:
+		$$
+			\frac{d\theta}{dx} = \frac{
+				2
+			}{
+				G_в C_{p \/\ в}
+			} \frac{
+				k_x
+			}{
+				\alpha_г
+			} \left( 
+				T_г^* - \theta
+			\right),
+		$$
+	где $k_x$ - коэффициент теплопередачи, определяемый уравнением
+		$$
+			k_x = \frac{1}{
+				\frac{1}{
+					\alpha_г
+				} + 
+				\frac{1}{
+					\alpha_в
+				} + 
+				\frac{\Delta}{\lambda_м}
+			}
+		$$
+	Численно решая уравнение теплообмена, поулчим распрееделение параметров по контуру лопатки:
+		\begin{longtable}{|l|c|c|c|}
+		\hline
+		\textbf{$x, \/\ м$} & \textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & \textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & \textbf{$\theta_x, \/\ К$} & \textbf{$T_{ст.x}, \/\ К$} \\ \hline
+			<-<>-> 
+		\end{longtable}
+
+
+	% ParametricCoord  []float64
+	% X                []float64
+	% Y                []float64
+	% LengthCoord      []float64
+	% AlphaAir         []float64
+	% AirTemperature   []float64
+	% WallTemperature  []float64
+	% HeatTransferCoef []float64
+
+\end{enumerate}
