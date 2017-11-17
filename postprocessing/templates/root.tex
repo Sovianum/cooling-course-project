@@ -1,0 +1,87 @@
+\documentclass[14pt]{extarticle}
+\usepackage{mathtext}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[top=20mm, bottom=20mm, left=30mm, right=15mm]{geometry}
+\usepackage{color}
+\usepackage{gensymb}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{longtable}
+
+\usepackage{enumitem}
+\setlist[enumerate]{label*=\arabic*.}
+
+\usepackage{indentfirst}
+
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
+\renewcommand{\baselinestretch}{1.5}
+
+\graphicspath{ {/home/artem/Documents/University/Research/Report/images/} }
+
+\begin{document}
+\begin{titlepage}	% Титульник
+	\begin{center}
+	{ Федеральное государственное бюджетное образовательное учреждеие высшего профессионального образования \\}
+	\end{center}
+
+
+   \begin{minipage}{0.80\textwidth}
+		\begin{large}
+			\begin{center}
+				{
+		\textbf{<<Московский государственый технический университет \\ имени Н.Э. Баумана>> \\ (МГТУ им. Н.Э. Баумана) \\}
+   				}
+			\end{center}
+   		\end{large}
+	\end{minipage}
+
+   \begin{center}
+    \vspace{0.25cm}
+	\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+    ФАКУЛЬТЕТ "Энергомашиностроение"
+
+    КАФЕДРА Э-3 "Газотурбинные и нетрадиционные энергоустановки"
+    \vspace{1cm}
+
+
+    \begin{large}\textbf{КУРСОВАЯ НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА СТУДЕНТА}\end{large}
+
+	\end{center}
+    \textbf{на тему:} Применение нейронных сетей для моделирования подсеточных напряжений при использовании метода больших вихрей
+
+    \textbf{группа:} Э3-101
+
+    \begin{small}\textbf{Выполнил(а) студент(ка)} \makebox[9cm]{\hrulefill}  \textbf{А.Клюквин} \\
+    \centerline{(подпись, дата)}
+    \end{small}
+
+    \begin{small}\textbf{Руководитель} \makebox[11.8cm]{\hrulefill}   \textbf{С.Бурцев} \\
+    \centerline{(подпись, дата)}
+    \end{small}
+
+
+
+\vfill
+
+\begin{center}
+  Москва - 2017 г.
+\end{center}
+\end{titlepage}
+
+\input{val_list_template}
+\input{input_data}
+\input{cycle_calc}
+\input{mean_line_calc_template}
+\input{profiling}
+\input{cooling_calc}
+\input{cooling_calc2}
+
+\end{document}
