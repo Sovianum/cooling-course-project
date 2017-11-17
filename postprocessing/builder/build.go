@@ -12,7 +12,7 @@ func BuildLatex(rootDir, rootFileName string) error {
 	var cmd = exec.Command(
 		"bash",
 		"-c",
-		fmt.Sprintf("cd %s; pdflatex -synctex=1 -interaction=nonstopmode %s", rootDir, filePath),
+		fmt.Sprintf("cd %s && pdflatex -synctex=1 -interaction=nonstopmode %s", rootDir, filePath),
 	)
 	cmd.Stdout = os.Stdout
 	return cmd.Run()

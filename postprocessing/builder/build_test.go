@@ -1,14 +1,147 @@
 package builder
 
-//func TestBuildLatex(t *testing.T) {
-//	//cmd := exec.Command("bash", "-c", "echo stdout; echo 1>&2 stderr")
-//	//stdoutStderr, err := cmd.CombinedOutput()
-//	//if err != nil {
-//	//	log.Fatal(err)
-//	//}
-//	//fmt.Printf("%s\n", stdoutStderr)
-//	var rootDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/postprocessing/templates"
-//	var fileName = "temp.tex"
-//	var err = BuildLatex(rootDir, fileName)
-//	assert.Nil(t, err)
-//}
+import (
+	"testing"
+	"github.com/stretchr/testify/assert"
+	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
+	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
+	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
+	"github.com/stretchr/testify/suite"
+	"github.com/Sovianum/turbocycle/material/gases"
+	"math"
+	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/turbocycle/impl/engine/states"
+	states2 "github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/common"
+)
+
+const (
+	n             = 1e4
+	stageHeatDrop = 3e5
+	reactivity    = 0.5
+	phi           = 0.98
+	psi           = 0.98
+	airGapRel     = 0.001
+	precision     = 0.05
+
+	c0       = 50.
+	tg       = 1200.
+	pg       = 1e6
+	massRate = 100.
+
+	gammaIn  = -0.09
+	gammaOut = 0.09
+	baRel    = 4
+	lRelOut  = 0.15
+	deltaRel = 0.1
+
+	alpha = 14
+
+	meanLineTemplateFilePath = "../templates/mean_line_calc_template.tex"
+)
+
+type insertionInfo struct {
+	outputPath string
+	data interface{}
+}
+
+type BuildTestSuite struct {
+	suite.Suite
+	insertionMap map[string]insertionInfo
+}
+
+func (suite *BuildTestSuite) SetupTest() {
+	suite.insertionMap = getInsertionMap()
+}
+
+func (suite *BuildTestSuite) TestBuildLatex() {
+	var insertionMap = suite.insertionMap
+	for key, val := range insertionMap {
+		var inserter = templ.NewDataInserter(key, val.outputPath)
+		var err = inserter.Insert(val.data)
+		assert.Nil(suite.T(), err)
+	}
+	var rootDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
+	var fileName = "root.tex"
+	var err = BuildLatex(rootDir, fileName)
+	assert.Nil(suite.T(), err)
+}
+
+func TestStageNodeTestSuite(t *testing.T) {
+	suite.Run(t, new(BuildTestSuite))
+}
+
+func getInsertionMap() map[string]insertionInfo {
+	var templateDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/postprocessing/templates"
+	var outputDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
+
+	var getTemplateFile = func(name string) string {return templateDir + "/" + name}
+	var getOutputFile = func(name string) string {return outputDir + "/" + name}
+
+	var result = make(map[string]insertionInfo)
+
+	result[getTemplateFile("root.tex")] = insertionInfo{
+		outputPath:getOutputFile("root.tex"),
+	}
+	result[getTemplateFile("var_list_template.tex")] = insertionInfo{
+		outputPath:getOutputFile("var_list.tex"),
+	}
+	result[getTemplateFile("cycle_calc_template.tex")] = insertionInfo{
+		outputPath:getOutputFile("cycle_calc.tex"),
+		data: getCycleDf(),
+	}
+	result[getTemplateFile("mean_line_calc_template.tex")] = insertionInfo{
+		outputPath:getOutputFile("mean_line_calc.tex"),
+		data: getStageDf(),
+	}
+
+	return result
+}
+
+func getCycleDf() dataframes.ThreeShaftsDF {
+	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+	var pi = 10.
+	var piFactor = 0.5
+	var iterNum = 100
+	var power = 16e6
+
+	var generator = core.GetDoubleCompressorDataGenerator(scheme, power, 0.1, iterNum)
+	var _, err = generator(pi, piFactor)
+	if err != nil {
+		panic(err)
+	}
+	return dataframes.NewThreeShaftsDF(power, scheme)
+}
+
+func getStageDf() dataframes.StageDF {
+	var gen = geometry.NewStageGeometryGenerator(
+		lRelOut,
+		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut),
+		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut),
+	)
+
+	var stage = nodes.NewTurbineStageNode(
+		n, stageHeatDrop, reactivity, phi, psi, airGapRel, precision, gen,
+	)
+
+	stage.GasInput().SetState(states.NewGasPortState(gases.GetAir()))
+	stage.VelocityInput().SetState(states2.NewVelocityPortState(
+		states2.NewInletTriangle(0, c0, math.Pi/2),
+		states2.InletTriangleType,
+	))
+
+	stage.TemperatureInput().SetState(states.NewTemperaturePortState(tg))
+	stage.PressureInput().SetState(states.NewPressurePortState(pg))
+	stage.MassRateInput().SetState(states2.NewMassRatePortState(massRate))
+
+	stage.SetAlpha1FirstStage(common.ToRadians(alpha))
+
+	var err = stage.Process()
+	if err != nil {
+		panic(err)
+	}
+	var df, _ = dataframes.NewStageDF(stage)
+	return df
+}
