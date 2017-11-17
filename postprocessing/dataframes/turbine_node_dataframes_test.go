@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/suite"
 	"io/ioutil"
 	"math"
-	"os"
 	"testing"
 )
 
@@ -92,15 +91,10 @@ func (suite *StageDFTestSuite) TestTemplateSmoke() {
 		string(f),
 		funcMap,
 	)
-	if tErr != nil {
-		panic(tErr)
-	}
+	assert.Nil(suite.T(), tErr)
 
-	//err = templ.Execute(ioutil.Discard, data)
-	err = templ.Execute(os.Stdout, &suite.df)
-	if err != nil {
-		panic(err)
-	}
+	err = templ.Execute(ioutil.Discard, &suite.df)
+	assert.Nil(suite.T(), err)
 }
 
 func TestStageNodeTestSuite(t *testing.T) {

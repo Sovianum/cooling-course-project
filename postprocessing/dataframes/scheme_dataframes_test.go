@@ -6,7 +6,6 @@ import (
 	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/stretchr/testify/assert"
 	"encoding/json"
-	"os"
 	"io/ioutil"
 	templ2 "github.com/Sovianum/cooling-course-project/postprocessing/templ"
 )
@@ -29,8 +28,8 @@ func TestNewThreeShaftsDF_Smoke(t *testing.T) {
 	assert.Nil(t, err)
 
 	var df = NewThreeShaftsDF(power, scheme)
-	var b, _ = json.MarshalIndent(df, "", "    ")
-	os.Stdout.Write(b)
+	_, err = json.MarshalIndent(df, "", "    ")
+	assert.Nil(t, err)
 }
 
 func TestTemplateSmoke(t *testing.T) {
@@ -43,9 +42,7 @@ func TestTemplateSmoke(t *testing.T) {
 		string(f),
 		funcMap,
 	)
-	if tErr != nil {
-		panic(tErr)
-	}
+	assert.Nil(t, tErr)
 
 	var scheme = three_shafts.GetInitedThreeShaftsScheme()
 	var pi = 10.
@@ -54,13 +51,9 @@ func TestTemplateSmoke(t *testing.T) {
 
 	var generator = core.GetDoubleCompressorDataGenerator(scheme, power, relaxCoef, iterNum)
 	var _, err = generator(pi, piFactor)
-	if err != nil {
-		panic(err)
-	}
+	assert.Nil(t, err)
 	var df = NewThreeShaftsDF(power, scheme)
 
-	fileErr = templ.Execute(os.Stdout, &df)
-	if fileErr != nil {
-		panic(fileErr)
-	}
+	fileErr = templ.Execute(ioutil.Discard, &df)
+	assert.Nil(t, fileErr)
 }
