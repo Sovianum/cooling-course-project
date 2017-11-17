@@ -1,20 +1,20 @@
 package dataframes
 
 import (
-	"github.com/stretchr/testify/suite"
-	"github.com/Sovianum/turbocycle/material/gases"
-	"math"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/engine/states"
-	states2 "github.com/Sovianum/turbocycle/impl/turbine/states"
-	"testing"
 	"encoding/json"
-	"os"
-	"github.com/Sovianum/turbocycle/common"
-	"io/ioutil"
-	"github.com/stretchr/testify/assert"
 	templ2 "github.com/Sovianum/cooling-course-project/postprocessing/templ"
+	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/impl/engine/states"
+	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	states2 "github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
+	"io/ioutil"
+	"math"
+	"os"
+	"testing"
 )
 
 const (
@@ -26,26 +26,27 @@ const (
 	airGapRel     = 0.001
 	precision     = 0.05
 
-	c0 = 50.
-	tg = 1200.
-	pg = 1e6
+	c0       = 50.
+	tg       = 1200.
+	pg       = 1e6
 	massRate = 100.
 
-	gammaIn = -0.09
+	gammaIn  = -0.09
 	gammaOut = 0.09
-	baRel = 4
-	lRelOut = 0.15
+	baRel    = 4
+	lRelOut  = 0.15
 	deltaRel = 0.1
 
 	alpha = 14
-	filePath = "../templates/mean_line_calc_template.tex"
+
+	meanLineTemplateFilePath = "../templates/mean_line_calc_template.tex"
 )
 
 type StageDFTestSuite struct {
 	suite.Suite
 	node nodes.TurbineStageNode
-	gen geometry.StageGeometryGenerator
-	df StageDF
+	gen  geometry.StageGeometryGenerator
+	df   StageDF
 }
 
 func (suite *StageDFTestSuite) SetupTest() {
@@ -61,7 +62,7 @@ func (suite *StageDFTestSuite) SetupTest() {
 
 	suite.node.GasInput().SetState(states.NewGasPortState(gases.GetAir()))
 	suite.node.VelocityInput().SetState(states2.NewVelocityPortState(
-		states2.NewInletTriangle(0, c0, math.Pi / 2),
+		states2.NewInletTriangle(0, c0, math.Pi/2),
 		states2.InletTriangleType,
 	))
 
@@ -82,7 +83,7 @@ func (suite *StageDFTestSuite) TestSmoke() {
 }
 
 func (suite *StageDFTestSuite) TestTemplateSmoke() {
-	var f, err = ioutil.ReadFile(filePath)
+	var f, err = ioutil.ReadFile(meanLineTemplateFilePath)
 	assert.Nil(suite.T(), err)
 
 	var funcMap = templ2.GetFuncMap()
