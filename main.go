@@ -8,6 +8,9 @@ import (
 	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/cooling-course-project/core/midline"
+	"encoding/json"
 )
 
 const (
@@ -19,7 +22,22 @@ const (
 )
 
 func main() {
-	saveData()
+	//saveData()
+	var pack = getStage(3, 4).GetDataPack()
+	var b, err = json.MarshalIndent(pack, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+	os.Stdout.Write(b)
+}
+
+func getStage(lowPiStag, highPiStag float64) nodes.TurbineStageNode {
+	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+	scheme.LowPressureCompressor().SetPiStag(lowPiStag)
+	scheme.HighPressureCompressor().SetPiStag(highPiStag)
+	scheme.GetNetwork().Solve(relaxCoef, iterNum, 0.05)
+
+	return midline.GetInitedStageNode(scheme)
 }
 
 func saveData() {
