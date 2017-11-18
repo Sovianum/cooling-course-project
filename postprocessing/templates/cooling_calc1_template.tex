@@ -1,0 +1,120 @@
+\subsection{Расчет расхода охлаждающего воздуха}
+
+% Добавить исходные данные
+Исходные данные:
+\begin{center}
+	\begin{tabular}{|p{7cm}|c|c|c|}
+		\hline
+		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+		Температура газа & $T_г$ & К & <-<.Gas.Tg | Round1>-> \\ \hline
+		Расход газа & $G_г$ & кг/c & <-<.Gas.GasMassRate | Round1>-> \\ \hline
+		Длина лопатки & $l$ & м & <-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
+		Средний диаметр & $D_{ср}$ & м & <-<.Geom.DMean | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
+		Осевая проекция хорды & $b_a$ & м & <-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
+		Поверхность лопатки, соприкасающаяся с газом & $f$ & $м^2$ & <-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
+		Периметр профиля & $u$ & $м$ & <-<.Geom.Perimeter | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
+		Толщина стенки & $\Delta$ & $м$ & <-<.Geom.WallThk | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
+		Диаметр входной кромки & $d_{вх.кр.}$ & $м$ & <-<.Geom.DInlet | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
+		Средняя температура наружной поверхности лопатки & $T_{ст}$ & $К$ & <-<.Metal.TWallOuter | Round1>-> \\ \hline
+	\end{tabular}
+\end{center}
+\end{enumerate}
+
+ \begin{enumerate}
+ 	\item Определим число $Re$ для газа ($\mu_г = Па \cdot с$):
+ 		$$
+ 			Re_г = \frac{
+ 				\rho_г \cdot c_a \cdot b_a
+ 			}{
+ 				\mu_г
+ 			} = \frac{
+ 				<-<.Gas.Tg | Round1>-> \cdot <-<.Gas.CaGas | Round1>-> \cdot <-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}
+ 			}{
+ 				<-<.Gas.MuGas | MultiplyE6 | Round2>-> \cdot 10^{-6} 
+ 			} = <-<.Gas.ReGas | DivideE3 | Round>-> \cdot 10^3
+ 		$$
+ 	\item Определим число $Nu$ для газа:
+ 		$$
+ 			Nu = A \cdot Re_г^{0.68} = <-<.Gas.NuCoef>-> \cdot {<-<.Gas.ReGas | DivideE3 | Round>-> \cdot 10^3}^{0.68} = <-<.Gas.NuGas | Round>->
+ 		$$
+ 	\item Определим средний коэффициент теплоотдачи от газа к лопатке:
+ 		$$
+ 			\alpha_г = Nu \frac{\lambda_г}{b_a} = <-<.Gas.NuGas | Round>-> \cdot \frac{<-<.Gas.LambdaGas>->}{<-<.Geom.ChordProjection>->} = <-<.Gas.AlphaGas>-> \/\ Вт / \left( м^2 \cdot К \right)
+ 		$$
+ 	\item Определим тепловой поток в сопловую лопатку:
+ 		$$
+ 			Q_л = \alpha_г u l \left( T_г - T_{ст} \right) = <-<.Gas.AlphaGas>-> \cdot <-<.Geom.Perimeter>-> \cdot <-<.Geom.BladeLength>-> \cdot \left( <-<.Gas.Tg | Round1>-> - <-<.Metal.TWallOuter>-> \right) = <-<.Gas.Heat | DivideE3>-> \cdot 10^3 \/\ Вт 
+ 		$$
+ 	\item Определим падение температуры в тенке лопатки:
+ 		$$
+ 			\Delta T_{ст} = \frac{
+ 				Q_л \cdot \Delta
+ 			}{
+ 				f \cdot \lambda_м
+ 			} = \frac{
+ 				<-<.Gas.Heat | DivideE3>-> \cdot 10^3 \cdot <-<.Geom.WallThk | MultiplyE3>-> \cdot 10^{-3}
+ 			}{
+ 				<-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot <-<.Metal.LambdaM | Round1>->
+ 			} = <-<.Metal.DTWall | Round1>-> \/\ К 
+ 		$$
+ 		($
+ 			\lambda_м = <-<.Metal.LambdaM | Round1>-> \/\ Вт / \left( м \cdot К\right)
+ 		$ для СПЛАВА при $
+ 			T_{ср} = T_{ст} - \frac{\Delta T_{ст}}{2} = <-<.Metal.TWallOuter | Round1>-> - \frac{<-<.Metal.DTWall | Round1>->}{2} = <-<.Metal.TWallMean | Round1>-> \/\ К
+ 		$)
+ 	\item Определим температуру внутренней поверхности стенки лопатки:
+ 		$$
+ 			T_{вн} = T_{ст} - \Delta T_{ст} = <-<.Metal.TWallOuter | Round1>-> - <-<.Metal.DTWall | Round1>-> = <-<.Metal.TWallInner | Round1>-> К
+ 		$$
+ 	\item Задаваясь рядом значений расходов охлаждающего воздуха, определим зависимость зазора в лопатке $\delta$ от расхода охлаждающего воздуха:
+ 		$$
+ 			\delta = \varepsilon G_в^{0.8} \left( 
+ 				D - \frac{
+ 					f
+ 				}{
+ 					7200 \cdot G_в \cdot c_p
+ 				}
+ 			\right),
+ 		$$
+ 		где 
+		$$
+			D = \frac{
+				1
+			}{
+				\alpha_г
+			} \cdot \frac {
+				T_г - \theta_0
+			}{
+				T_г - T_{ст}
+			} - \frac{
+				1
+			}{
+				\alpha_г
+			} - \frac{
+				\Delta
+			}{
+				\lambda_м
+			};
+		$$
+		$$
+			\epsilon = 0.01 \cdot \lambda \left( 
+				\frac{
+					1
+				}{
+					l \mu
+				}
+			\right)^{0.8}
+		$$
+
+ 	Результаты расчета сведены в таблицу:
+		\begin{center}
+			\begin{tabular}{|p|c|c|c|}
+				\hline
+				\textbf{№} & \textbf{$G_в, \/\ кг/c$} & \textbf{$D$} & \textbf{$\epsilon$} & \textbf{\delta} \\\hline
+				<-<range .Gas.TableRows>->
+					<-<.Id>-> & <-<.AirMassRate | Round1>-> & <-<.DCoef | MultiplyE3 | Round3>-> \cdot 10^{-3} & <-<.EpsCoef | Round2>-> & <-<.AirGap | MultiplyE3 | Round1>-> \cdot 10^-3 \\\hline
+				<-<end>->
+			\end{tabular}
+		\end{center}
+
+ \end{enumerate}
