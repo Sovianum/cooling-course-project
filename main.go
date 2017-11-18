@@ -11,6 +11,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"os/exec"
 	"os"
+	"github.com/Sovianum/cooling-course-project/postprocessing/builder"
 )
 
 const (
@@ -32,7 +33,7 @@ const (
 
 	templatesDir = "postprocessing/templates"
 
-	buildDir     = "build"
+	buildDir     = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
 	dataDir      = "build/data/"
 	imgDir       = "build/img"
 
@@ -54,8 +55,6 @@ const (
 	cooling2Template = "cooling_calc2_template.tex"
 	cooling2Out      = "cooling_calc2.tex"
 
-	plotterPath = "plot_all.py"
-
 	cycleFileName = "3n.csv"
 )
 
@@ -68,7 +67,7 @@ func main() {
 	var highPiStag = 1 / piFactor
 	var scheme = getScheme(lowPiStag, highPiStag)
 
-	saveSchemeData(scheme)
+	//saveSchemeData(scheme)
 	solveParticularScheme(scheme, lowPiStag, highPiStag)
 	saveCycleTemplate(scheme)
 
@@ -83,6 +82,25 @@ func main() {
 	saveTitleTemplate()
 
 	buildPlots()
+	buildReport()
+	//cleanup()
+}
+
+func cleanup() {
+	var cmd = exec.Command(
+		"bash",
+		"-c",
+		fmt.Sprintf("cd %s && rm !(*.pdf)", buildDir),
+	)
+	if err := cmd.Run(); err != nil {
+		panic(err)
+	}
+}
+
+func buildReport() {
+	if err := builder.BuildLatex(buildDir, rootOut); err != nil {
+		panic(err)
+	}
 }
 
 func buildPlots() {
