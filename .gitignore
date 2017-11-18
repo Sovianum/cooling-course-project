@@ -2,3 +2,4 @@ references/
 .idea
 *.swp
 /build/
+postprocessing/python/__pycache__/

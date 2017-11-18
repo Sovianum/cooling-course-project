@@ -9,6 +9,8 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
 	"github.com/Sovianum/turbocycle/library/schemes"
+	"os/exec"
+	"os"
 )
 
 const (
@@ -17,9 +19,9 @@ const (
 	iterNum   = 100
 	precision = 0.05
 
-	startPi   = 8
+	startPi   = 7
 	piStep    = 0.1
-	piStepNum = 150
+	piStepNum = 200
 
 	startPiFactor   = 0.15
 	piFactorStep    = 0.1
@@ -28,10 +30,11 @@ const (
 	totalPiStag = 12
 	piFactor    = 0.5
 
-	dataDir = "postprocessing/notebooks/cycle/data/"
-
 	templatesDir = "postprocessing/templates"
+
 	buildDir     = "build"
+	dataDir      = "build/data/"
+	imgDir       = "build/img"
 
 	cycleTemplate = "cycle_calc_template.tex"
 	cycleOut      = "cycle_calc.tex"
@@ -50,14 +53,22 @@ const (
 
 	cooling2Template = "cooling_calc2_template.tex"
 	cooling2Out      = "cooling_calc2.tex"
+
+	plotterPath = "plot_all.py"
+
+	cycleFileName = "3n.csv"
 )
 
 func main() {
+	io.PrepareDirectories(
+		buildDir, dataDir, imgDir,
+	)
+
 	var lowPiStag = totalPiStag * piFactor
 	var highPiStag = 1 / piFactor
 	var scheme = getScheme(lowPiStag, highPiStag)
 
-	//saveSchemeData(scheme)
+	saveSchemeData(scheme)
 	solveParticularScheme(scheme, lowPiStag, highPiStag)
 	saveCycleTemplate(scheme)
 
@@ -70,6 +81,22 @@ func main() {
 
 	saveRootTemplate()
 	saveTitleTemplate()
+
+	buildPlots()
+}
+
+func buildPlots() {
+	var arguments = []string{
+		imgDir,
+		dataDir + "/" + cycleFileName,
+	}
+
+	var cmd = exec.Command("./plot_all.py", arguments...)
+	cmd.Stdout = os.Stdout
+	var err = cmd.Run()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func saveRootTemplate() {
