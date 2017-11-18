@@ -47,6 +47,9 @@ const (
 
 	cooling1Template = "cooling_calc1_template.tex"
 	cooling1Out      = "cooling_calc1.tex"
+
+	cooling2Template = "cooling_calc2_template.tex"
+	cooling2Out      = "cooling_calc2.tex"
 )
 
 func main() {
@@ -63,6 +66,7 @@ func main() {
 	saveStageTemplate(stage)
 
 	saveCooling1Template()
+	saveCooling2Template()
 
 	saveRootTemplate()
 	saveTitleTemplate()
@@ -88,14 +92,49 @@ func saveTitleTemplate() {
 	}
 }
 
+func saveCooling2Template() {
+	var geomDF = dataframes.TProfileGeomDF{}
+	var gasDF = dataframes.TProfileGasDF{
+		LengthPSArr:   []float64{1, 1, 1},
+		AlphaAirPSArr: []float64{1, 1, 1},
+		AlphaGasPSArr: []float64{1, 1, 1},
+		TAirPSArr:     []float64{1, 1, 1},
+
+		LengthSSArr:   []float64{1, 1, 1},
+		AlphaAirSSArr: []float64{1, 1, 1},
+		AlphaGasSSArr: []float64{1, 1, 1},
+		TAirSSArr:     []float64{1, 1, 1},
+	}
+	var calcDF = dataframes.TProfileCalcDF{
+		Geom: geomDF,
+		Gas:  gasDF,
+	}
+
+	var inserter = templ.NewDataInserter(
+		templatesDir+"/"+cooling2Template,
+		buildDir+"/"+cooling2Out,
+	)
+
+	//var df, err = gapCalcDF, nil
+	var df = calcDF
+	var err error = nil
+	if err != nil {
+		panic(err)
+	}
+	if err := inserter.Insert(df); err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+}
+
 func saveCooling1Template() {
 	var geomDF = dataframes.GapGeometryDF{}
 	var metalDF = dataframes.GapMetalDF{}
 	var gasDF = dataframes.GapGasDF{
-		AirMassRate:[]float64{1, 1, 1},
-		DCoef:[]float64{1, 1, 1},
-		EpsCoef:[]float64{1, 1, 1},
-		AirGap:[]float64{1, 1, 1},
+		AirMassRate: []float64{1, 1, 1},
+		DCoef:       []float64{1, 1, 1},
+		EpsCoef:     []float64{1, 1, 1},
+		AirGap:      []float64{1, 1, 1},
 	}
 	var gapCalcDF = dataframes.GapCalcDF{
 		geomDF, metalDF, gasDF,

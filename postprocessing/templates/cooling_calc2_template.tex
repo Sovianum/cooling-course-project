@@ -15,28 +15,29 @@
 				}
 			} =
 			0.74 \frac{
-				\lambda_г
+				<-<.Gas.LambdaGas | Round1>->
 			}{
-				d_{вх.кр.}
+				<-<.Geom.DInlet | MultiplyE3 | Round2>-> \cdot 10^{-3}
 			}\sqrt{
 				\frac{
-					G_г \cdot d_{вх.кр.}
+					<-<.Gas.MassRateGas | Round1>-> \cdot <-<.Geom.DInlet | MultiplyE3 | Round2>-> \cdot 10^{-3}
 				}{
-					\pi \cdot D_{ср} \cdot l \cdot \sin \alpha_0 \cdot \mu_г
+					\pi \cdot <-<.Geom.DMean | Round3>-> \cdot l \cdot \sin <-<.Gas.Alpha0 | Degree | Round1>-> \cdot <-<.Gas.MuGas | MultiplyE6 | Round3>-> \cdot 10^{-6}
 				}
-			} = Вт/\left( м^2 \cdot К\right)
+			} = <-<.Gas.AlphaGasInlet | Round1>-> \/\ Вт/\left( м^2 \cdot К\right)
 		$$
 	\item Определим коэффициент теплоотдачи на спинке на расстоянии $\frac{1}{3} b_a$ $\alpha_{г.вых.кр.}$:
 		$$
-			\alpha_{г.вых.кр.} = 1.5 \alpha_г = 1.5 \alpha_г = Вт/\left( м^2 \cdot К\right)
+			\alpha_{г.вых.кр.} = 1.5 \alpha_г = 
+			1.5 \cdot <-<.Gas.AlphaMean | Round1>-> = <-<.Gas.AlphaGasOutlet | Round1>-> Вт/\left( м^2 \cdot К\right)
 		$$
 	\item Определим коэффициент теплоотдачи на остальной выпуклой части (спинке) $\alpha_{г.сп.}$:
 		$$
-			\alpha_{г.сп.} = 0.6 \alpha_г = 0.6 \alpha_г = Вт/\left( м^2 \cdot К\right)
+			\alpha_{г.сп.} = 0.6 \alpha_г = 0.6 \cdot <-<.Gas.AlphaMean | Round1>-> = <-<.Gas.AlphaGasSS | Round1>-> Вт/\left( м^2 \cdot К\right)
 		$$
 	\item Определим коэффициет теплоотдачи на вокнутой части профиля (корыте) $\alpha_{г.кор.}$:
 		$$
-			\alpha_{г.кор.} = \alpha_г = \alpha_г = Вт/\left( м^2 \cdot К\right)
+			\alpha_{г.кор.} = \alpha_г = <-<.Gas.AlphaMean | Round1>-> = <-<.Gas.AlphaGasPS | Round1>-> Вт/\left( м^2 \cdot К\right)
 		$$
 	\item Определим коэффициент теплоотдачи от стенки к охлаждающему воздуху \alpha_{в}:
 		$$
@@ -56,20 +57,20 @@
 				}
 			\right)^{0.8} = 
 			0.02 \cdot \frac{
-				\lambda_{в}
+				<-<.Gas.LambdaAir | Round1>->
 			}{
 				2\delta
 			} \left( 
 				\frac{
-					G_в
+					<-<.Gas.MassRateAir | Round1>->
 				}{
 					l
 				} \cdot \frac{
 					1
 				}{
-					\mu_{в}
+					<-<.Gas.MuGas | MultiplyE6 | Round3>-> \cdot 10^{-6}
 				}
-			\right)^{0.8} = Вт/\left( м^2 \cdot К\right)
+			\right)^{0.8} = <-<.Gas.AlphaAir | Round1>-> \/\ Вт/\left( м^2 \cdot К\right)
 		$$
 	\item Уравнение теплообмена между охлаждающим воздухом и газом имеет вид:
 		$$
@@ -97,21 +98,43 @@
 				\frac{\Delta}{\lambda_м}
 			}
 		$$
-	Численно решая уравнение теплообмена, поулчим распрееделение параметров по контуру лопатки:
-		\begin{longtable}{|l|c|c|c|}
+	Численно решая уравнение теплообмена, поулчим распределение параметров по спинке и корыту.
+	Распределение параметров газа по спинке:
+		\begin{longtable}{|c|c|c|c|c|}
 		\hline
-		\textbf{$x, \/\ м$} & \textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & \textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & \textbf{$\theta_x, \/\ К$} & \textbf{$T_{ст.x}, \/\ К$} \\ \hline
-			<-<>-> 
+		\textbf{№} &
+		\textbf{$x, \/\ м$} & 
+		\textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & 
+		\textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & 
+		\textbf{$\theta_x, \/\ К$} & \textbf{$T_{ст.x}, \/\ К$} 
+		\\ \hline
+		<-<range .Gas.SSRows>->
+			<-<.Id>-> & 
+			<-<.X | MultiplyE3 | Round3>-> & 
+			<-<.AlphaAir | Round1>-> & 
+			<-<.AlphaGas | Round1>-> &
+			<-<.TAir | Round1>-> & 
+			\\\hline
+		<-<end>->
 		\end{longtable}
 
-
-	% ParametricCoord  []float64
-	% X                []float64
-	% Y                []float64
-	% LengthCoord      []float64
-	% AlphaAir         []float64
-	% AirTemperature   []float64
-	% WallTemperature  []float64
-	% HeatTransferCoef []float64
+	Распределение параметров газа по корыту:
+		\begin{longtable}{|c|c|c|c|c|}
+		\hline
+		\textbf{№} &
+		\textbf{$x, \/\ 10^{-3} м$} & 
+		\textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & 
+		\textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & 
+		\textbf{$\theta_x, \/\ К$} & \textbf{$T_{ст.x}, \/\ К$} 
+		\\ \hline
+		<-<range .Gas.PSRows>->
+			<-<.Id>-> & 
+			<-<.X | MultiplyE3 | Round3>-> & 
+			<-<.AlphaAir | Round1>-> & 
+			<-<.AlphaGas | Round1>-> &
+			<-<.TAir | Round1>-> & 
+			\\\hline
+		<-<end>->	
+		\end{longtable}
 
 \end{enumerate}

@@ -110,9 +110,18 @@
 		\begin{center}
 			\begin{tabular}{|p|c|c|c|}
 				\hline
-				\textbf{№} & \textbf{$G_в, \/\ кг/c$} & \textbf{$D$} & \textbf{$\epsilon$} & \textbf{\delta} \\\hline
+				\textbf{№} & 
+				\textbf{$G_в, \/\ кг/c$} & 
+				\textbf{$D$} & 
+				\textbf{$\epsilon$} & 
+				\textbf{\delta} \\\hline
 				<-<range .Gas.TableRows>->
-					<-<.Id>-> & <-<.AirMassRate | Round1>-> & <-<.DCoef | MultiplyE3 | Round3>-> \cdot 10^{-3} & <-<.EpsCoef | Round2>-> & <-<.AirGap | MultiplyE3 | Round1>-> \cdot 10^-3 \\\hline
+					<-<.Id>-> & 
+					<-<.AirMassRate | Round1>-> & 
+					<-<.DCoef | MultiplyE3 | Round3>-> \cdot 10^{-3} & 
+					<-<.EpsCoef | Round2>-> & 
+					<-<.AirGap | MultiplyE3 | Round1>-> \cdot 10^-3 
+					\\\hline
 				<-<end>->
 			\end{tabular}
 		\end{center}
