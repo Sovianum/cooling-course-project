@@ -5,11 +5,11 @@ import (
 	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 )
 
 const (
 	n             = 1e4
-	stageHeatDrop = 3e5
 	reactivity    = 0.5
 	phi           = 0.98
 	psi           = 0.98
@@ -48,7 +48,9 @@ func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) nodes.TurbineStageNode
 		),
 	)
 	var stage = nodes.NewTurbineStageNode(
-		n, stageHeatDrop, reactivity, phi, psi, airGapRel, precision, geomGen,
+		n,
+		constructive.Ht(scheme.GasGenerator().TurboCascade().Turbine()),
+		reactivity, phi, psi, airGapRel, precision, geomGen,
 	)
 	var massRate = schemes.GetMassRate(power, scheme)
 	nodes.InitFromTurbineNode(
