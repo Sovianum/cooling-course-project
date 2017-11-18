@@ -1,127 +1,133 @@
 package main
 
 import (
-	"os"
-
-	"encoding/csv"
-
-	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/Sovianum/turbocycle/library/schemes"
+	"fmt"
 	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/cooling-course-project/io"
+	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
+	"github.com/Sovianum/turbocycle/library/schemes"
+	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/core/midline"
-	"encoding/json"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
 )
 
 const (
 	power     = 16e6
 	relaxCoef = 0.1
 	iterNum   = 100
+	precision = 0.05
 
-	dataRoot = "/home/artem/Documents/University/CoolingSystemProject/notebooks/cycle/data/"
+	startPi   = 8
+	piStep    = 0.1
+	piStepNum = 150
+
+	startPiFactor   = 0.15
+	piFactorStep    = 0.1
+	piFactorStepNum = 8
+
+	totalPiStag = 12
+	piFactor    = 0.5
+
+	dataDir = "postprocessing/notebooks/cycle/data/"
+
+	templatesDir = "postprocessing/templates"
+	buildDir     = "build"
+
+	cycleTemplate = "cycle_calc_template.tex"
+	cycleOut      = "cycle_calc.tex"
+
+	rootTemplate = "root.tex"
+	rootOut      = "root.tex"
+
+	stageTemplate = "mean_line_calc_template.tex"
+	stageOut      = "mean_line_calc.tex"
 )
 
 func main() {
-	//saveData()
-	var pack = getStage(3, 4).GetDataPack()
-	var b, err = json.MarshalIndent(pack, "", "    ")
+	var lowPiStag = totalPiStag * piFactor
+	var highPiStag = 1 / piFactor
+	var scheme = getScheme(lowPiStag, highPiStag)
+
+	//saveSchemeData(scheme)
+	solveParticularScheme(scheme, lowPiStag, highPiStag)
+	saveCycleTemplate(scheme)
+
+	var stage = midline.GetInitedStageNode(scheme)
+	solveParticularStage(stage)
+	saveStageTemplate(stage)
+
+	saveRootTemplate()
+}
+
+func saveRootTemplate() {
+	var inserter = templ.NewDataInserter(
+		templatesDir + "/" + rootTemplate,
+		buildDir + "/" + rootOut,
+	)
+	if err := inserter.Insert(nil); err != nil {
+		panic(err)
+	}
+}
+
+func saveStageTemplate(stage nodes.TurbineStageNode) {
+	var inserter = templ.NewDataInserter(
+		templatesDir + "/" + stageTemplate,
+		buildDir + "/" + stageOut,
+	)
+	var df, err = dataframes.NewStageDF(stage)
 	if err != nil {
 		panic(err)
 	}
-	os.Stdout.Write(b)
+	if err := inserter.Insert(df); err != nil {
+		panic(err)
+	}
 }
 
-func getStage(lowPiStag, highPiStag float64) nodes.TurbineStageNode {
-	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+func solveParticularStage(stage nodes.TurbineStageNode) {
+	if err := stage.Process(); err != nil {
+		panic(err)
+	}
+}
+
+func saveCycleTemplate(scheme schemes.ThreeShaftsScheme) {
+	var inserter = templ.NewDataInserter(
+		templatesDir + "/" + cycleTemplate,
+		buildDir + "/" + cycleOut,
+	)
+	var df = dataframes.NewThreeShaftsDF(power, scheme)
+	if err := inserter.Insert(df); err != nil {
+		panic(err)
+	}
+}
+
+func solveParticularScheme(scheme schemes.ThreeShaftsScheme, lowPiStag, highPiStag float64) {
 	scheme.LowPressureCompressor().SetPiStag(lowPiStag)
 	scheme.HighPressureCompressor().SetPiStag(highPiStag)
-	scheme.GetNetwork().Solve(relaxCoef, iterNum, 0.05)
-
-	return midline.GetInitedStageNode(scheme)
+	if converged, err := scheme.GetNetwork().Solve(relaxCoef, iterNum, precision); !converged || err != nil {
+		if err != nil {
+			panic(err)
+		}
+		if !converged {
+			panic(fmt.Errorf("not converged"))
+		}
+	}
 }
 
-func saveData() {
-	if err := saveThreeShaftsSchemeData(
-		three_shafts.GetInitedThreeShaftsScheme(),
-		8, 0.1, 120,
-		0.15, 0.1, 8,
-		dataRoot + "3n.csv",
+func saveSchemeData(scheme schemes.ThreeShaftsScheme)  {
+	if err := io.SaveThreeShaftsSchemeData(
+		scheme,
+		power,
+		startPi, piStep, piStepNum,
+		startPiFactor, piFactorStep, piFactorStepNum,
+		dataDir+"3n.csv",
 	); err != nil {
 		panic(err)
 	}
 }
 
-func saveThreeShaftsSchemeData(
-	scheme schemes.ThreeShaftsScheme,
-	startPi, piStep float64, piStepNum int,
-	startPiFactor, piFactorStep float64, piFactorStepNum int,
-	filename string,
-) error {
-	var piArr []float64
-	for i := 0; i != piStepNum; i++ {
-		piArr = append(piArr, startPi+float64(i)*piStep)
-	}
-
-	var piFactorArr []float64
-	for i := 0; i != piFactorStepNum; i++ {
-		piFactorArr = append(piFactorArr, startPiFactor+float64(i)*piFactorStep)
-	}
-
-	var records [][]string
-	var generator = core.GetDoubleCompressorDataGenerator(scheme, power, relaxCoef, iterNum)
-	for _, piFactor := range piFactorArr {
-		for _, pi := range piArr {
-			var point, err = generator(pi, piFactor)
-			if err != nil {
-				return err
-			}
-			records = append(records, point.ToRecord())
-		}
-	}
-
-	file, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	writer.WriteAll(records)
-
-	return nil
-}
-
-func saveTwoShaftSchemeData(
-	scheme core.SingleCompressorScheme,
-	startPi, piStep float64,
-	stepNum int, filename string,
-) error {
-	var piArr []float64
-
-	for i := 0; i != stepNum; i++ {
-		piArr = append(piArr, startPi+float64(i)*piStep)
-	}
-
-	var records [][]string
-	var generator = core.GetSingleCompressorDataGenerator(scheme, power, relaxCoef, iterNum)
-	for _, pi := range piArr {
-		var point, err = generator(pi)
-		if err != nil {
-			return err
-		}
-		records = append(records, point.ToRecord())
-	}
-
-	file, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	writer.WriteAll(records)
-
-	return nil
+func getScheme(lowPiStag, highPiStag float64) schemes.ThreeShaftsScheme {
+	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+	scheme.LowPressureCompressor().SetPiStag(lowPiStag)
+	scheme.HighPressureCompressor().SetPiStag(highPiStag)
+	return scheme
 }
