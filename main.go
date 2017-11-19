@@ -20,6 +20,7 @@ import (
 	"github.com/Sovianum/turbocycle/common"
 	"gonum.org/v1/gonum/mat"
 	"math"
+	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 )
 
 const (
@@ -92,8 +93,13 @@ func main() {
 	var statorProfiler = getStatorProfiler(stage)
 	saveProfiles(
 		statorProfiler,
+		stage.StageGeomGen().StatorGenerator(),
 		[]float64{0, 0.5, 1.0},
-		[]string{"stator_root.csv", "stator_mid.csv", "stator_top.csv"},
+		[][]string{
+			{"rotor_root_1.csv", "rotor_root_2.csv"},
+			{"rotor_mid_1.csv", "rotor_mid_2.csv"},
+			{"rotor_top_1.csv", "rotor_top_2.csv"},
+		},
 		false,
 	)
 
@@ -108,8 +114,13 @@ func main() {
 	}, outletAngleData)
 	saveProfiles(
 		rotorProfiler,
+		stage.StageGeomGen().RotorGenerator(),
 		[]float64{0, 0.5, 1},
-		[]string{"rotor_root.csv", "rotor_mid.csv", "rotor_top.csv"},
+		[][]string{
+			{"stator_root_1.csv", "stator_root_2.csv"},
+			{"stator_mid_1.csv", "stator_mid_2.csv"},
+			{"stator_top_1.csv", "stator_top_2.csv"},
+		},
 		true,
 	)
 
@@ -240,7 +251,13 @@ func saveCooling1Template() {
 	}
 }
 
-func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []string, isRotor bool) {
+func saveProfiles(
+	profiler profilers.Profiler,
+	geomGen geometry.BladingGeometryGenerator,
+	hRelArr []float64,
+	dataNames [][]string,
+	isRotor bool,
+) {
 	var profileArr = make([]profiles.BladeProfile, len(hRelArr))
 	for i, hRel := range hRelArr {
 		profileArr[i] = profiles.NewBladeProfileFromProfiler(
@@ -252,12 +269,18 @@ func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []st
 	}
 
 	var installationAngleArr = make([]float64, len(hRelArr))
+	var tRelArr = make([]float64, len(hRelArr))
+	var tArr = common.LinSpace(0, 1, 200)
+
 	for i, hRel := range hRelArr {
 		installationAngleArr[i] = profiler.InstallationAngle(hRel)
+		tRelArr[i] = geometry.TRel(hRel, geomGen)
 	}
 
-	var segments = make([]geom.Segment, len(hRelArr))
+	var coordinatesArr = make([][][][]float64, len(hRelArr))
 	for i, profile := range profileArr {
+		coordinatesArr[i] = make([][][]float64, 2)
+
 		if isRotor {
 			profile.Transform(geom.Reflection(0))
 		}
@@ -268,13 +291,19 @@ func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []st
 			profile.Transform(geom.Rotation(-installationAngleArr[i]))
 		}
 
-		segments[i] = profiles.CircularSegment(profile)
+		coordinatesArr[i][0] = geom.GetCoordinates(tArr, profiles.CircularSegment(profile))
+
+		profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{
+			tRelArr[i] * profiler.InstallationAngle(0.5), 0,
+		})))
+		coordinatesArr[i][1] = geom.GetCoordinates(tArr, profiles.CircularSegment(profile))
 	}
 
 	for i := range hRelArr {
-		var coordinates = geom.GetCoordinates(common.LinSpace(0, 1, 200), segments[i])
-		if err := profiling.SaveMatrix(dataDir + "/" + dataNames[i], coordinates); err != nil {
-			panic(err)
+		for j := 0; j != 2; j++ {
+			if err := profiling.SaveMatrix(dataDir + "/" + dataNames[i][j], coordinatesArr[i][j]); err != nil {
+				panic(err)
+			}
 		}
 	}
 }

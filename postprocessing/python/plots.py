@@ -31,5 +31,4 @@ def plot_height_parameter(parameter, parameter_name):
 
 def plot_profile(profile_x, profile_y):
     plt.plot(profile_x, profile_y, color='blue')
-    plt.grid()
     plt.axis('equal')
