@@ -36,6 +36,9 @@ const (
 	lRelOut  = 0.15
 	deltaRel = 0.1
 
+	statorApproxTRel = 0.7
+	rotorApproxTRel = 0.7
+
 	alpha = 14
 
 	meanLineTemplateFilePath = "../templates/mean_line_calc_template.tex"
@@ -51,8 +54,8 @@ type StageDFTestSuite struct {
 func (suite *StageDFTestSuite) SetupTest() {
 	suite.gen = geometry.NewStageGeometryGenerator(
 		lRelOut,
-		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut),
-		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut),
+		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, statorApproxTRel),
+		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, rotorApproxTRel),
 	)
 
 	suite.node = nodes.NewTurbineStageNode(

@@ -37,6 +37,9 @@ const (
 	lRelOut  = 0.15
 	deltaRel = 0.1
 
+	statorApproxTRel = 0.7
+	rotorApproxTRel = 0.7
+
 	alpha = 14
 
 	meanLineTemplateFilePath = "../templates/mean_line_calc_template.tex"
@@ -118,8 +121,8 @@ func getCycleDf() dataframes.ThreeShaftsDF {
 func getStageDf() dataframes.StageDF {
 	var gen = geometry.NewStageGeometryGenerator(
 		lRelOut,
-		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut),
-		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut),
+		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, statorApproxTRel),
+		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, rotorApproxTRel),
 	)
 
 	var stage = nodes.NewTurbineStageNode(
