@@ -17,7 +17,8 @@
 			Удельная работа турбины & $H_т$ & Дж/кг & $<-<.Ht | DivideE6 | Round3>-> \cdot 10^6$ \\ \hline
 			Коэффициент скорости статора & $\phi$ & - & <-<.Phi | Round2>-> \\ \hline
 			Коэффициент скорости ротора & $\psi$ & - & <-<.Psi | Round2>-> \\ \hline
-			Направление скорости на выходе из СА & $\alpha_1$ & $\degree$ & <-<.InletTriangle.Alpha | Degree | Round1>-> \\ \hline 
+			Направление скорости на выходе из СА & $\alpha_1$ & $\degree$ & <-<.InletTriangle.Alpha | Degree | Round1>-> \\ \hline
+			Частота вращения вала турбины & $n$ & $об/мин$ & <-<.RPM | Round1>-> \\ \hline
 	\end{longtable}
 \end{center}
 
@@ -172,7 +173,7 @@
 	   		<-<.StatorGeom.DMeanOut | Round3>-> + 
 	   		\frac{
 	   			\tan <-<.StatorGeom.GammaOut | Abs | Degree | Round1>-> \degree - 
-	   			\tan <-<.StatorGeom.GammaIn | Degree | Round1>-> \degree
+	   			\tan <-<.StatorGeom.GammaIn | Abs | Degree | Round1>-> \degree
 	   		}{2} \cdot <-<.X | Round3>-> =
    		<-<.RotorGeom.DMeanOut | Round3>-> \/\ м$$
 	 \item Определим длину лопатки на выходе из РК:
@@ -185,7 +186,7 @@
 		 	<-<.StatorGeom.LRelOut | Round2>-> + 
 		 	\frac{
 		 		\tan <-<.StatorGeom.GammaOut | Abs | Degree | Round1>-> \degree + 
-		 		\tan <-<.StatorGeom.GammaIn | Degree | Round1>-> \degree
+		 		\tan <-<.StatorGeom.GammaIn | Abs | Degree | Round1>-> \degree
 		 	}{2} \cdot <-<.X | Round3>-> =
 		 		<-<.RotorGeom.LOut | Round3>-> \/\ м
 	 	$$
@@ -326,7 +327,7 @@
 	 		<-<.OutletTriangle.C | Round1>-> \cdot
 	 		\sin <-<.OutletTriangle.Alpha | Degree | Round1>-> \degree = 
 	 		<-<.OutletTriangle.CA | Round1>-> \/\ м/с$$
-	 \item Опрдеелим плотность газа за турбиной:
+	 \item Определим плотность газа за турбиной:
 	 	$$\rho_2 = \frac{G}{\pi \cdot c_{2a} \cdot D_2 \cdot l_2} = 
 	 	\frac{
 	 		<-<.MassRate | Round1>->
