@@ -2,6 +2,10 @@
 import pandas as pd
 
 
+def read_profile_angles(file_path):
+    return pd.read_csv(file_path, names=["h", "angle_in", "angle_out"])
+
+
 def read_profile_data(file_path):
     return pd.read_csv(file_path, names=["x", "y"])
 

@@ -3,6 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def plot_profile_angles(data, angle_names):
+    plt.plot(np.rad2deg(data.angle_in), data.h)
+    plt.plot(np.rad2deg(data.angle_out), data.h)
+    plt.grid()
+    plt.legend(angle_names, loc="best")
+    plt.ylabel('$\overline{h}$')
+
+
 def plot_scheme_characteristics(data, y_min=0.8, y_max=1.02):
     plt.title('$Приведенные \ характеристики \ установки \ (\overline{f} = f / f_{max})$')
     plt.plot(data.pi, data.G / data.G.max())

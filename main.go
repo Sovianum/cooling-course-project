@@ -65,6 +65,11 @@ const (
 
 	cycleData     = "3n.csv"
 	statorMidData = "stator_mid.csv"
+
+	inletAngleData  = "inlet_angle.csv"
+	outletAngleData = "outlet_angle.csv"
+
+	hPointNum = 50
 )
 
 func main() {
@@ -87,15 +92,23 @@ func main() {
 	var statorProfiler = getStatorProfiler(stage)
 	saveProfiles(
 		statorProfiler,
-		[]float64{0.2, 0.5, 1.0},
+		[]float64{0, 0.5, 1.0},
 		[]string{"stator_root.csv", "stator_mid.csv", "stator_top.csv"},
 		false,
 	)
 
 	var rotorProfiler = getRotorProfiler(stage)
+	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
+		var triangle = profiler.InletTriangle(hRel)
+		return triangle
+	}, inletAngleData)
+	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
+		var triangle = profiler.OutletTriangle(hRel)
+		return triangle
+	}, outletAngleData)
 	saveProfiles(
 		rotorProfiler,
-		[]float64{0.01, 0.5, 1},
+		[]float64{0, 0.5, 1},
 		[]string{"rotor_root.csv", "rotor_mid.csv", "rotor_top.csv"},
 		true,
 	)
@@ -139,45 +152,6 @@ func buildPlots() {
 	var err = cmd.Run()
 	if err != nil {
 		panic(err)
-	}
-}
-
-func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []string, isRotor bool) {
-	var profileArr = make([]profiles.BladeProfile, len(hRelArr))
-	for i, hRel := range hRelArr {
-		profileArr[i] = profiles.NewBladeProfileFromProfiler(
-			hRel,
-			0.01, 0.01,
-			0.2, 0.2,
-			profiler,
-		)
-	}
-
-	var installationAngleArr = make([]float64, len(hRelArr))
-	for i, hRel := range hRelArr {
-		installationAngleArr[i] = profiler.InstallationAngle(hRel)
-	}
-
-	var segments = make([]geom.Segment, len(hRelArr))
-	for i, profile := range profileArr {
-		if isRotor {
-			profile.Transform(geom.Reflection(0))
-		}
-		profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{-1, 0})))
-		if !isRotor {
-			profile.Transform(geom.Rotation(installationAngleArr[i] - math.Pi))
-		} else {
-			profile.Transform(geom.Rotation(-math.Pi + installationAngleArr[i]))
-		}
-
-		segments[i] = profiles.CircularSegment(profile)
-	}
-
-	for i := range hRelArr {
-		var coordinates = geom.GetCoordinates(common.LinSpace(0, 1, 200), segments[i])
-		if err := profiling.SaveMatrix(dataDir + "/" + dataNames[i], coordinates); err != nil {
-			panic(err)
-		}
 	}
 }
 
@@ -262,6 +236,63 @@ func saveCooling1Template() {
 	}
 	if err := inserter.Insert(df); err != nil {
 		fmt.Println(err)
+		panic(err)
+	}
+}
+
+func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []string, isRotor bool) {
+	var profileArr = make([]profiles.BladeProfile, len(hRelArr))
+	for i, hRel := range hRelArr {
+		profileArr[i] = profiles.NewBladeProfileFromProfiler(
+			hRel,
+			0.01, 0.01,
+			0.2, 0.2,
+			profiler,
+		)
+	}
+
+	var installationAngleArr = make([]float64, len(hRelArr))
+	for i, hRel := range hRelArr {
+		installationAngleArr[i] = profiler.InstallationAngle(hRel)
+	}
+
+	var segments = make([]geom.Segment, len(hRelArr))
+	for i, profile := range profileArr {
+		if isRotor {
+			profile.Transform(geom.Reflection(0))
+		}
+		profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{-1, 0})))
+		if !isRotor {
+			profile.Transform(geom.Rotation(installationAngleArr[i] - math.Pi))
+		} else {
+			profile.Transform(geom.Rotation(-installationAngleArr[i]))
+		}
+
+		segments[i] = profiles.CircularSegment(profile)
+	}
+
+	for i := range hRelArr {
+		var coordinates = geom.GetCoordinates(common.LinSpace(0, 1, 200), segments[i])
+		if err := profiling.SaveMatrix(dataDir + "/" + dataNames[i], coordinates); err != nil {
+			panic(err)
+		}
+	}
+}
+
+func saveAngleData(profiler profilers.Profiler, triangleExtractor func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle, filename string)  {
+	var hRelArr = common.LinSpace(0, 1, hPointNum)
+
+	var angleArr = make([][]float64, hPointNum)
+	for i, hRel := range hRelArr {
+		var triangle = triangleExtractor(hRel, profiler)
+		angleArr[i] = make([]float64, 3)
+
+		angleArr[i][0] = hRel
+		angleArr[i][1] = triangle.Alpha()
+		angleArr[i][2] = triangle.Beta()
+	}
+
+	if err := profiling.SaveMatrix(dataDir + "/" + filename, angleArr); err != nil {
 		panic(err)
 	}
 }

@@ -34,5 +34,14 @@ if __name__ == '__main__':
         ["rotor_mid.csv", "rotor_mid.png"],
         ["rotor_top.csv", "rotor_top.png"]
     ]
-
     [save_profile(pair[0], pair[1]) for pair in profile_data]
+
+    inlet_profile_df = loaders.read_profile_angles(os.path.join(data_dir, "inlet_angle.csv"))
+    plots.plot_profile_angles(inlet_profile_df, [r"$\alpha_1$", r"$\beta_1$"])
+    plt.savefig(os.path.join(img_dir, "inlet_angle.png"))
+    plt.close()
+
+    rotor_profile_df = loaders.read_profile_angles(os.path.join(data_dir, "outlet_angle.csv"))
+    plots.plot_profile_angles(rotor_profile_df, [r"$\alpha_2$", r"$\beta_2$"])
+    plt.savefig(os.path.join(img_dir, "outlet_angle.png"))
+    plt.close()
