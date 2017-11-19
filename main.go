@@ -131,7 +131,7 @@ func main() {
 	//saveTitleTemplate()
 	//
 	buildPlots()
-	//buildReport()
+	buildReport()
 	////cleanup()
 }
 

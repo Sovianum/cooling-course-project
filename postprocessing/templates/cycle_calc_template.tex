@@ -185,17 +185,23 @@
 	\end{enumerate}
 
 	\item Определим удельный расход через ТВД:
-		$$g_{твд} = \left( 1 + g_m \right) \left( 1 - g_{ут} - g_{охл} \right) =
-			\left( 1 + <-<.Burner.FuelMassRateRel | Round3>-> \right) \left( 1 - <-<.HPTurbine.LeakMassRateRel | Abs | Round3>-> - <-<.HPTurbine.CoolMassRateRel | Abs | Round3>-> \right) = <-<.HPTurbine.MassRateRel | Round3>->$$
+		$$g_{твд} = \left( 1 + g_m \right) \left( 1 - g_{ут \/\ твд} - g_{охл \/\ твд} \right) = $$
+		$$
+		= \left(
+		    1 + <-<.Burner.FuelMassRateRel | Round3>->
+		\right) \left(
+		    1 - <-<.HPTurbine.LeakMassRateRel | Abs | Round3>-> -
+		    <-<.HPTurbine.CoolMassRateRel | Abs | Round3>->
+        \right) = <-<.HPTurbine.MassRateRel | Round3>->$$
 	\item Определим удельную работу ТВД:
-		$$L_{твд} = \frac{L_{квд}}{g_{твд}\eta_{м \/\ ВД}} = \frac{
+		$$L_{твд} = \frac{L_{квд}}{g_{твд}\eta_{м \/\ вд}} = \frac{
 			<-<.HPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6
 		}{
 			<-<.HPTurbine.MassRateRel | Round3>-> \cdot <-<.HPShaft.Eta | Round3>->
 		} = <-<.HPTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг$$
 	\item Определим давление газа перед ТВД:
 		$$p_{г}^* = p_{тнд}^* \sigma_г = <-<.HPCompressor.POut | DivideE6 | Round3>-> \cdot <-<.Burner.Sigma | Round2>-> = <-<.HPTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
-	\item Определим среднюю теплоемкость газа в процессе расширения газа в турбине, принимая показатель адиабаты газа $k_{г \/\ ТВД} = <-<.HPTurbine.GasData.KMean | Round2>->$:
+	\item Определим среднюю теплоемкость газа в процессе расширения газа в турбине, принимая показатель адиабаты газа $k_{г \/\ твд} = <-<.HPTurbine.GasData.KMean | Round2>->$:
 		$$c_{pг \/\ твд} = \frac{k_{г \/\ твд}}{k_{г \/\ твд} - 1} R_г =
 			\frac{
 				<-<.HPTurbine.GasData.KMean | Round2>->
@@ -242,19 +248,23 @@
 			\right\rbrace = <-<.HPTurbine.TOut | Round1>-> \/\ К
 		$$
 	\item Определим давление перед ТНД:
-		$$p_{0 \/\ ТНД}^* = p_{ТВД}^*\sigma_{ТВД} = <-<.HPTurbine.POut | DivideE6 | Round3>-> \cdot <-<.HPTurbinePipe.Sigma | Round2>-> = <-<.LPTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
+		$$p_{0 \/\ тнд}^* = p_{твд}^*\sigma_{твд} = <-<.HPTurbine.POut | DivideE6 | Round3>-> \cdot <-<.HPTurbinePipe.Sigma | Round2>-> = <-<.LPTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
 
 	\item Определим удельный расход через ТНД:
-		% $$g_{ТНД} = \left( 1 + g_m \right) \left( 1 - g_{ут} - g_{охл} \right) =
-		% 	\left( 1 + <-<.Burner.FuelMassRateRel>-> \right) \left( 1 - <-<.HPTurbine.LeakMassRateRel>-> - <-<.HPTurbine.CoolMassRateRel>-> \right) = <-<.HPTurbine.MassRateRel>->$$
+		 $$g_{тнд} = g_{твд} \left( 1 - g_{ут \/\ тнд} - g_{охл \/\ тнд} \right) =
+		 	<-<.HPTurbine.MassRateRel | Round3>-> \cdot
+		 	\left(
+		 	    1 - <-<.LPTurbine.LeakMassRateRel | Abs | Round3>-> -
+		 	    <-<.LPTurbine.CoolMassRateRel | Abs |Round3>->
+		 	\right) = <-<.LPTurbine.MassRateRel | Round3>->$$
 	\item Определим удельную работу ТНД:
 		$$L_{тнд} = \frac{L_{кнд}}{g_{тнд}\eta_{м \/\ нд}} = \frac{
 			<-<.LPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6
 		}{
 			<-<.LPTurbine.MassRateRel | Round3>-> \cdot <-<.LPShaft.Eta | Round2>->
 		} = <-<.LPTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг$$
-	\item Определим среднюю теплоемкость газа в процессе расширения газа в турбине, принимая показатель адиабаты газа $k_{г \/\ тнд} = <-<.LPTurbine.GasData.KMean | Round2>->$:
-		$$c_{pг \/\ твд} = \frac{k_{г \/\ ТВД}}{k_{г \/\ твд} - 1} R_г =
+	\item Определим среднюю теплоемкость газа в процессе расширения газа в ТНД, принимая показатель адиабаты газа $k_{г \/\ тнд} = <-<.LPTurbine.GasData.KMean | Round2>->$:
+		$$c_{pг \/\ тнд} = \frac{k_{г \/\ тнд}}{k_{г \/\ тнд} - 1} R_г =
 			\frac{
 				<-<.LPTurbine.GasData.KMean | Round2>->
 			}{
@@ -307,13 +317,17 @@
 	\item Определим давление перед свободной турбиной:
 		$$p_{0 \/\ тс}^* = p_{тнд}^*\sigma_{тнд} = <-<.LPTurbine.POut | DivideE6 | Round3>-> \cdot <-<.LPTurbinePipe.Sigma | Round2>-> = <-<.FreeTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
 	\item Определим удельный расход через силовую турбину:
-		% $$g_{ТС} = \left( 1 + g_m \right) \left( 1 - g_{ут} - g_{охл} \right) =
-		% 	\left( 1 + <-<.Burner.FuelMassRateRel>-> \right) \left( 1 - <-<.HPTurbine.LeakMassRateRel>-> - <-<.HPTurbine.CoolMassRateRel>-> \right) = <-<.HPTurbine.MassRateRel>->$$
-	\item Определим давление торможения на выходе из свободной турбины $p_{тс}^*$:
+	    $$g_{тс} = g_{тнд} \left( 1 - g_{ут \/\ тс} - g_{охл \/\ тс} \right) =
+            <-<.LPTurbine.MassRateRel | Round3>-> \cdot
+            \left(
+                1 - <-<.FreeTurbine.LeakMassRateRel | Abs | Round3>-> -
+                <-<.FreeTurbine.CoolMassRateRel | Abs |Round3>->
+            \right) = <-<.FreeTurbine.MassRateRel | Round3>->$$
+    \item Определим давление торможения на выходе из свободной турбины $p_{тс}^*$:
 		$$p_{тс}^* = p_a / \sigma_{вых} = <-<.GasSource.P | DivideE6 | Round3>-> \cdot <-<.OutletPipe.Sigma | Round2>-> = <-<.FreeTurbine.POut | DivideE6 | Round3>-> \/\ МПа$$
 	\item Зададим значение приведенной скорости на выходе из свободной турбины:
 		$$\lambda_{вых} = <-<.FreeTurbine.LambdaOut | Round2>->$$
-	\item Определим статическое давление на выходе из свободной турбины, принимая показатель адиабаты газа на выходе из свбодной турбины $k_{тс \/\ вых} = <-<.FreeTurbine.OutletGasData.K | Round2>->$:
+	\item Определим статическое давление на выходе из свободной турбины, принимая показатель адиабаты газа на выходе из свободной турбины $k_{тс \/\ вых} = <-<.FreeTurbine.OutletGasData.K | Round2>->$:
 		$$p_{тс} = \frac{
 			p_{тс}^*
 		}{
@@ -322,8 +336,8 @@
 			<-<.FreeTurbine.POut | DivideE6 | Round3>->
 		}{
 			\pi \left( <-<.FreeTurbine.LambdaOut | Round2>->, \/\ <-<.FreeTurbine.OutletGasData.K | Round2>-> \right)
-		}$$
-	\item Определим статическую температуру на выходе из силовой турбины, принимая показатель адиабаты газа $k_{г \/\ тс} = <-<.FreeTurbine.GasData.KMean | Round2>->$::
+		} = <-<.FreeTurbine.POutStat>->$$
+	\item Определим статическую температуру на выходе из свободной турбины, принимая показатель адиабаты газа $k_{г \/\ тс} = <-<.FreeTurbine.GasData.KMean | Round2>->$::
 		$$
 			T_{тс} = T_{тнд}^*
 			\left\lbrace
@@ -354,7 +368,7 @@
 		$$
 	\item Определим температуру торможения на выходе из силовой турбины:
 		$$T_{тс}^* = 
-			\frac{T_{тс}}{\tau\left( \lambda_{вых}, \/\ k_{СТ \/\ вых} \right)} = 
+			\frac{T_{тс}}{\tau\left( \lambda_{вых}, \/\ k_{тс \/\ вых} \right)} =
 			\frac{T_{тс}}{\tau\left( <-<.FreeTurbine.LambdaOut | Round2>->, \/\ <-<.FreeTurbine.OutletGasData.K | Round2>-> \right)} =
 			= <-<.FreeTurbine.TOut | Round1>-> \/\ К$$
 	\item Определим значение теплоемкости газа в свободной турбине:
@@ -363,11 +377,11 @@
 			\frac{<-<.FreeTurbine.GasData.KMean | Round2>->}{<-<.FreeTurbine.GasData.KMean | Round2>-> - 1} = <-<.FreeTurbine.GasData.CpMean | Round1>-> \/\ Дж / \left( кг \cdot К \right)$$
 	\item Определим удельную работу силовой турбины:
 		$$L_{тс} = c_{p \/\ тс} \left( T_{тнд}^* - T_{тс}^* \right) = 
-			<-<.FreeTurbine.GasData.CpMean | Round1>-> \left( <-<.FreeTurbine.TIn | Round1>-> - <-<.FreeTurbine.TOut | Round1>-> \right) = 
+			<-<.FreeTurbine.GasData.CpMean | Round1>-> \cdot \left( <-<.FreeTurbine.TIn | Round1>-> - <-<.FreeTurbine.TOut | Round1>-> \right) =
 			<-<.FreeTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6\/\ Дж/кг$$
 	\item Определим удельную мощность ГТД:
 		$$N_{e \/\ уд} = L_{тс} \/\ g_{тс} =
-			<-<.FreeTurbine.Labour | DivideE6 | Round2>-> \cdot 10^6 \cdot <-<.FreeTurbine.MassRateRel | Round2>-> =
+			<-<.FreeTurbine.Labour | DivideE6 | Round2>-> \cdot 10^6 \cdot <-<.FreeTurbine.MassRateRel | Round3>-> =
 			<-<.EngineLabour | DivideE6 | Round3>-> \cdot 10^6 Дж/кг$$
 	\item Определим экономичность ГТД:
 		$$C_e = \frac{3600}{N_{e уд}} g_{тс} =
