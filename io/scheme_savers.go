@@ -12,13 +12,13 @@ const (
 	iterNum   = 100
 )
 
-func SaveThreeShaftsSchemeData(
+
+func GetThreeShaftsSchemeData(
 	scheme schemes.ThreeShaftsScheme,
 	power float64,
 	startPi, piStep float64, piStepNum int,
 	startPiFactor, piFactorStep float64, piFactorStepNum int,
-	filename string,
-) error {
+) ([]core.DoubleCompressorDataPoint, error) {
 	var piArr []float64
 	for i := 0; i != piStepNum; i++ {
 		piArr = append(piArr, startPi+float64(i)*piStep)
@@ -29,29 +29,18 @@ func SaveThreeShaftsSchemeData(
 		piFactorArr = append(piFactorArr, startPiFactor+float64(i)*piFactorStep)
 	}
 
-	var records [][]string
+	var points []core.DoubleCompressorDataPoint
 	var generator = core.GetDoubleCompressorDataGenerator(scheme, power, relaxCoef, iterNum)
 	for _, piFactor := range piFactorArr {
 		for _, pi := range piArr {
 			var point, err = generator(pi, piFactor)
 			if err != nil {
-				return err
+				return nil, err
 			}
-			records = append(records, point.ToRecord())
+			points = append(points, point)
 		}
 	}
-
-	file, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	writer.WriteAll(records)
-
-	return nil
+	return points, nil
 }
 
 func SaveTwoShaftSchemeData(

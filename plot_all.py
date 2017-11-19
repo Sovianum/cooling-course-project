@@ -13,11 +13,19 @@ if __name__ == '__main__':
     img_dir = args[1]
     data_dir = args[2]
 
-    cycle_plot_name = "cycle_plot.png"
     cycle_data_path = os.path.join(data_dir, "3n.csv")
-    cycle_df = loaders.get_max_eta_df(loaders.read_double_compressor_data(cycle_data_path))
-    plots.plot_scheme_characteristics(cycle_df, 0.6)
-    plt.savefig(os.path.join(img_dir, cycle_plot_name))
+    cycle_data = loaders.read_double_compressor_data(cycle_data_path)
+
+    cycle_eta_plot_name = "cycle_eta_plot.png"
+    cycle_eta_df = loaders.get_max_eta_df(cycle_data)
+    plots.plot_scheme_characteristics(cycle_eta_df, 0.6)
+    plt.savefig(os.path.join(img_dir, cycle_eta_plot_name))
+    plt.close()
+
+    cycle_power_plot_name = "cycle_power_plot.png"
+    cycle_power_df = loaders.get_max_power_df(cycle_data)
+    plots.plot_scheme_characteristics(cycle_power_df, 0.6)
+    plt.savefig(os.path.join(img_dir, cycle_power_plot_name))
     plt.close()
 
     def save_profile(data_name_1, data_name_2, plot_name):

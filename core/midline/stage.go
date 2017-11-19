@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	n          = 0.9e4
+	n          = 1.0e4
 	reactivity = 0.4
 	phi        = 0.98
 	psi        = 0.98

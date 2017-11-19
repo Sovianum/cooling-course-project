@@ -2,25 +2,26 @@ package main
 
 import (
 	"fmt"
+	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/core/midline"
+	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
 	"github.com/Sovianum/cooling-course-project/io"
+	"github.com/Sovianum/cooling-course-project/postprocessing/builder"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
+	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/library/schemes"
-	"os/exec"
-	"os"
-	"github.com/Sovianum/cooling-course-project/postprocessing/builder"
-	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/library/schemes"
+	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
-	"github.com/Sovianum/turbocycle/utils/turbine/geom"
-	"github.com/Sovianum/turbocycle/common"
 	"gonum.org/v1/gonum/mat"
 	"math"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
+	"os"
+	"os/exec"
 )
 
 const (
@@ -37,14 +38,18 @@ const (
 	piFactorStep    = 0.1
 	piFactorStepNum = 8
 
-	totalPiStag = 12
-	piFactor    = 0.5
+	totalPiStag = 20
+	lowPiStag   = 20 / 2.5
+	highPiStag  = 2.5
 
 	templatesDir = "postprocessing/templates"
 
-	buildDir     = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
-	dataDir      = "build/data/"
-	imgDir       = "build/img"
+	buildDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
+	dataDir  = "build/data/"
+	imgDir   = "build/img"
+
+	variantTemplate = "variant_template.tex"
+	variantOut      = "variant.tex"
 
 	cycleTemplate = "cycle_calc_template.tex"
 	cycleOut      = "cycle_calc.tex"
@@ -64,9 +69,6 @@ const (
 	cooling2Template = "cooling_calc2_template.tex"
 	cooling2Out      = "cooling_calc2.tex"
 
-	cycleData     = "3n.csv"
-	statorMidData = "stator_mid.csv"
-
 	inletAngleData  = "inlet_angle.csv"
 	outletAngleData = "outlet_angle.csv"
 
@@ -78,11 +80,12 @@ func main() {
 		buildDir, dataDir, imgDir,
 	)
 
-	var lowPiStag = totalPiStag * piFactor
-	var highPiStag = 1 / piFactor
 	var scheme = getScheme(lowPiStag, highPiStag)
 
-	//saveSchemeData(scheme)
+	var schemeData = getSchemeData(scheme)
+	saveSchemeData(schemeData)
+	saveVariantTemplate(schemeData)
+
 	solveParticularScheme(scheme, lowPiStag, highPiStag)
 	saveCycleTemplate(scheme)
 
@@ -127,23 +130,11 @@ func main() {
 	//saveCooling1Template()
 	//saveCooling2Template()
 	//
-	//saveRootTemplate()
-	//saveTitleTemplate()
-	//
+	saveRootTemplate()
+	saveTitleTemplate()
+
 	buildPlots()
 	buildReport()
-	////cleanup()
-}
-
-func cleanup() {
-	var cmd = exec.Command(
-		"bash",
-		"-c",
-		fmt.Sprintf("cd %s && rm !(*.pdf)", buildDir),
-	)
-	if err := cmd.Run(); err != nil {
-		panic(err)
-	}
 }
 
 func buildReport() {
@@ -301,14 +292,18 @@ func saveProfiles(
 
 	for i := range hRelArr {
 		for j := 0; j != 2; j++ {
-			if err := profiling.SaveMatrix(dataDir + "/" + dataNames[i][j], coordinatesArr[i][j]); err != nil {
+			if err := profiling.SaveMatrix(dataDir+"/"+dataNames[i][j], coordinatesArr[i][j]); err != nil {
 				panic(err)
 			}
 		}
 	}
 }
 
-func saveAngleData(profiler profilers.Profiler, triangleExtractor func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle, filename string)  {
+func saveAngleData(
+	profiler profilers.Profiler,
+	triangleExtractor func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle,
+	filename string,
+) {
 	var hRelArr = common.LinSpace(0, 1, hPointNum)
 
 	var angleArr = make([][]float64, hPointNum)
@@ -321,7 +316,7 @@ func saveAngleData(profiler profilers.Profiler, triangleExtractor func(hRel floa
 		angleArr[i][2] = triangle.Beta()
 	}
 
-	if err := profiling.SaveMatrix(dataDir + "/" + filename, angleArr); err != nil {
+	if err := profiling.SaveMatrix(dataDir+"/"+filename, angleArr); err != nil {
 		panic(err)
 	}
 }
@@ -390,15 +385,44 @@ func solveParticularScheme(scheme schemes.ThreeShaftsScheme, lowPiStag, highPiSt
 	}
 }
 
-func saveSchemeData(scheme schemes.ThreeShaftsScheme) {
-	if err := io.SaveThreeShaftsSchemeData(
+func saveVariantTemplate(schemeData []core.DoubleCompressorDataPoint) {
+	var inserter = templ.NewDataInserter(
+		templatesDir+"/"+variantTemplate,
+		buildDir+"/"+variantOut,
+	)
+	var df = dataframes.VariantDF{
+		MaxEta:    core.EtaOptimalPoint(schemeData),
+		MaxLabour: core.LabourOptimalPoint(schemeData),
+		PiLow:     lowPiStag,
+		PiHigh:    highPiStag,
+		PiTotal:   totalPiStag,
+	}
+	if err := inserter.Insert(df); err != nil {
+		panic(err)
+	}
+}
+
+func saveSchemeData(data []core.DoubleCompressorDataPoint) {
+	var matrix = make([][]float64, len(data))
+	for i, point := range data {
+		matrix[i] = point.ToArray()
+	}
+
+	if err := profiling.SaveMatrix(dataDir+"3n.csv", matrix); err != nil {
+		panic(err)
+	}
+}
+
+func getSchemeData(scheme schemes.ThreeShaftsScheme) []core.DoubleCompressorDataPoint {
+	if data, err := io.GetThreeShaftsSchemeData(
 		scheme,
 		power,
 		startPi, piStep, piStepNum,
 		startPiFactor, piFactorStep, piFactorStepNum,
-		dataDir+"3n.csv",
 	); err != nil {
 		panic(err)
+	} else {
+		return data
 	}
 }
 
