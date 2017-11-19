@@ -12,6 +12,12 @@ import (
 	"os/exec"
 	"os"
 	"github.com/Sovianum/cooling-course-project/postprocessing/builder"
+	"github.com/Sovianum/cooling-course-project/core/profiling"
+	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
+	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
+	"github.com/Sovianum/turbocycle/utils/turbine/geom"
+	"github.com/Sovianum/turbocycle/common"
 )
 
 const (
@@ -55,7 +61,8 @@ const (
 	cooling2Template = "cooling_calc2_template.tex"
 	cooling2Out      = "cooling_calc2.tex"
 
-	cycleFileName = "3n.csv"
+	cycleData     = "3n.csv"
+	statorMidData = "stator_mid.csv"
 )
 
 func main() {
@@ -75,15 +82,29 @@ func main() {
 	solveParticularStage(stage)
 	saveStageTemplate(stage)
 
-	saveCooling1Template()
-	saveCooling2Template()
+	var statorProfiler = getStatorProfiler(stage)
+	saveProfiles(
+		statorProfiler,
+		[]float64{0.001, 0.5, 1.0},
+		[]string{"stator_root.csv", "stator_mid.csv", "stator_top.csv"},
+	)
 
-	saveRootTemplate()
-	saveTitleTemplate()
+	//var rotorProfiler = getRotorProfiler(stage)
+	//saveProfiles(
+	//	rotorProfiler,
+	//	[]float64{0.01, 0.5, 1},
+	//	[]string{"rotor_root.csv", "rotor_mid.csv", "rotor_top.csv"},
+	//)
 
+	//saveCooling1Template()
+	//saveCooling2Template()
+	//
+	//saveRootTemplate()
+	//saveTitleTemplate()
+	//
 	buildPlots()
-	buildReport()
-	//cleanup()
+	//buildReport()
+	////cleanup()
 }
 
 func cleanup() {
@@ -106,7 +127,7 @@ func buildReport() {
 func buildPlots() {
 	var arguments = []string{
 		imgDir,
-		dataDir + "/" + cycleFileName,
+		dataDir,
 	}
 
 	var cmd = exec.Command("./plot_all.py", arguments...)
@@ -114,6 +135,37 @@ func buildPlots() {
 	var err = cmd.Run()
 	if err != nil {
 		panic(err)
+	}
+}
+
+func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []string) {
+	var profileArr = make([]profiles.BladeProfile, len(hRelArr))
+	for i, hRel := range hRelArr {
+		profileArr[i] = profiles.NewBladeProfileFromProfiler(
+			hRel,
+			0.00, 0.00,
+			0.2, 0.2,
+			profiler,
+		)
+	}
+
+	var installationAngleArr = make([]float64, len(hRelArr))
+	for i, hRel := range hRelArr {
+		installationAngleArr[i] = profiler.InstallationAngle(hRel)
+	}
+
+	var segments = make([]geom.Segment, len(hRelArr))
+	for i, profile := range profileArr {
+		//profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{-1, 0})))
+		//profile.Transform(geom.Rotation(installationAngleArr[i] - math.Pi / 2))
+		segments[i] = profiles.CircularSegment(profile)
+	}
+
+	for i := range hRelArr {
+		var coordinates = geom.GetCoordinates(common.LinSpace(0, 1, 200), segments[i])
+		if err := profiling.SaveMatrix(dataDir + "/" + dataNames[i], coordinates); err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -200,6 +252,26 @@ func saveCooling1Template() {
 		fmt.Println(err)
 		panic(err)
 	}
+}
+
+func getRotorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {
+	var pack = stage.GetDataPack()
+	var profiler = profiling.GetInitedStatorProfiler(
+		stage.StageGeomGen().RotorGenerator(),
+		pack.RotorInletTriangle,
+		pack.RotorOutletTriangle,
+	)
+	return profiler
+}
+
+func getStatorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {
+	var pack = stage.GetDataPack()
+	var profiler = profiling.GetInitedStatorProfiler(
+		stage.StageGeomGen().StatorGenerator(),
+		stage.VelocityInput().GetState().(states.VelocityPortState).Triangle,
+		pack.RotorInletTriangle,
+	)
+	return profiler
 }
 
 func saveStageTemplate(stage nodes.TurbineStageNode) {

@@ -2,6 +2,10 @@
 import pandas as pd
 
 
+def read_profile_data(file_path):
+    return pd.read_csv(file_path, names=["x", "y"])
+
+
 def read_single_compressor_data(file_path):
     return pd.read_csv(file_path, names=['pi', 'G', 'N_e', 'eta'])
 
