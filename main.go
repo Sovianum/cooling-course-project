@@ -18,6 +18,8 @@ import (
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/common"
+	"gonum.org/v1/gonum/mat"
+	"math"
 )
 
 const (
@@ -85,16 +87,18 @@ func main() {
 	var statorProfiler = getStatorProfiler(stage)
 	saveProfiles(
 		statorProfiler,
-		[]float64{0.001, 0.5, 1.0},
+		[]float64{0.2, 0.5, 1.0},
 		[]string{"stator_root.csv", "stator_mid.csv", "stator_top.csv"},
+		false,
 	)
 
-	//var rotorProfiler = getRotorProfiler(stage)
-	//saveProfiles(
-	//	rotorProfiler,
-	//	[]float64{0.01, 0.5, 1},
-	//	[]string{"rotor_root.csv", "rotor_mid.csv", "rotor_top.csv"},
-	//)
+	var rotorProfiler = getRotorProfiler(stage)
+	saveProfiles(
+		rotorProfiler,
+		[]float64{0.01, 0.5, 1},
+		[]string{"rotor_root.csv", "rotor_mid.csv", "rotor_top.csv"},
+		true,
+	)
 
 	//saveCooling1Template()
 	//saveCooling2Template()
@@ -138,12 +142,12 @@ func buildPlots() {
 	}
 }
 
-func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []string) {
+func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []string, isRotor bool) {
 	var profileArr = make([]profiles.BladeProfile, len(hRelArr))
 	for i, hRel := range hRelArr {
 		profileArr[i] = profiles.NewBladeProfileFromProfiler(
 			hRel,
-			0.00, 0.00,
+			0.01, 0.01,
 			0.2, 0.2,
 			profiler,
 		)
@@ -156,8 +160,16 @@ func saveProfiles(profiler profilers.Profiler, hRelArr []float64, dataNames []st
 
 	var segments = make([]geom.Segment, len(hRelArr))
 	for i, profile := range profileArr {
-		//profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{-1, 0})))
-		//profile.Transform(geom.Rotation(installationAngleArr[i] - math.Pi / 2))
+		if isRotor {
+			profile.Transform(geom.Reflection(0))
+		}
+		profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{-1, 0})))
+		if !isRotor {
+			profile.Transform(geom.Rotation(installationAngleArr[i] - math.Pi))
+		} else {
+			profile.Transform(geom.Rotation(-math.Pi + installationAngleArr[i]))
+		}
+
 		segments[i] = profiles.CircularSegment(profile)
 	}
 
@@ -256,7 +268,7 @@ func saveCooling1Template() {
 
 func getRotorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {
 	var pack = stage.GetDataPack()
-	var profiler = profiling.GetInitedStatorProfiler(
+	var profiler = profiling.GetInitedRotorProfiler(
 		stage.StageGeomGen().RotorGenerator(),
 		pack.RotorInletTriangle,
 		pack.RotorOutletTriangle,

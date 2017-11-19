@@ -34,7 +34,7 @@ func GetInitedStatorProfiler(
 			return common.InterpTolerate(
 				hRel,
 				[]float64{0, 1},
-				[]float64{common.ToRadians(68), common.ToRadians(34)},
+				[]float64{common.ToRadians(50), common.ToRadians(50)},
 			)
 		},
 
