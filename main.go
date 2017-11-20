@@ -66,6 +66,9 @@ const (
 	stageTemplate = "mean_line_calc_template.tex"
 	stageOut      = "mean_line_calc.tex"
 
+	profilingTemplate = "profiling_template.tex"
+	profilingOut      = "profiling.tex"
+
 	cooling1Template = "cooling_calc1_template.tex"
 	cooling1Out      = "cooling_calc1.tex"
 
@@ -131,6 +134,8 @@ func main() {
 		},
 		true,
 	)
+
+	saveProfilingTemplate()
 
 	//saveCooling1Template()
 	//saveCooling2Template()
@@ -243,6 +248,16 @@ func saveCooling1Template() {
 	}
 	if err := inserter.Insert(df); err != nil {
 		fmt.Println(err)
+		panic(err)
+	}
+}
+
+func saveProfilingTemplate() {
+	var inserter = templ.NewDataInserter(
+		templatesDir+"/"+profilingTemplate,
+		buildDir+"/"+profilingOut,
+	)
+	if err := inserter.Insert(nil); err != nil {
 		panic(err)
 	}
 }
