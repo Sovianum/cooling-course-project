@@ -22,6 +22,8 @@ import (
 	"math"
 	"os"
 	"os/exec"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
+	cooling2 "github.com/Sovianum/cooling-course-project/core/cooling"
 )
 
 const (
@@ -137,7 +139,15 @@ func main() {
 
 	saveProfilingTemplate()
 
-	saveCooling1Template()
+	var statorMidProfile = profiles.NewBladeProfileFromProfiler(
+		0.5,
+		0.01, 0.01,
+		0.2, 0.2,
+		statorProfiler,
+	)
+	var gapCalculator = getGapCalculator(stage, statorMidProfile)
+
+	saveCooling1Template(common.LinSpace(0.05, 0.15, 10), gapCalculator)
 	saveCooling2Template()
 
 	saveRootTemplate()
@@ -222,33 +232,45 @@ func saveCooling2Template() {
 	}
 }
 
-func saveCooling1Template() {
-	var geomDF = dataframes.GapGeometryDF{}
-	var metalDF = dataframes.GapMetalDF{}
-	var gasDF = dataframes.GapGasDF{
-		AirMassRate: []float64{1, 1, 1},
-		DCoef:       []float64{1, 1, 1},
-		EpsCoef:     []float64{1, 1, 1},
-		AirGap:      []float64{1, 1, 1},
+func saveCooling1Template(
+	massRateArr []float64,
+	calculator cooling.GapCalculator,
+) {
+	var dataPackArr = make([]cooling.DataPack, len(massRateArr))
+
+	for i, massRate := range massRateArr {
+		var pack = calculator.GetPack(massRate)
+		if pack.Err != nil {
+			panic(pack.Err)
+		}
+		dataPackArr[i] = pack
 	}
-	var gapCalcDF = dataframes.GapCalcDF{
-		geomDF, metalDF, gasDF,
-	}
+	var gapCalcDF = dataframes.GapCalcFromDataPacks(dataPackArr)
+	gapCalcDF.Gas.NuCoef = 0.079	// todo remove hardcode
 
 	var inserter = templ.NewDataInserter(
 		templatesDir+"/"+cooling1Template,
 		buildDir+"/"+cooling1Out,
 	)
 
-	//var df, err = gapCalcDF, nil
-	var df = gapCalcDF
 	var err error = nil
 	if err != nil {
 		panic(err)
 	}
-	if err := inserter.Insert(df); err != nil {
+	if err := inserter.Insert(gapCalcDF); err != nil {
 		fmt.Println(err)
 		panic(err)
+	}
+}
+
+func getGapCalculator(
+	stage nodes.TurbineStageNode,
+	profile profiles.BladeProfile,
+) cooling.GapCalculator {
+	if result, err := cooling2.GetInitedStatorGapCalculator(stage, profile); err != nil {
+		panic(err)
+	} else {
+		return result
 	}
 }
 

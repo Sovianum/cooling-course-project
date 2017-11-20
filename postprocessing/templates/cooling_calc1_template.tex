@@ -7,15 +7,14 @@
 		\hline
 		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
 		Температура газа & $T_г$ & К & $<-<.Gas.Tg | Round1>->$ \\ \hline
-		Расход газа & $G_г$ & кг/c & $<-<.Gas.GasMassRate | Round1>->$ \\ \hline
 		Длина лопатки & $l$ & м & $<-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
-		Средний диаметр & $D_{ср}$ & м & $<-<.Geom.DMean | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
 		Осевая проекция хорды & $b_a$ & м & $<-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
 		Поверхность лопатки, соприкасающаяся с газом & $f$ & $м^2$ & $<-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
 		Периметр профиля & $u$ & $м$ & $<-<.Geom.Perimeter | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
 		Толщина стенки & $\Delta$ & $м$ & $<-<.Geom.WallThk | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
-		Диаметр входной кромки & $d_{вх.кр.}$ & $м$ & $<-<.Geom.DInlet | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
 		Средняя температура наружной поверхности лопатки & $T_{ст}$ & $К$ & $<-<.Metal.TWallOuter | Round1>->$ \\ \hline
+		Плотность газа & $\rho_г$ & $кг/м^3$ & $<-<.Gas.DensityGas | Round2>->$ \\ \hline
+		Осевая скорость & $c_a$ & $м/с$ & $<-<.Gas.CaGas | Round1>->$ \\ \hline
 	\end{tabular}
 \end{center}
 
@@ -27,22 +26,38 @@
  			}{
  				\mu_г
  			} = \frac{
- 				<-<.Gas.Tg | Round1>-> \cdot <-<.Gas.CaGas | Round1>-> \cdot <-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}
+ 				<-<.Gas.DensityGas | Round2>-> \cdot <-<.Gas.CaGas | Round1>-> \cdot <-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}
  			}{
  				<-<.Gas.MuGas | MultiplyE6 | Round2>-> \cdot 10^{-6} 
  			} = <-<.Gas.ReGas | DivideE3 | Round>-> \cdot 10^3
  		$$
  	\item Определим число $Nu$ для газа:
  		$$
- 			Nu = A \cdot Re_г^{0.68} = <-<.Gas.NuCoef>-> \cdot {<-<.Gas.ReGas | DivideE3 | Round>-> \cdot 10^3}^{0.68} = <-<.Gas.NuGas | Round>->
+ 			Nu = A \cdot Re_г^{0.68} = 
+ 			<-<.Gas.NuCoef | Round3>-> \cdot \left(
+ 				<-<.Gas.ReGas | DivideE3 | Round>-> \cdot 10^3
+			\right)^{0.68} = <-<.Gas.NuGas | Round>->
  		$$
  	\item Определим средний коэффициент теплоотдачи от газа к лопатке:
  		$$
- 			\alpha_г = Nu \frac{\lambda_г}{b_a} = <-<.Gas.NuGas | Round>-> \cdot \frac{<-<.Gas.LambdaGas>->}{<-<.Geom.ChordProjection>->} = <-<.Gas.AlphaGas>-> \/\ Вт / \left( м^2 \cdot К \right)
+ 			\alpha_г = Nu \frac{\lambda_г}{b_a} = 
+ 			<-<.Gas.NuGas | Round>-> \cdot \frac{
+ 				<-<.Gas.LambdaGas | MultiplyE3 | Round1>-> \cdot 10^{-3}
+ 			}{
+ 				<-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}
+ 			} = <-<.Gas.AlphaGas | Round1>-> \/\ Вт / \left( м^2 \cdot К \right)
  		$$
  	\item Определим тепловой поток в сопловую лопатку:
  		$$
- 			Q_л = \alpha_г u l \left( T_г - T_{ст} \right) = <-<.Gas.AlphaGas>-> \cdot <-<.Geom.Perimeter>-> \cdot <-<.Geom.BladeLength>-> \cdot \left( <-<.Gas.Tg | Round1>-> - <-<.Metal.TWallOuter>-> \right) = <-<.Gas.Heat | DivideE3>-> \cdot 10^3 \/\ Вт 
+ 			Q_л = \alpha_г u l \left( T_г - T_{ст} \right) = 
+		$$
+		$$
+ 			=<-<.Gas.AlphaGas | Round1>-> \cdot 
+ 			<-<.Geom.Perimeter | MultiplyE3 | Round1>-> \cdot 10^{-3} \cdot 
+ 			<-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3} \cdot 
+ 			\left( 
+ 				<-<.Gas.Tg | Round1>-> - <-<.Metal.TWallOuter>-> 
+			\right) = <-<.Gas.Heat | DivideE3 | Round1>-> \cdot 10^3 \/\ Вт 
  		$$
  	\item Определим падение температуры в тенке лопатки:
  		$$
@@ -51,7 +66,7 @@
  			}{
  				f \cdot \lambda_м
  			} = \frac{
- 				<-<.Gas.Heat | DivideE3>-> \cdot 10^3 \cdot <-<.Geom.WallThk | MultiplyE3>-> \cdot 10^{-3}
+ 				<-<.Gas.Heat | DivideE3 | Round1>-> \cdot 10^3 \cdot <-<.Geom.WallThk | MultiplyE3 | Round1>-> \cdot 10^{-3}
  			}{
  				<-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot <-<.Metal.LambdaM | Round1>->
  			} = <-<.Metal.DTWall | Round1>-> \/\ К 
@@ -116,7 +131,7 @@
 				\textbf{$\delta$} \\\hline
 				<-<range .Gas.TableRows>->
 					<-<.Id>-> & 
-					$<-<.AirMassRate | Round1>->$ & 
+					$<-<.AirMassRate | Round2>->$ & 
 					$<-<.DCoef | MultiplyE3 | Round3>-> \cdot 10^{-3}$ & 
 					$<-<.EpsCoef | Round2>->$ & 
 					$<-<.AirGap | MultiplyE3 | Round1>-> \cdot 10^-3$ 

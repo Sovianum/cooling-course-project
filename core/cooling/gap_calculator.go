@@ -17,7 +17,7 @@ const (
 	tCoolerInlet = 500
 )
 
-func GetStatorInitedGapCalculator(
+func GetInitedStatorGapCalculator(
 	stage nodes.TurbineStageNode,
 	profile profiles.BladeProfile,
 ) (cooling.GapCalculator, error) {
@@ -27,8 +27,9 @@ func GetStatorInitedGapCalculator(
 	}
 
 	var gas = stage.GasInput().GetState().(states.GasPortState).Gas
-	var ca = stage.VelocityInput().GetState().(states2.VelocityPortState).Triangle.CA()
+	var ca = stage.VelocityInput().GetState().(states2.VelocityPortState).Triangle.CA()	// todo fix axial velocity
 	var pGas = stage.PressureInput().GetState().(states.PressurePortState).PStag
+	var tGas = stage.TemperatureInput().GetState().(states.TemperaturePortState).TStag
 	return cooling.NewGapCalculator(
 		gases.GetAir(), gas,
 		ca, pGas,
@@ -39,7 +40,7 @@ func GetStatorInitedGapCalculator(
 		func(re float64) float64 {
 			return 0.079 * math.Pow(re, 0.68)
 		},
-		dataPack.T0,
+		tGas,
 		tWallOuter,
 		tCoolerInlet,
 	), nil

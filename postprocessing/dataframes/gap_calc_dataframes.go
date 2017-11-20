@@ -1,9 +1,29 @@
 package dataframes
 
+import "github.com/Sovianum/turbocycle/utils/turbine/cooling"
+
+func GapCalcFromDataPacks(packArr []cooling.DataPack) GapCalcDF{
+	return GapCalcDF{
+		Geom:GapGeomFromDataPack(packArr[0]),
+		Metal:GapMetalFromDataPack(packArr[0]),
+		Gas:GapGasFromDataPacks(packArr),
+	}
+}
+
 type GapCalcDF struct {
 	Geom  GapGeometryDF
 	Metal GapMetalDF
 	Gas   GapGasDF
+}
+
+func GapGeomFromDataPack(pack cooling.DataPack) GapGeometryDF {
+	return GapGeometryDF{
+		BladeLength:     pack.BladeLength,
+		ChordProjection: pack.ChordProjection,
+		BladeArea:       pack.BladeArea,
+		Perimeter:       pack.Perimeter,
+		WallThk:         pack.WallThk,
+	}
 }
 
 type GapGeometryDF struct {
@@ -16,12 +36,56 @@ type GapGeometryDF struct {
 	DInlet          float64
 }
 
+func GapMetalFromDataPack(pack cooling.DataPack) GapMetalDF {
+	return GapMetalDF{
+		TWallOuter: pack.TWallOuter,
+		TWallInner: pack.TWallInner,
+		TWallMean:  pack.TMean,
+		DTWall:     pack.TDrop,
+		LambdaM:    pack.LambdaM,
+	}
+}
+
 type GapMetalDF struct {
 	TWallOuter float64
 	TWallInner float64
 	TWallMean  float64
 	DTWall     float64
 	LambdaM    float64
+}
+
+func GapGasFromDataPacks(packArr []cooling.DataPack) GapGasDF {
+	var airMassRate = make([]float64, len(packArr))
+	var dCoef = make([]float64, len(packArr))
+	var epsCoef = make([]float64, len(packArr))
+	var airGap = make([]float64, len(packArr))
+
+	for i, pack := range packArr {
+		airMassRate[i] = pack.MassRateCooler
+		dCoef[i] = pack.DComplex
+		epsCoef[i] = pack.EpsComplex
+		airGap[i] = pack.AirGap
+	}
+
+	return GapGasDF{
+		Tg:         packArr[0].TGas,
+		CaGas:      packArr[0].CaGas,
+		DensityGas: packArr[0].DensityGas,
+		MuGas:      packArr[0].MuGas,
+		LambdaGas:  packArr[0].LambdaGas,
+
+		ReGas: packArr[0].ReGas,
+		NuGas: packArr[0].NuGas,
+
+		Theta0:   packArr[0].TAir0,
+		AlphaGas: packArr[0].AlphaGas,
+		Heat:     packArr[0].BladeHeat,
+
+		AirMassRate: airMassRate,
+		DCoef:       dCoef,
+		EpsCoef:     epsCoef,
+		AirGap:      airGap,
+	}
 }
 
 type GapGasDF struct {
