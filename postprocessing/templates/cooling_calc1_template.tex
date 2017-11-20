@@ -1,4 +1,4 @@
-\subsection{Расчет расхода охлаждающего воздуха}
+\section{Расчет расхода охлаждающего воздуха}
 
 % Добавить исходные данные
 Исходные данные:
@@ -6,19 +6,18 @@
 	\begin{tabular}{|p{7cm}|c|c|c|}
 		\hline
 		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
-		Температура газа & $T_г$ & К & <-<.Gas.Tg | Round1>-> \\ \hline
-		Расход газа & $G_г$ & кг/c & <-<.Gas.GasMassRate | Round1>-> \\ \hline
-		Длина лопатки & $l$ & м & <-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
-		Средний диаметр & $D_{ср}$ & м & <-<.Geom.DMean | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
-		Осевая проекция хорды & $b_a$ & м & <-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
-		Поверхность лопатки, соприкасающаяся с газом & $f$ & $м^2$ & <-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
-		Периметр профиля & $u$ & $м$ & <-<.Geom.Perimeter | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
-		Толщина стенки & $\Delta$ & $м$ & <-<.Geom.WallThk | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
-		Диаметр входной кромки & $d_{вх.кр.}$ & $м$ & <-<.Geom.DInlet | MultiplyE3 | Round1>-> \cdot 10^{-3} \\ \hline
-		Средняя температура наружной поверхности лопатки & $T_{ст}$ & $К$ & <-<.Metal.TWallOuter | Round1>-> \\ \hline
+		Температура газа & $T_г$ & К & $<-<.Gas.Tg | Round1>->$ \\ \hline
+		Расход газа & $G_г$ & кг/c & $<-<.Gas.GasMassRate | Round1>->$ \\ \hline
+		Длина лопатки & $l$ & м & $<-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+		Средний диаметр & $D_{ср}$ & м & $<-<.Geom.DMean | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+		Осевая проекция хорды & $b_a$ & м & $<-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+		Поверхность лопатки, соприкасающаяся с газом & $f$ & $м^2$ & $<-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+		Периметр профиля & $u$ & $м$ & $<-<.Geom.Perimeter | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+		Толщина стенки & $\Delta$ & $м$ & $<-<.Geom.WallThk | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+		Диаметр входной кромки & $d_{вх.кр.}$ & $м$ & $<-<.Geom.DInlet | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+		Средняя температура наружной поверхности лопатки & $T_{ст}$ & $К$ & $<-<.Metal.TWallOuter | Round1>->$ \\ \hline
 	\end{tabular}
 \end{center}
-\end{enumerate}
 
  \begin{enumerate}
  	\item Определим число $Re$ для газа ($\mu_г = Па \cdot с$):
@@ -108,19 +107,19 @@
 
  	Результаты расчета сведены в таблицу:
 		\begin{center}
-			\begin{tabular}{|p|c|c|c|}
+			\begin{tabular}{|c|c|c|c|c|}
 				\hline
 				\textbf{№} & 
 				\textbf{$G_в, \/\ кг/c$} & 
 				\textbf{$D$} & 
 				\textbf{$\epsilon$} & 
-				\textbf{\delta} \\\hline
+				\textbf{$\delta$} \\\hline
 				<-<range .Gas.TableRows>->
 					<-<.Id>-> & 
-					<-<.AirMassRate | Round1>-> & 
-					<-<.DCoef | MultiplyE3 | Round3>-> \cdot 10^{-3} & 
-					<-<.EpsCoef | Round2>-> & 
-					<-<.AirGap | MultiplyE3 | Round1>-> \cdot 10^-3 
+					$<-<.AirMassRate | Round1>->$ & 
+					$<-<.DCoef | MultiplyE3 | Round3>-> \cdot 10^{-3}$ & 
+					$<-<.EpsCoef | Round2>->$ & 
+					$<-<.AirGap | MultiplyE3 | Round1>-> \cdot 10^-3$ 
 					\\\hline
 				<-<end>->
 			\end{tabular}

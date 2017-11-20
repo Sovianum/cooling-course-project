@@ -137,9 +137,9 @@ func main() {
 
 	saveProfilingTemplate()
 
-	//saveCooling1Template()
-	//saveCooling2Template()
-	//
+	saveCooling1Template()
+	saveCooling2Template()
+
 	saveRootTemplate()
 	saveTitleTemplate()
 

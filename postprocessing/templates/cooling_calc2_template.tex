@@ -1,4 +1,4 @@
-\subsection{Расчет профиля температур}
+\section{Расчет профиля температур}
 
 \begin{enumerate}
 	\item Определим коэффициент теплоотдачи от газа на входной кромке лопатки $\alpha_{г.вх.кр.}$:
@@ -39,7 +39,7 @@
 		$$
 			\alpha_{г.кор.} = \alpha_г = <-<.Gas.AlphaMean | Round1>-> = <-<.Gas.AlphaGasPS | Round1>-> Вт/\left( м^2 \cdot К\right)
 		$$
-	\item Определим коэффициент теплоотдачи от стенки к охлаждающему воздуху \alpha_{в}:
+	\item Определим коэффициент теплоотдачи от стенки к охлаждающему воздуху $\alpha_{в}$:
 		$$
 			\alpha_{в} = 0.02 \cdot \frac{
 				\lambda_{в}
@@ -100,13 +100,14 @@
 		$$
 	Численно решая уравнение теплообмена, поулчим распределение параметров по спинке и корыту.
 	Распределение параметров газа по спинке:
-		\begin{longtable}{|c|c|c|c|c|}
+		\begin{longtable}{|c|c|c|c|c|c|}
 		\hline
 		\textbf{№} &
 		\textbf{$x, \/\ м$} & 
 		\textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & 
 		\textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & 
-		\textbf{$\theta_x, \/\ К$} & \textbf{$T_{ст.x}, \/\ К$} 
+		\textbf{$\theta_x, \/\ К$} & 
+		\textbf{$T_{ст.x}, \/\ К$} 
 		\\ \hline
 		<-<range .Gas.SSRows>->
 			<-<.Id>-> & 
@@ -119,13 +120,14 @@
 		\end{longtable}
 
 	Распределение параметров газа по корыту:
-		\begin{longtable}{|c|c|c|c|c|}
+		\begin{longtable}{|c|c|c|c|c|c|}
 		\hline
 		\textbf{№} &
 		\textbf{$x, \/\ 10^{-3} м$} & 
 		\textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & 
 		\textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & 
-		\textbf{$\theta_x, \/\ К$} & \textbf{$T_{ст.x}, \/\ К$} 
+		\textbf{$\theta_x, \/\ К$} & 
+		\textbf{$T_{ст.x}, \/\ К$} 
 		\\ \hline
 		<-<range .Gas.PSRows>->
 			<-<.Id>-> & 
