@@ -62,6 +62,9 @@ func GetInitedRotorProfiler(
 	geomGen geometry.BladingGeometryGenerator,
 	meanInletTriangle, meanOutletTriangle states.VelocityTriangle,
 ) profilers.Profiler {
+	var inletLaw = laws.NewConstantAbsoluteAngleLaw()
+	var outletLaw = laws.NewConstantLabourLaw(inletLaw, meanInletTriangle)
+
 	return profilers.NewProfiler(
 		1,
 		0.7,
@@ -70,8 +73,8 @@ func GetInitedRotorProfiler(
 		geomGen,
 
 		meanInletTriangle, meanOutletTriangle,
-		laws.NewConstantAbsoluteAngleLaw(),
-		laws.NewConstantAbsoluteAngleLaw(),
+		inletLaw,
+		outletLaw,
 
 		func(characteristicAngle, hRel float64) float64 {
 			return characteristicAngle
