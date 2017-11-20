@@ -145,6 +145,8 @@ func main() {
 		0.2, 0.2,
 		statorProfiler,
 	)
+	var pack = stage.GetDataPack()
+	statorMidProfile.Transform(geom.Scale(geometry.ChordProjection(pack.StageGeometry.StatorGeometry())))
 	var gapCalculator = getGapCalculator(stage, statorMidProfile)
 
 	saveCooling1Template(common.LinSpace(0.05, 0.15, 10), gapCalculator)
