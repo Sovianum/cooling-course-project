@@ -1,4 +1,4 @@
-\subsection{Расчет цикла при $\pi_{кнд} = <-<.LPCompressor.Pi>->, \pi_{квд} = <-<.HPCompressor.Pi>->$}
+\section{Расчет цикла при $\pi_{кнд} = <-<.LPCompressor.Pi>->, \pi_{квд} = <-<.HPCompressor.Pi>->$}
 % Расчет ГТД носит итерационный характер, так как параметры газа на входе в камеру сгорания
 % за счет регенератора зависят от температуры на выходе из силовой турбины.
 % Таким образом, расчет, представленный ниже, относится к последней итерации для
@@ -52,7 +52,6 @@
 		$$L_{КНД} = c_{pв \/\ кнд} \left( T_{кнд}^* - T_a \right) =
 			<-<.LPCompressor.GasData.CpMean | Round1>-> \cdot \left(<-<.LPCompressor.TOut | Round1>-> - <-<.LPCompressor.TIn | Round1>->\right) =
 			<-<.LPCompressor.Labour | DivideE6 | Round3>-> \cdot 10^6 \/\ Дж/кг $$
-
 	\item Определим давление перед КВД:
 		$$p_{0 \/\ квд}^* = \sigma_{кнд} p_{кнд}^* = <-<.LPCompressorPipe.Sigma | Round2>-> \cdot <-<.LPCompressor.POut | DivideE6 | Round3>-> = <-<.HPCompressor.PIn | DivideE6 | Round3>-> \/\ МПа$$
 	\item Определим давление за КВД:

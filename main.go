@@ -38,15 +38,18 @@ const (
 	piFactorStep    = 0.1
 	piFactorStepNum = 8
 
-	totalPiStag = 20
-	lowPiStag   = 20 / 2.5
-	highPiStag  = 2.5
+	totalPiStag = 16
+	lowPiStag   = 16 / 2
+	highPiStag  = 2
 
 	templatesDir = "postprocessing/templates"
 
 	buildDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
 	dataDir  = "build/data/"
 	imgDir   = "build/img"
+
+	cycleInputTemplate = "cycle_input_data_template.tex"
+	cycleInputOut      = "cycle_input_data.tex"
 
 	variantTemplate = "variant_template.tex"
 	variantOut      = "variant.tex"
@@ -82,9 +85,11 @@ func main() {
 
 	var scheme = getScheme(lowPiStag, highPiStag)
 
-	var schemeData = getSchemeData(scheme)
-	saveSchemeData(schemeData)
-	saveVariantTemplate(schemeData)
+	saveCycleInputTemplate()
+
+	//var schemeData = getSchemeData(scheme)
+	//saveSchemeData(schemeData)
+	//saveVariantTemplate(schemeData)
 
 	solveParticularScheme(scheme, lowPiStag, highPiStag)
 	saveCycleTemplate(scheme)
@@ -397,6 +402,18 @@ func saveVariantTemplate(schemeData []core.DoubleCompressorDataPoint) {
 		PiHigh:    highPiStag,
 		PiTotal:   totalPiStag,
 	}
+	if err := inserter.Insert(df); err != nil {
+		panic(err)
+	}
+}
+
+func saveCycleInputTemplate() {
+	var inserter = templ.NewDataInserter(
+		templatesDir+"/"+cycleInputTemplate,
+		buildDir+"/"+cycleInputOut,
+	)
+	var df = three_shafts.GetInitDF()
+	df.Ne = power
 	if err := inserter.Insert(df); err != nil {
 		panic(err)
 	}
