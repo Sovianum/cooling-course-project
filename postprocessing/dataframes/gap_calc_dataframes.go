@@ -2,11 +2,11 @@ package dataframes
 
 import "github.com/Sovianum/turbocycle/utils/turbine/cooling"
 
-func GapCalcFromDataPacks(packArr []cooling.DataPack) GapCalcDF{
+func GapCalcFromDataPacks(packArr []cooling.DataPack) GapCalcDF {
 	return GapCalcDF{
-		Geom:GapGeomFromDataPack(packArr[0]),
-		Metal:GapMetalFromDataPack(packArr[0]),
-		Gas:GapGasFromDataPacks(packArr),
+		Geom:  GapGeomFromDataPack(packArr[0]),
+		Metal: GapMetalFromDataPack(packArr[0]),
+		Gas:   GapGasFromDataPacks(packArr),
 	}
 }
 

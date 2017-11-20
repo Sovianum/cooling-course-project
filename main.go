@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/Sovianum/cooling-course-project/core"
+	cooling2 "github.com/Sovianum/cooling-course-project/core/cooling"
 	"github.com/Sovianum/cooling-course-project/core/midline"
 	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
@@ -11,10 +12,12 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common"
+	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
 	"github.com/Sovianum/turbocycle/impl/turbine/states"
 	"github.com/Sovianum/turbocycle/library/schemes"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
@@ -22,8 +25,6 @@ import (
 	"math"
 	"os"
 	"os/exec"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
-	cooling2 "github.com/Sovianum/cooling-course-project/core/cooling"
 )
 
 const (
@@ -80,7 +81,10 @@ const (
 	inletAngleData  = "inlet_angle.csv"
 	outletAngleData = "outlet_angle.csv"
 
-	hPointNum = 50
+	hPointNum       = 50
+	coolAirMassRate = 0.05
+	theta0 = 500
+	gapWidth        = 2.4e-3
 )
 
 func main() {
@@ -145,12 +149,23 @@ func main() {
 		0.2, 0.2,
 		statorProfiler,
 	)
-	var pack = stage.GetDataPack()
-	statorMidProfile.Transform(geom.Scale(geometry.ChordProjection(pack.StageGeometry.StatorGeometry())))
-	var gapCalculator = getGapCalculator(stage, statorMidProfile)
+	var stagePack = stage.GetDataPack()
+	statorMidProfile.Transform(geom.Scale(geometry.ChordProjection(stagePack.StageGeometry.StatorGeometry())))
 
-	saveCooling1Template(common.LinSpace(0.05, 0.15, 10), gapCalculator)
-	saveCooling2Template()
+	var gapCalculator = getGapCalculator(stage, statorMidProfile)
+	var gapPack = gapCalculator.GetPack(coolAirMassRate)
+
+	var gapCalcDF = getGapDF(common.LinSpace(0.05, 0.15, 10), gapCalculator)
+	saveCooling1Template(gapCalcDF)
+
+	var psTemperatureSystem = getPSTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	var psSolution = psTemperatureSystem.Solve(0, theta0, 1, 0.001)
+
+	var ssTemperatureSystem = getSSTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	var ssSolution = ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
+
+	var tempProfileDF = getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
+	saveCooling2Template(tempProfileDF)
 
 	saveRootTemplate()
 	saveTitleTemplate()
@@ -199,31 +214,12 @@ func saveTitleTemplate() {
 	}
 }
 
-func saveCooling2Template() {
-	var geomDF = dataframes.TProfileGeomDF{}
-	var gasDF = dataframes.TProfileGasDF{
-		LengthPSArr:   []float64{1, 1, 1},
-		AlphaAirPSArr: []float64{1, 1, 1},
-		AlphaGasPSArr: []float64{1, 1, 1},
-		TAirPSArr:     []float64{1, 1, 1},
-
-		LengthSSArr:   []float64{1, 1, 1},
-		AlphaAirSSArr: []float64{1, 1, 1},
-		AlphaGasSSArr: []float64{1, 1, 1},
-		TAirSSArr:     []float64{1, 1, 1},
-	}
-	var calcDF = dataframes.TProfileCalcDF{
-		Geom: geomDF,
-		Gas:  gasDF,
-	}
-
+func saveCooling2Template(df dataframes.TProfileCalcDF) {
 	var inserter = templ.NewDataInserter(
 		templatesDir+"/"+cooling2Template,
 		buildDir+"/"+cooling2Out,
 	)
 
-	//var df, err = gapCalcDF, nil
-	var df = calcDF
 	var err error = nil
 	if err != nil {
 		panic(err)
@@ -234,10 +230,150 @@ func saveCooling2Template() {
 	}
 }
 
+func getTempProfileDF(
+	gapDF dataframes.GapCalcDF,
+	stage nodes.TurbineStageNode,
+	profile profiles.BladeProfile,
+	psSolution cooling.TemperatureSolution,
+	ssSolution cooling.TemperatureSolution,
+) dataframes.TProfileCalcDF {
+	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
+
+	var dInlet = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-3)
+
+	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
+	var tStagIn = stage.TemperatureInput().GetState().(states2.TemperaturePortState).TStag
+	var pStagIn = stage.PressureInput().GetState().(states2.PressurePortState).PStag
+	var density0 = pStagIn / (gas.R() * tStagIn)
+	var ca = inletTriangle.CA()
+	var massRateIntensity = density0 * ca
+
+	var geomDF = dataframes.TProfileGeomDF{
+		DInlet: dInlet,
+	}
+
+	var alphaMean = gapDF.Gas.AlphaGas
+
+	var alphaGasSS = cooling.InletSSAlphaLaw(alphaMean)(0, tStagIn)
+	var alphaGasOutlet = cooling.OutletSSAlphaLaw(alphaMean)(0, tStagIn)
+	var alphaGasPS = cooling.PSAlphaLaw(alphaMean)(0, tStagIn)
+	var alphaInlet = cooling.CylinderAlphaLaw(gas, massRateIntensity, dInlet)(0, tStagIn)
+
+	var gasDF = dataframes.TProfileGasDF{
+		Ca:             ca,
+		RhoGas:         density0,
+		MuGas:          gapDF.Gas.MuGas,
+		LambdaGas:      gapDF.Gas.LambdaGas,
+		AlphaMean:      alphaMean,
+		AlphaGasSS:     alphaGasSS,
+		AlphaGasPS:     alphaGasPS,
+		AlphaGasOutlet: alphaGasOutlet,
+		AlphaGasInlet:  alphaInlet,
+		SkipSteps:      50,
+	}
+	gasDF.SetPSSolutionInfo(psSolution)
+	gasDF.SetSSSolutionInfo(ssSolution)
+
+	var calcDF = dataframes.TProfileCalcDF{
+		Geom: geomDF,
+		Gas:  gasDF,
+	}
+	return calcDF
+}
+
+func getSSTemperatureSystem(
+	meanAlphaGas float64,
+	stage nodes.TurbineStageNode,
+	profile profiles.BladeProfile,
+) cooling.TemperatureSystem {
+	var segment = profiles.SSSegment(profile, 0.5, 0.5)
+	var pack = stage.GetDataPack()
+	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
+
+	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
+	var tStagIn = stage.TemperatureInput().GetState().(states2.TemperaturePortState).TStag
+	var pStagIn = stage.PressureInput().GetState().(states2.PressurePortState).PStag
+	var density0 = pStagIn / (gas.R() * tStagIn)
+
+	var massRateIntensity = density0 * inletTriangle.CA()
+
+	var dInlet = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-3)
+	var alphaInlet = cooling.CylinderAlphaLaw(gas, massRateIntensity, dInlet)(0, tStagIn)
+
+	var alphaGasFunc = cooling2.SSProfileGasAlphaLaw(
+		profile, alphaInlet, meanAlphaGas,
+	)
+	var alphaAirFunc = cooling.DefaultAirAlphaLaw(
+		stage.GasInput().GetState().(states2.GasPortState).Gas,
+		geometry.Height(0, pack.StageGeometry.StatorGeometry()),
+		gapWidth, coolAirMassRate,
+	)
+	if system, err := cooling2.GetInitedStatorTemperatureSystem(
+		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
+	); err != nil {
+		panic(err)
+	} else {
+		return system
+	}
+}
+
+func getPSTemperatureSystem(
+	meanAlphaGas float64,
+	stage nodes.TurbineStageNode,
+	profile profiles.BladeProfile,
+) cooling.TemperatureSystem {
+	var segment = profiles.PSSegment(profile, 0.5, 0.5)
+	var pack = stage.GetDataPack()
+	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
+
+	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
+	var tStagIn = stage.TemperatureInput().GetState().(states2.TemperaturePortState).TStag
+	var pStagIn = stage.PressureInput().GetState().(states2.PressurePortState).PStag
+	var density0 = pStagIn / (gas.R() * tStagIn)
+
+	var massRateIntensity = density0 * inletTriangle.CA()
+
+	var dInlet = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-3)
+	var alphaInlet = cooling.CylinderAlphaLaw(gas, massRateIntensity, dInlet)(0, tStagIn)
+
+	var alphaGasFunc = cooling2.PSProfileGasAlphaLaw(
+		profile, alphaInlet, meanAlphaGas,
+	)
+	var alphaAirFunc = cooling.DefaultAirAlphaLaw(
+		stage.GasInput().GetState().(states2.GasPortState).Gas,
+		geometry.Height(0, pack.StageGeometry.StatorGeometry()),
+		gapWidth, coolAirMassRate,
+	)
+	if system, err := cooling2.GetInitedStatorTemperatureSystem(
+		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
+	); err != nil {
+		panic(err)
+	} else {
+		return system
+	}
+}
+
 func saveCooling1Template(
+	df dataframes.GapCalcDF,
+) {
+	var inserter = templ.NewDataInserter(
+		templatesDir+"/"+cooling1Template,
+		buildDir+"/"+cooling1Out,
+	)
+
+	var err error = nil
+	if err != nil {
+		panic(err)
+	}
+	if err := inserter.Insert(df); err != nil {
+		panic(err)
+	}
+}
+
+func getGapDF(
 	massRateArr []float64,
 	calculator cooling.GapCalculator,
-) {
+) dataframes.GapCalcDF {
 	var dataPackArr = make([]cooling.DataPack, len(massRateArr))
 
 	for i, massRate := range massRateArr {
@@ -248,21 +384,9 @@ func saveCooling1Template(
 		dataPackArr[i] = pack
 	}
 	var gapCalcDF = dataframes.GapCalcFromDataPacks(dataPackArr)
-	gapCalcDF.Gas.NuCoef = 0.079	// todo remove hardcode
+	gapCalcDF.Gas.NuCoef = 0.079 // todo remove hardcode
 
-	var inserter = templ.NewDataInserter(
-		templatesDir+"/"+cooling1Template,
-		buildDir+"/"+cooling1Out,
-	)
-
-	var err error = nil
-	if err != nil {
-		panic(err)
-	}
-	if err := inserter.Insert(gapCalcDF); err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
+	return gapCalcDF
 }
 
 func getGapCalculator(

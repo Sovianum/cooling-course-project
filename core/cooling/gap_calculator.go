@@ -27,7 +27,7 @@ func GetInitedStatorGapCalculator(
 	}
 
 	var gas = stage.GasInput().GetState().(states.GasPortState).Gas
-	var ca = stage.VelocityInput().GetState().(states2.VelocityPortState).Triangle.CA()	// todo fix axial velocity
+	var ca = stage.VelocityInput().GetState().(states2.VelocityPortState).Triangle.CA()
 	var pGas = stage.PressureInput().GetState().(states.PressurePortState).PStag
 	var tGas = stage.TemperatureInput().GetState().(states.TemperaturePortState).TStag
 	return cooling.NewGapCalculator(

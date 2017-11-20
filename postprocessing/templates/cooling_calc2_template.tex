@@ -9,20 +9,24 @@
 				d_{вх.кр.}
 			}\sqrt{
 				\frac{
-					G_г \cdot d_{вх.кр.}
+					\rho_г \cdot c_a \cdot d_{вх.кр.}
 				}{
-					\pi \cdot D_{ср} \cdot l \cdot \sin \alpha_0 \cdot \mu_г
+					\mu_г
 				}
 			} =
-			0.74 \frac{
-				<-<.Gas.LambdaGas | Round1>->
+		$$
+		$$
+			= 0.74 \frac{
+				<-<.Gas.LambdaGas | MultiplyE3 | Round1>-> \cdot 10^{-3}
 			}{
 				<-<.Geom.DInlet | MultiplyE3 | Round2>-> \cdot 10^{-3}
 			}\sqrt{
 				\frac{
-					<-<.Gas.MassRateGas | Round1>-> \cdot <-<.Geom.DInlet | MultiplyE3 | Round2>-> \cdot 10^{-3}
+					<-<.Gas.RhoGas | Round1>-> \cdot 
+					<-<.Gas.Ca | Round1>-> \cdot 
+					<-<.Geom.DInlet | MultiplyE3 | Round2>-> \cdot 10^{-3}
 				}{
-					\pi \cdot <-<.Geom.DMean | Round3>-> \cdot l \cdot \sin <-<.Gas.Alpha0 | Degree | Round1>-> \cdot <-<.Gas.MuGas | MultiplyE6 | Round3>-> \cdot 10^{-6}
+					<-<.Gas.MuGas | MultiplyE6 | Round1>-> \cdot 10^{-6}
 				}
 			} = <-<.Gas.AlphaGasInlet | Round1>-> \/\ Вт/\left( м^2 \cdot К\right)
 		$$
@@ -39,7 +43,7 @@
 		$$
 			\alpha_{г.кор.} = \alpha_г = <-<.Gas.AlphaMean | Round1>-> = <-<.Gas.AlphaGasPS | Round1>-> Вт/\left( м^2 \cdot К\right)
 		$$
-	\item Определим коэффициент теплоотдачи от стенки к охлаждающему воздуху $\alpha_{в}$:
+	\item Коэффициент теплоотдачи от стенки к охлаждающему воздуху зависит от его температуры и определяется следующим уравнением $\alpha_{в}$:
 		$$
 			\alpha_{в} = 0.02 \cdot \frac{
 				\lambda_{в}
@@ -55,22 +59,7 @@
 				}{
 					\mu_{в}
 				}
-			\right)^{0.8} = 
-			0.02 \cdot \frac{
-				<-<.Gas.LambdaAir | Round1>->
-			}{
-				2\delta
-			} \left( 
-				\frac{
-					<-<.Gas.MassRateAir | Round1>->
-				}{
-					l
-				} \cdot \frac{
-					1
-				}{
-					<-<.Gas.MuGas | MultiplyE6 | Round3>-> \cdot 10^{-6}
-				}
-			\right)^{0.8} = <-<.Gas.AlphaAir | Round1>-> \/\ Вт/\left( м^2 \cdot К\right)
+			\right)^{0.8}
 		$$
 	\item Уравнение теплообмена между охлаждающим воздухом и газом имеет вид:
 		$$
@@ -112,9 +101,10 @@
 		<-<range .Gas.SSRows>->
 			<-<.Id>-> & 
 			<-<.X | MultiplyE3 | Round3>-> & 
-			<-<.AlphaAir | Round1>-> & 
-			<-<.AlphaGas | Round1>-> &
+			<-<.AlphaGas | Round1>-> & 
+			<-<.AlphaAir | Round1>-> &
 			<-<.TAir | Round1>-> & 
+			<-<.TWall | Round1>->
 			\\\hline
 		<-<end>->
 		\end{longtable}
@@ -132,9 +122,10 @@
 		<-<range .Gas.PSRows>->
 			<-<.Id>-> & 
 			<-<.X | MultiplyE3 | Round3>-> & 
-			<-<.AlphaAir | Round1>-> & 
-			<-<.AlphaGas | Round1>-> &
+			<-<.AlphaGas | Round1>-> & 
+			<-<.AlphaAir | Round1>-> &
 			<-<.TAir | Round1>-> & 
+			<-<.TWall | Round1>->  
 			\\\hline
 		<-<end>->	
 		\end{longtable}

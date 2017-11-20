@@ -10,11 +10,8 @@ import (
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
 )
 
-const (
-	airMassRate = 0.05
-)
-
 func GetInitedStatorTemperatureSystem(
+	airMassRate float64,
 	stage nodes.TurbineStageNode,
 	segment geom.Segment,
 	alphaAirFunc cooling.AlphaLaw,
@@ -45,42 +42,42 @@ func GetInitedStatorTemperatureSystem(
 	), nil
 }
 
-func PSProfileAlphaLaw(
-	gas gases.Gas,
+func PSProfileGasAlphaLaw(
 	profile profiles.BladeProfile,
-	massRateIntensity float64,
+	inletAlpha float64,
 	meanAlpha float64,
 ) cooling.AlphaLaw {
-	var inletEdgeDiameter = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-4)
 	var inletEdgeLength = geom.ApproxLength(profile.InletEdge(), 0.5, 1, 100)
 	var psLength = geom.ApproxLength(profile.PSLine(), 0, 1, 100)
 
-	var boundaryValue = inletEdgeLength / (inletEdgeLength + psLength)
+	var boundaryValue = inletEdgeLength
+	var totalLength = inletEdgeLength + psLength
 
 	return cooling.JoinedAlphaLaw(
 		[]cooling.AlphaLaw{
-			cooling.CylinderAlphaLaw(gas, massRateIntensity, inletEdgeDiameter),
+			cooling.ConstantAlphaLaw(inletAlpha),
 			cooling.PSAlphaLaw(meanAlpha),
-		}, []float64{boundaryValue},
+		}, []float64{0, boundaryValue, totalLength},
 	)
 }
 
-func SSProfileAlphaLaw(
-	gas gases.Gas,
+func SSProfileGasAlphaLaw(
 	profile profiles.BladeProfile,
-	massRateIntensity float64,
+	inletAlpha float64,
 	meanAlpha float64,
 ) cooling.AlphaLaw {
-	var inletEdgeDiameter = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-4)
 	var inletEdgeLength = geom.ApproxLength(profile.InletEdge(), 0.5, 1, 100)
-	var psLength = geom.ApproxLength(profile.PSLine(), 0, 1, 100)
+	var ssLength = geom.ApproxLength(profile.SSLine(), 0, 1, 100)
+	var totalLength = inletEdgeLength + ssLength
 
-	var boundaryValue = inletEdgeLength / (inletEdgeLength + psLength)
+	var boundary1 = inletEdgeLength
+	var boundary2 = inletEdgeLength + 2 * ssLength / 3
 
 	return cooling.JoinedAlphaLaw(
 		[]cooling.AlphaLaw{
-			cooling.CylinderAlphaLaw(gas, massRateIntensity, inletEdgeDiameter),
-			cooling.PSAlphaLaw(meanAlpha),
-		}, []float64{boundaryValue},
+			cooling.ConstantAlphaLaw(inletAlpha),
+			cooling.InletSSAlphaLaw(meanAlpha),
+			cooling.OutletSSAlphaLaw(meanAlpha),
+		}, []float64{0, boundary1, boundary2, totalLength},
 	)
 }
