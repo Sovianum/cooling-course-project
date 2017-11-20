@@ -3,7 +3,7 @@ package profiling
 import (
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 	"github.com/Sovianum/turbocycle/impl/turbine/states"
-	"github.com/Sovianum/turbocycle/utils/turbine/radial"
+	"github.com/Sovianum/turbocycle/utils/turbine/radial/laws"
 	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 	"github.com/Sovianum/turbocycle/common"
 )
@@ -20,8 +20,8 @@ func GetInitedStatorProfiler(
 		geomGen,
 
 		meanInletTriangle, meanOutletTriangle,
-		radial.NewConstantAbsoluteAngleLaw(),
-		radial.NewConstantAbsoluteAngleLaw(),
+		laws.NewConstantAbsoluteAngleLaw(),
+		laws.NewConstantAbsoluteAngleLaw(),
 
 		func(characteristicAngle, hRel float64) float64 {
 			return characteristicAngle
@@ -70,8 +70,8 @@ func GetInitedRotorProfiler(
 		geomGen,
 
 		meanInletTriangle, meanOutletTriangle,
-		radial.NewConstantAbsoluteAngleLaw(),
-		radial.NewConstantAbsoluteAngleLaw(),
+		laws.NewConstantAbsoluteAngleLaw(),
+		laws.NewConstantAbsoluteAngleLaw(),
 
 		func(characteristicAngle, hRel float64) float64 {
 			return characteristicAngle

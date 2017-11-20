@@ -2,8 +2,6 @@ package builder
 
 import (
 	"testing"
-	"github.com/stretchr/testify/assert"
-	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
 	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
@@ -57,19 +55,6 @@ type BuildTestSuite struct {
 
 func (suite *BuildTestSuite) SetupTest() {
 	suite.insertionMap = getInsertionMap()
-}
-
-func (suite *BuildTestSuite) TestBuildLatex() {
-	var insertionMap = suite.insertionMap
-	for key, val := range insertionMap {
-		var inserter = templ.NewDataInserter(key, val.outputPath)
-		var err = inserter.Insert(val.data)
-		assert.Nil(suite.T(), err)
-	}
-	var rootDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
-	var fileName = "root.tex"
-	var err = BuildLatex(rootDir, fileName)
-	assert.Nil(suite.T(), err)
 }
 
 func TestStageNodeTestSuite(t *testing.T) {
