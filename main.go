@@ -107,9 +107,9 @@ func main() {
 		stage.StageGeomGen().StatorGenerator(),
 		[]float64{0, 0.5, 1.0},
 		[][]string{
-			{"rotor_root_1.csv", "rotor_root_2.csv"},
-			{"rotor_mid_1.csv", "rotor_mid_2.csv"},
-			{"rotor_top_1.csv", "rotor_top_2.csv"},
+			{"stator_root_1.csv", "stator_root_2.csv"},
+			{"stator_mid_1.csv", "stator_mid_2.csv"},
+			{"stator_top_1.csv", "stator_top_2.csv"},
 		},
 		false,
 	)
@@ -128,9 +128,9 @@ func main() {
 		stage.StageGeomGen().RotorGenerator(),
 		[]float64{0, 0.5, 1},
 		[][]string{
-			{"stator_root_1.csv", "stator_root_2.csv"},
-			{"stator_mid_1.csv", "stator_mid_2.csv"},
-			{"stator_top_1.csv", "stator_top_2.csv"},
+			{"rotor_root_1.csv", "rotor_root_2.csv"},
+			{"rotor_mid_1.csv", "rotor_mid_2.csv"},
+			{"rotor_top_1.csv", "rotor_top_2.csv"},
 		},
 		true,
 	)
