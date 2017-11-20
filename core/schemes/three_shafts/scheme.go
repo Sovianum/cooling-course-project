@@ -19,7 +19,6 @@ const (
 	piCompTotal              = 30
 	piCompFactor             = 0.18
 	etaMiddlePressureTurbine = 0.9
-	dgMiddlePressureTurbine  = 0.01
 	etaMMiddleCascade        = 0.99
 
 	etaHighPressureComp = 0.85
@@ -32,7 +31,6 @@ const (
 	t0                     = 300
 	etaHighPressureTurbine = 0.9
 	lambdaOut              = 0.3
-	dgHighPressureTurbine  = -0.01
 	etaMHighCascade        = 0.99
 
 	middlePressureCompressorPipeSigma = 0.98
@@ -42,6 +40,12 @@ const (
 	etaFreeTurbine               = 0.92
 	dgFreeTurbine                = -0.01
 	freeTurbinePressureLossSigma = 0.93
+
+	hptCoolMassRate = 0.05
+	lptCoolMassRate = 0
+
+	hptLeakMassRate = 0.01
+	lptLeakMassRate = 0.01
 
 	precision = 0.05
 )
@@ -53,13 +57,13 @@ func GetInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 		etaMiddlePressureComp, piCompTotal*piCompFactor,
 		etaMiddlePressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
-			return 0
+			return -lptLeakMassRate
 		},
 		func(node constructive.TurbineNode) float64 {
-			return 0
+			return -lptCoolMassRate
 		},
 		func(node constructive.TurbineNode) float64 {
-			return 0
+			return hptCoolMassRate
 		},
 		etaMMiddleCascade, precision,
 	)
@@ -68,10 +72,10 @@ func GetInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
 		etaHighPressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
-			return dgHighPressureTurbine
+			return -hptLeakMassRate
 		},
 		func(node constructive.TurbineNode) float64 {
-			return 0
+			return -(lptCoolMassRate + hptCoolMassRate)
 		},
 		func(node constructive.TurbineNode) float64 {
 			return 0
