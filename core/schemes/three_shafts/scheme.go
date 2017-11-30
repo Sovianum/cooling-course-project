@@ -15,13 +15,13 @@ const (
 
 	sigmaInlet = 0.98
 
-	etaMiddlePressureComp    = 0.83
+	etaMiddlePressureComp    = 0.86
 	piCompTotal              = 30
 	piCompFactor             = 0.18
 	etaMiddlePressureTurbine = 0.9
 	etaMMiddleCascade        = 0.99
 
-	etaHighPressureComp = 0.85
+	etaHighPressureComp = 0.90
 
 	tGas                   = 1500
 	tFuel                  = 300

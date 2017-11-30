@@ -15,7 +15,14 @@ def read_single_compressor_data(file_path):
 
 
 def read_double_compressor_data(file_path):
-    return pd.read_csv(file_path, names=['pi', 'pi_factor', 'G', 'N_e', 'eta'])
+    return pd.read_csv(file_path, names=[
+        'pi', 'pi_factor',
+        'G', 'N_e', 'eta',
+        'Pi_LPC', 'Pi_HPC',
+        'Pi_LPT', 'Pi_HPT',
+        'L_HPC', 'L_LPC',
+        'L_HPT', 'L_LPT', 'L_FT',
+        'Q'])
 
 
 def get_max_eta_df(double_compressor_df):

@@ -37,9 +37,9 @@ const (
 	piStep    = 0.5
 	piStepNum = 100
 
-	startPiFactor   = 0.15
-	piFactorStep    = 0.1
-	piFactorStepNum = 8
+	startPiFactor   = 0.05
+	piFactorStep    = 0.05
+	piFactorStepNum = 19
 
 	totalPiStag = 20
 	lowPiStag   = 4
