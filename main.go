@@ -33,17 +33,17 @@ const (
 	iterNum   = 100
 	precision = 0.05
 
-	startPi   = 7
-	piStep    = 0.1
-	piStepNum = 200
+	startPi   = 10
+	piStep    = 0.5
+	piStepNum = 100
 
 	startPiFactor   = 0.15
 	piFactorStep    = 0.1
 	piFactorStepNum = 8
 
-	totalPiStag = 16
-	lowPiStag   = 16 / 2
-	highPiStag  = 2
+	totalPiStag = 20
+	lowPiStag   = 4
+	highPiStag  = 5
 
 	templatesDir = "postprocessing/templates"
 
@@ -96,9 +96,9 @@ func main() {
 
 	saveCycleInputTemplate()
 
-	//var schemeData = getSchemeData(scheme)
-	//saveSchemeData(schemeData)
-	//saveVariantTemplate(schemeData)
+	var schemeData = getSchemeData(scheme)
+	saveSchemeData(schemeData)
+	saveVariantTemplate(schemeData)
 
 	solveParticularScheme(scheme, lowPiStag, highPiStag)
 	saveCycleTemplate(scheme)
