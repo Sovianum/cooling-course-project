@@ -6,7 +6,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 )
 
-func NewThreeShaftsDF(power float64, scheme schemes.ThreeShaftsScheme) ThreeShaftsDF {
+func NewThreeShaftsDF(nE float64, etaR float64, scheme schemes.ThreeShaftsScheme) ThreeShaftsDF {
 	var gasSourceState = scheme.GasSource().ComplexGasOutput().GetState().(states.ComplexGasPortState)
 
 	return ThreeShaftsDF{
@@ -30,13 +30,16 @@ func NewThreeShaftsDF(power float64, scheme schemes.ThreeShaftsScheme) ThreeShaf
 
 		Burner:      NewBurnerDF(scheme.GasGenerator().Burner()),
 		FreeTurbine: NewTurbineDFFromFreeTurbine(scheme.FreeTurbineBlock().FreeTurbine()),
-		OutletPipe:NewPressureDropDF(scheme.FreeTurbineBlock().OutletPressureLoss()),
+		OutletPipe:  NewPressureDropDF(scheme.FreeTurbineBlock().OutletPressureLoss()),
 
 		EngineLabour: scheme.FreeTurbineBlock().FreeTurbine().LSpecific(),
 		Ce:           schemes.GetSpecificFuelRate(scheme),
-		MassRate:     schemes.GetMassRate(power, scheme),
+		MassRate:     schemes.GetMassRate(nE, scheme),
 		Eta:          schemes.GetEfficiency(scheme),
-		Ne:           power,
+		Ne:           nE,
+
+		EtaR:   etaR,
+		NeMech: nE / etaR,
 	}
 }
 
@@ -65,4 +68,7 @@ type ThreeShaftsDF struct {
 	MassRate     float64 `json:"mass_rate"`
 	Eta          float64 `json:"eta"`
 	Ne           float64 `json:"ne"`
+
+	EtaR   float64 `json:"eta_r"`
+	NeMech float64 `json:"ne_mech"`
 }

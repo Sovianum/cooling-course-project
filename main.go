@@ -29,6 +29,7 @@ import (
 
 const (
 	power     = 16e6
+	etaR      = 0.98
 	relaxCoef = 0.1
 	iterNum   = 100
 	precision = 0.05
@@ -50,6 +51,9 @@ const (
 	buildDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
 	dataDir  = "build/data/"
 	imgDir   = "build/img"
+
+	projectInputTemplate = "project_input_data_template.tex"
+	projectInputOut = "project_input_data.tex"
 
 	cycleInputTemplate = "cycle_input_data_template.tex"
 	cycleInputOut      = "cycle_input_data.tex"
@@ -83,7 +87,7 @@ const (
 
 	hPointNum       = 50
 	coolAirMassRate = 0.05
-	theta0 = 500
+	theta0          = 500
 	gapWidth        = 2.4e-3
 )
 
@@ -94,11 +98,11 @@ func main() {
 
 	var scheme = getScheme(lowPiStag, highPiStag)
 
-	saveCycleInputTemplate()
+	saveInputTemplates()
 
-	var schemeData = getSchemeData(scheme)
-	saveSchemeData(schemeData)
-	saveVariantTemplate(schemeData)
+	//var schemeData = getSchemeData(scheme)
+	//saveSchemeData(schemeData)
+	//saveVariantTemplate(schemeData)
 
 	solveParticularScheme(scheme, lowPiStag, highPiStag)
 	saveCycleTemplate(scheme)
@@ -534,7 +538,7 @@ func saveCycleTemplate(scheme schemes.ThreeShaftsScheme) {
 		templatesDir+"/"+cycleTemplate,
 		buildDir+"/"+cycleOut,
 	)
-	var df = dataframes.NewThreeShaftsDF(power, scheme)
+	var df = dataframes.NewThreeShaftsDF(power, etaR, scheme)
 	if err := inserter.Insert(df); err != nil {
 		panic(err)
 	}
@@ -570,14 +574,23 @@ func saveVariantTemplate(schemeData []core.DoubleCompressorDataPoint) {
 	}
 }
 
-func saveCycleInputTemplate() {
-	var inserter = templ.NewDataInserter(
+func saveInputTemplates() {
+	var cycleInputInserter = templ.NewDataInserter(
 		templatesDir+"/"+cycleInputTemplate,
 		buildDir+"/"+cycleInputOut,
 	)
+	var projectInputInserter = templ.NewDataInserter(
+		templatesDir+"/"+projectInputTemplate,
+		buildDir+"/"+projectInputOut,
+	)
+
 	var df = three_shafts.GetInitDF()
 	df.Ne = power
-	if err := inserter.Insert(df); err != nil {
+	df.EtaR = etaR
+	if err := cycleInputInserter.Insert(df); err != nil {
+		panic(err)
+	}
+	if err := projectInputInserter.Insert(df); err != nil {
 		panic(err)
 	}
 }
@@ -596,7 +609,7 @@ func saveSchemeData(data []core.DoubleCompressorDataPoint) {
 func getSchemeData(scheme schemes.ThreeShaftsScheme) []core.DoubleCompressorDataPoint {
 	if data, err := io.GetThreeShaftsSchemeData(
 		scheme,
-		power,
+		power / etaR,
 		startPi, piStep, piStepNum,
 		startPiFactor, piFactorStep, piFactorStepNum,
 	); err != nil {

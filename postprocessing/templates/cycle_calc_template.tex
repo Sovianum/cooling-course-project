@@ -1,15 +1,43 @@
 \section{Расчет цикла при $\pi_{кнд} = <-<.LPCompressor.Pi>->, \pi_{квд} = <-<.HPCompressor.Pi>->$}
-% Расчет ГТД носит итерационный характер, так как параметры газа на входе в камеру сгорания
-% за счет регенератора зависят от температуры на выходе из силовой турбины.
-% Таким образом, расчет, представленный ниже, относится к последней итерации для
-% случая $\pi_к = <PiComp>$. При этом принимается температура на выходе из силовой
-% турбины: $T_т = <FreeTurbineTOut>$.
+В данном расчете учет изменения теплофизических свойств рабочего тела в зависимости от его температуры производился
+путем итерирования на каждом этапе расчета до тех пор, пока изменение искомого теплофизического свойства (теплоемкости или
+показателя адиабаты) не составляло менее 0.1\% в сравнении с результатами предыдущей итерации. Ниже везде используются
+значения теплофизический свойств на последнем этапе итерационных расчетов.
+
 \begin{enumerate}
 	\item Определим давление за входным устройством:
 		$$p_{вх}^* = \sigma_{вх}  p_a = <-<.InletPipe.Sigma | Round2>-> \cdot <-<.GasSource.P | DivideE6 | Round3>-> = <-<.InletPipe.POut | DivideE6 | Round3>-> \/\ МПа$$
 	\item Определим давление за КНД:
-		$$p_{кнд}^* = \pi_к p_{вх}^* = <-<.LPCompressor.Pi | Round1>-> \cdot <-<.LPCompressor.PIn | DivideE6 | Round3>-> = <-<.LPCompressor.POut | DivideE6 | Round3>-> \/\ МПа$$
-	\item Определим температуру газа за КНД, принимая показатель адиабаты воздуха $k_{в \/\ кнд} = <-<.LPCompressor.GasData.KMean | Round2>->$:
+		$$p_{кнд}^* = \pi_{кнд} p_{вх}^* = <-<.LPCompressor.Pi | Round1>-> \cdot <-<.LPCompressor.PIn | DivideE6 | Round3>-> = <-<.LPCompressor.POut | DivideE6 | Round3>-> \/\ МПа$$
+	\item Определим адиабатический КПД КНД $\eta_{кнд}$, принимая показатель адиабаты воздуха $k_{в \/\ кнд} = <-<.LPCompressor.GasData.KMean | Round2>->$:
+	    $$
+	    	\eta_{кнд} = \frac{
+		        \pi_{кнд}^\frac{
+		            k_{в \/\ кнд} - 1
+		        }{
+		            k_{в \/\ кнд}
+	            } - 1
+		    }{
+		        \pi_{кнд}^\frac{
+		            k_{в \/\ кнд} - 1
+	            }{
+	                k_{в \/\ кнд} \cdot \eta_{пол \/\ кнд}
+	            } - 1
+		    } = \frac{
+	            <-<.LPCompressor.Pi | Round1>->^\frac{
+	                <-<.LPCompressor.GasData.KMean | Round2>-> - 1
+	            }{
+	                <-<.LPCompressor.GasData.KMean | Round2>->
+	            } - 1
+	        }{
+	            <-<.LPCompressor.Pi | Round1>->^\frac{
+	                <-<.LPCompressor.GasData.KMean | Round2>-> - 1
+	            }{
+	                <-<.LPCompressor.GasData.KMean | Round2>-> \cdot <-<.LPCompressor.EtaPol | Round3>->
+	            } - 1
+	        } = <-<.LPCompressor.Eta | Round2>->
+	    $$
+	\item Определим температуру газа за КНД:
 		$$T_{КНД}^* = T_a 
 		\left[ 
 			1 + \frac{
@@ -21,7 +49,7 @@
 					}
 				} - 1
 			}{
-				\eta_к
+				\eta_{кнд}
 			}
 		\right] =
 			<-<.LPCompressor.TIn | Round1>-> 
@@ -56,7 +84,35 @@
 		$$p_{0 \/\ квд}^* = \sigma_{кнд} p_{кнд}^* = <-<.LPCompressorPipe.Sigma | Round2>-> \cdot <-<.LPCompressor.POut | DivideE6 | Round3>-> = <-<.HPCompressor.PIn | DivideE6 | Round3>-> \/\ МПа$$
 	\item Определим давление за КВД:
 		$$ p_{квд}^* = \pi_{квд} p_{0 \/\ квд}^* = <-<.HPCompressor.Pi | Round1>-> \cdot <-<.HPCompressor.PIn | DivideE6 | Round3>-> = <-<.HPCompressor.POut | DivideE6 | Round3>-> \/\ МПа $$
-	\item Определим температуру газа за КВД, принимая показатель адиабаты воздуха $k_{в \/\ КВД} = <-<.HPCompressor.GasData.KMean | Round2>->$:
+	\item Определим адиабатический КПД КВД $\eta_{квд}$, принимая показатель адиабаты воздуха $k_{в \/\ КВД} = <-<.HPCompressor.GasData.KMean | Round2>->$:
+	    $$
+	    	\eta_{квд} = \frac{
+		        \pi_{квд}^\frac{
+		            k_{в \/\ квд} - 1
+		        }{
+		            k_{в \/\ квд}
+	            } - 1
+		    }{
+		        \pi_{кнд}^\frac{
+		            k_{в \/\ квд} - 1
+	            }{
+	                k_{в \/\ квд} \cdot \eta_{пол \/\ квд}
+	            } - 1
+		    } = \frac{
+	            <-<.HPCompressor.Pi | Round1>->^\frac{
+	                <-<.HPCompressor.GasData.KMean | Round2>-> - 1
+	            }{
+	                <-<.HPCompressor.GasData.KMean | Round2>->
+	            } - 1
+	        }{
+	            <-<.HPCompressor.Pi | Round1>->^\frac{
+	                <-<.HPCompressor.GasData.KMean | Round2>-> - 1
+	            }{
+	                <-<.HPCompressor.GasData.KMean | Round2>-> \cdot <-<.HPCompressor.EtaPol | Round3>->
+	            } - 1
+	        } = <-<.HPCompressor.Eta | Round2>->
+	    $$
+	\item Определим температуру газа за КВД:
 		$$T_{квд}^* = T_{кнд}^*
 		\left[ 
 			1 + \frac{
@@ -68,7 +124,7 @@
 					}
 				} - 1
 			}{
-				\eta_к
+				\eta_{квд}
 			}
 		\right] =
 			<-<.HPCompressor.TIn | Round1>-> 
@@ -390,8 +446,12 @@
 		$$\eta_e = \frac{3600}{C_e Q_н^р} =
 			\frac{3600}{<-<.Ce | Round3>-> \cdot <-<.Burner.Fuel.QLower | DivideE6 | Round3>-> }
 			= <-<.Eta | Round3>->$$
+	\item Определим потребную мощность ГТД:
+		$$
+			N = N_e / \eta_р = <-<.Ne | DivideE3 | Round>-> \cdot 10^3 \cdot \ <-<.EtaR | Round2>-> = <-<.NeMech | DivideE3 | Round>-> \cdot 10^3 \/\ Вт
+		$$
 	\item Определим расход воздуха:
-		$$G_в = \frac{N_e}{N_{e \/\ уд}} =
-			\frac{<-<.Ne | DivideE3 | Round>-> \cdot 10^3}{<-<.EngineLabour | DivideE6 | Round3>->} =
+		$$G_в = \frac{N}{N_{e \/\ уд}} =
+			\frac{<-<.NeMech | DivideE3 | Round>-> \cdot 10^3}{<-<.EngineLabour | DivideE6 | Round3>-> \cdot 10^6} =
 			<-<.MassRate | Round1>-> \/\ кг/с$$
 \end{enumerate}

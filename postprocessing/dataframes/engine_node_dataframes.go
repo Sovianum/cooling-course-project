@@ -1,11 +1,11 @@
 package dataframes
 
 import (
-	"github.com/Sovianum/turbocycle/material/fuel"
-	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/impl/engine/states"
+	"github.com/Sovianum/turbocycle/material/fuel"
+	"github.com/Sovianum/turbocycle/material/gases"
 )
 
 func NewGasDF(p, t float64, gas gases.Gas) GasDF {
@@ -59,6 +59,7 @@ func NewCompressorDF(node constructive.CompressorNode) CompressorDF {
 		Pi:     node.PiStag(),
 		Labour: node.LSpecific(),
 		Eta:    node.Eta(),
+		EtaPol: node.EtaPol(),
 
 		GasData: NewGasMeanDF(
 			node.PStagIn(),
@@ -76,8 +77,9 @@ type CompressorDF struct {
 	TIn  float64 `json:"t_in"`
 	TOut float64 `json:"t_out"`
 
-	Pi  float64 `json:"pi"`
-	Eta float64 `json:"eta"`
+	Pi     float64 `json:"pi"`
+	Eta    float64 `json:"eta"`
+	EtaPol float64 `json:"eta_pol"`
 
 	Labour float64 `json:"labour"`
 
@@ -183,9 +185,9 @@ func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
 		GasDataOutlet: NewGasDF(outletGasState.PStag, outletGasState.TStag, outletGasState.Gas),
 	}
 
-	df.A = df.GasDataOutlet.Cp * df.Tg - df.AirDataInlet.Cp * inletGasState.TStag
+	df.A = df.GasDataOutlet.Cp*df.Tg - df.AirDataInlet.Cp*inletGasState.TStag
 	df.B = (df.GasData0.Cp - df.AirData0.Cp) * t0
-	df.C = df.GasDataOutlet.Cp * df.Tg - df.GasData0.Cp * t0
+	df.C = df.GasDataOutlet.Cp*df.Tg - df.GasData0.Cp*t0
 	df.D = df.Fuel.C * (node.TFuel() - t0)
 
 	return df

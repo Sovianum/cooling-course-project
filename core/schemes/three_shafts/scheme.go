@@ -133,6 +133,7 @@ func GetInitDF() InitDF {
 
 type InitDF struct {
 	Ne        float64
+	EtaR      float64
 	PAtm      float64
 	TAtm      float64
 	SigmaIn   float64

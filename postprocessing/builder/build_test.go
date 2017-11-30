@@ -93,14 +93,15 @@ func getCycleDf() dataframes.ThreeShaftsDF {
 	var pi = 10.
 	var piFactor = 0.5
 	var iterNum = 100
-	var power = 16e6
+	var nE = 16e6
+	var etaR = 0.98
 
-	var generator = core.GetDoubleCompressorDataGenerator(scheme, power, 0.1, iterNum)
+	var generator = core.GetDoubleCompressorDataGenerator(scheme, nE, 0.1, iterNum)
 	var _, err = generator(pi, piFactor)
 	if err != nil {
 		panic(err)
 	}
-	return dataframes.NewThreeShaftsDF(power, scheme)
+	return dataframes.NewThreeShaftsDF(nE, etaR, scheme)
 }
 
 func getStageDf() dataframes.StageDF {
