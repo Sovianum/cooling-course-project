@@ -8,6 +8,7 @@ import (
 	"github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 )
 
 func GetInitedStatorTemperatureSystem(
@@ -16,14 +17,14 @@ func GetInitedStatorTemperatureSystem(
 	segment geom.Segment,
 	alphaAirFunc cooling.AlphaLaw,
 	alphaGasFunc cooling.AlphaLaw,
-) (cooling.TemperatureSystem, error) {
+) (profile.TemperatureSystem, error) {
 	var dataPack = stage.GetDataPack()
 	if dataPack.Err != nil {
 		return nil, dataPack.Err
 	}
 	var tGas = stage.TemperatureInput().GetState().(states.TemperaturePortState).TStag
 
-	return cooling.NewTemperatureSystem(
+	return profile.NewConvectiveTemperatureSystem(
 		ode.NewEulerSolver(),
 		airMassRate,
 		gases.GetAir().Cp,

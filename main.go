@@ -25,6 +25,8 @@ import (
 	"math"
 	"os"
 	"os/exec"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
 )
 
 const (
@@ -238,8 +240,8 @@ func getTempProfileDF(
 	gapDF dataframes.GapCalcDF,
 	stage nodes.TurbineStageNode,
 	profile profiles.BladeProfile,
-	psSolution cooling.TemperatureSolution,
-	ssSolution cooling.TemperatureSolution,
+	psSolution profile.TemperatureSolution,
+	ssSolution profile.TemperatureSolution,
 ) dataframes.TProfileCalcDF {
 	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
 
@@ -289,7 +291,7 @@ func getSSTemperatureSystem(
 	meanAlphaGas float64,
 	stage nodes.TurbineStageNode,
 	profile profiles.BladeProfile,
-) cooling.TemperatureSystem {
+) profile.TemperatureSystem {
 	var segment = profiles.SSSegment(profile, 0.5, 0.5)
 	var pack = stage.GetDataPack()
 	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
@@ -325,7 +327,7 @@ func getPSTemperatureSystem(
 	meanAlphaGas float64,
 	stage nodes.TurbineStageNode,
 	profile profiles.BladeProfile,
-) cooling.TemperatureSystem {
+) profile.TemperatureSystem {
 	var segment = profiles.PSSegment(profile, 0.5, 0.5)
 	var pack = stage.GetDataPack()
 	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
@@ -376,9 +378,9 @@ func saveCooling1Template(
 
 func getGapDF(
 	massRateArr []float64,
-	calculator cooling.GapCalculator,
+	calculator gap.GapCalculator,
 ) dataframes.GapCalcDF {
-	var dataPackArr = make([]cooling.DataPack, len(massRateArr))
+	var dataPackArr = make([]gap.DataPack, len(massRateArr))
 
 	for i, massRate := range massRateArr {
 		var pack = calculator.GetPack(massRate)
@@ -396,7 +398,7 @@ func getGapDF(
 func getGapCalculator(
 	stage nodes.TurbineStageNode,
 	profile profiles.BladeProfile,
-) cooling.GapCalculator {
+) gap.GapCalculator {
 	if result, err := cooling2.GetInitedStatorGapCalculator(stage, profile); err != nil {
 		panic(err)
 	} else {

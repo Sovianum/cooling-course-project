@@ -1,6 +1,8 @@
 package dataframes
 
-import "github.com/Sovianum/turbocycle/utils/turbine/cooling"
+import (
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
+)
 
 type TProfileCalcDF struct {
 	Geom TProfileGeomDF
@@ -41,7 +43,7 @@ type TProfileGasDF struct {
 	SkipSteps int
 }
 
-func (df *TProfileGasDF) SetSSSolutionInfo(solution cooling.TemperatureSolution) {
+func (df *TProfileGasDF) SetSSSolutionInfo(solution profile.TemperatureSolution) {
 	df.LengthSSArr = solution.LengthCoord
 	df.AlphaAirSSArr = solution.AlphaAir
 	df.AlphaGasSSArr = solution.AlphaGas
@@ -49,7 +51,7 @@ func (df *TProfileGasDF) SetSSSolutionInfo(solution cooling.TemperatureSolution)
 	df.TWallSSArr = solution.WallTemperature
 }
 
-func (df *TProfileGasDF) SetPSSolutionInfo(solution cooling.TemperatureSolution) {
+func (df *TProfileGasDF) SetPSSolutionInfo(solution profile.TemperatureSolution) {
 	df.LengthPSArr = solution.LengthCoord
 	df.AlphaAirPSArr = solution.AlphaAir
 	df.AlphaGasPSArr = solution.AlphaGas

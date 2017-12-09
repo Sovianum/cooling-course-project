@@ -1,8 +1,10 @@
 package dataframes
 
-import "github.com/Sovianum/turbocycle/utils/turbine/cooling"
+import (
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
+)
 
-func GapCalcFromDataPacks(packArr []cooling.DataPack) GapCalcDF {
+func GapCalcFromDataPacks(packArr []gap.DataPack) GapCalcDF {
 	return GapCalcDF{
 		Geom:  GapGeomFromDataPack(packArr[0]),
 		Metal: GapMetalFromDataPack(packArr[0]),
@@ -16,7 +18,7 @@ type GapCalcDF struct {
 	Gas   GapGasDF
 }
 
-func GapGeomFromDataPack(pack cooling.DataPack) GapGeometryDF {
+func GapGeomFromDataPack(pack gap.DataPack) GapGeometryDF {
 	return GapGeometryDF{
 		BladeLength:     pack.BladeLength,
 		ChordProjection: pack.ChordProjection,
@@ -36,7 +38,7 @@ type GapGeometryDF struct {
 	DInlet          float64
 }
 
-func GapMetalFromDataPack(pack cooling.DataPack) GapMetalDF {
+func GapMetalFromDataPack(pack gap.DataPack) GapMetalDF {
 	return GapMetalDF{
 		TWallOuter: pack.TWallOuter,
 		TWallInner: pack.TWallInner,
@@ -54,7 +56,7 @@ type GapMetalDF struct {
 	LambdaM    float64
 }
 
-func GapGasFromDataPacks(packArr []cooling.DataPack) GapGasDF {
+func GapGasFromDataPacks(packArr []gap.DataPack) GapGasDF {
 	var airMassRate = make([]float64, len(packArr))
 	var dCoef = make([]float64, len(packArr))
 	var epsCoef = make([]float64, len(packArr))
