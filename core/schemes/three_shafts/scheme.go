@@ -18,10 +18,10 @@ const (
 	etaMiddlePressureComp    = 0.86
 	piCompTotal              = 30
 	piCompFactor             = 0.18
-	etaMiddlePressureTurbine = 0.9
+	etaMiddlePressureTurbine = 0.88
 	etaMMiddleCascade        = 0.99
 
-	etaHighPressureComp = 0.90
+	etaHighPressureComp = 0.88
 
 	tGas                   = 1500
 	tFuel                  = 300
@@ -29,7 +29,7 @@ const (
 	etaBurn                = 0.98
 	initAlpha              = 3
 	t0                     = 300
-	etaHighPressureTurbine = 0.9
+	etaHighPressureTurbine = 0.88
 	lambdaOut              = 0.3
 	etaMHighCascade        = 0.99
 

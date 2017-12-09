@@ -306,11 +306,12 @@
 		$$p_{0 \/\ тнд}^* = p_{твд}^*\sigma_{твд} = <-<.HPTurbine.POut | DivideE6 | Round3>-> \cdot <-<.HPTurbinePipe.Sigma | Round2>-> = <-<.LPTurbine.PIn | DivideE6 | Round3>-> \/\ МПа$$
 
 	\item Определим удельный расход через ТНД:
-		 $$g_{тнд} = g_{твд} \left( 1 - g_{ут \/\ тнд} - g_{охл \/\ тнд} \right) =
-		 	<-<.HPTurbine.MassRateRel | Round3>-> \cdot
+		 $$g_{тнд} = g_{твд} \left( 1 - g_{ут \/\ тнд} - g_{охл \/\ тнд} + g_{охл \/\ твд}\right) = $$
+		 $$=<-<.HPTurbine.MassRateRel | Round3>-> \cdot
 		 	\left(
 		 	    1 - <-<.LPTurbine.LeakMassRateRel | Abs | Round3>-> -
-		 	    <-<.LPTurbine.CoolMassRateRel | Abs |Round3>->
+		 	    <-<.LPTurbine.CoolMassRateRel | Abs | Round3>-> +
+		 	    <-<.HPTurbine.CoolMassRateRel | Abs | Round3>->
 		 	\right) = <-<.LPTurbine.MassRateRel | Round3>->$$
 	\item Определим удельную работу ТНД:
 		$$L_{тнд} = \frac{L_{кнд}}{g_{тнд}\eta_{м \/\ нд}} = \frac{
@@ -383,15 +384,11 @@
 	\item Зададим значение приведенной скорости на выходе из свободной турбины:
 		$$\lambda_{вых} = <-<.FreeTurbine.LambdaOut | Round2>->$$
 	\item Определим статическое давление на выходе из свободной турбины, принимая показатель адиабаты газа на выходе из свободной турбины $k_{тс \/\ вых} = <-<.FreeTurbine.OutletGasData.K | Round2>->$:
-		$$p_{тс} = \frac{
-			p_{тс}^*
-		}{
-			\pi \left( \lambda_{вых}, \/\ k_{тс \/\ вых} \right)
-		} = \frac{
+		$$p_{тс} = p_{тс}^* \cdot \pi \left( \lambda_{вых}, \/\ k_{тс \/\ вых} \right)
+        =
 			<-<.FreeTurbine.POut | DivideE6 | Round3>->
-		}{
-			\pi \left( <-<.FreeTurbine.LambdaOut | Round2>->, \/\ <-<.FreeTurbine.OutletGasData.K | Round2>-> \right)
-		} = <-<.FreeTurbine.POutStat>->$$
+			\cdot \pi \left( <-<.FreeTurbine.LambdaOut | Round2>->, \/\ <-<.FreeTurbine.OutletGasData.K | Round2>-> \right)
+        = <-<.FreeTurbine.POutStat | DivideE6 | Round3>-> \/\ МПа$$
 	\item Определим статическую температуру на выходе из свободной турбины, принимая показатель адиабаты газа $k_{г \/\ тс} = <-<.FreeTurbine.GasData.KMean | Round2>->$::
 		$$
 			T_{тс} = T_{тнд}^*

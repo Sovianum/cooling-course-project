@@ -9,17 +9,17 @@ import (
 )
 
 const (
-	n          = 1.0e4
+	n          = 1.3e4
 	reactivity = 0.4
 	phi        = 0.98
 	psi        = 0.98
 	airGapRel  = 0.001
 	precision  = 0.05
 
-	lRelOut = 0.15
+	lRelOut = 0.075
 
-	gammaIn  = -10
-	gammaOut = 10
+	gammaIn  = -5
+	gammaOut = 5
 
 	baRelStator = 4
 	baRelRotor  = 4

@@ -42,7 +42,7 @@ func GetInitedStatorProfiler(
 			return common.InterpTolerate(
 				hRel,
 				[]float64{0, 1},
-				[]float64{common.ToRadians(30), common.ToRadians(15)},
+				[]float64{common.ToRadians(15), common.ToRadians(30)},
 			)
 		},
 		func(hRel float64) float64 {
@@ -50,7 +50,7 @@ func GetInitedStatorProfiler(
 		},
 
 		func(hRel float64) float64 {
-			return 0.7
+			return 0.5
 		},
 		func(hRel float64) float64 {
 			return 1 / 3
@@ -87,7 +87,7 @@ func GetInitedRotorProfiler(
 			return common.InterpTolerate(
 				hRel,
 				[]float64{0, 1},
-				[]float64{common.ToRadians(68), common.ToRadians(34)},
+				[]float64{common.ToRadians(68), common.ToRadians(40)},
 			)
 		},
 
@@ -95,7 +95,7 @@ func GetInitedRotorProfiler(
 			return common.InterpTolerate(
 				hRel,
 				[]float64{0, 1},
-				[]float64{common.ToRadians(30), common.ToRadians(15)},
+				[]float64{common.ToRadians(25), common.ToRadians(15)},
 			)
 		},
 		func(hRel float64) float64 {

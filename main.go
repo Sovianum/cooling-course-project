@@ -45,8 +45,8 @@ const (
 	piFactorStepNum = 19
 
 	totalPiStag = 20
-	lowPiStag   = 4
-	highPiStag  = 5
+	lowPiStag   = 5
+	highPiStag  = 4
 
 	templatesDir = "postprocessing/templates"
 
