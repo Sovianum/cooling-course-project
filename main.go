@@ -161,7 +161,7 @@ func main() {
 	var gapCalculator = getGapCalculator(stage, statorMidProfile)
 	var gapPack = gapCalculator.GetPack(coolAirMassRate)
 
-	var gapCalcDF = getGapDF(common.LinSpace(0.05, 0.15, 10), gapCalculator)
+	var gapCalcDF = getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
 	saveCooling1Template(gapCalcDF)
 
 	var psTemperatureSystem = getPSTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)

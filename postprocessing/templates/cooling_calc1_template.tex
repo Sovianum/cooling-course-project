@@ -7,6 +7,7 @@
 		\hline
 		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
 		Температура газа & $T_г$ & К & $<-<.Gas.Tg | Round1>->$ \\ \hline
+		Начальная температура охлаждающего воздуха & $\theta_0$ & К & $<-<.Gas.Theta0 | Round1>->$ \\ \hline
 		Длина лопатки & $l$ & м & $<-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
 		Осевая проекция хорды & $b_a$ & м & $<-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
 		Поверхность лопатки, соприкасающаяся с газом & $f$ & $м^2$ & $<-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
@@ -19,7 +20,7 @@
 \end{center}
 
  \begin{enumerate}
- 	\item Определим число $Re$ для газа ($\mu_г = Па \cdot с$):
+ 	\item Определим число $Re$ для газа ($\mu_г = <-<.Gas.MuGas | MultiplyE6 | Round2>-> \cdot 10^{-6} Па \cdot с$):
  		$$
  			Re_г = \frac{
  				\rho_г \cdot c_a \cdot b_a
