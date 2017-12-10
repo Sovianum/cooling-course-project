@@ -45,8 +45,8 @@ const (
 	piFactorStepNum = 19
 
 	totalPiStag = 20
-	lowPiStag   = 5
-	highPiStag  = 4
+	lowPiStag   = 5.7
+	highPiStag  = 3.5
 
 	templatesDir = "postprocessing/templates"
 
@@ -459,7 +459,7 @@ func saveProfiles(
 		coordinatesArr[i][0] = geom.GetCoordinates(tArr, profiles.CircularSegment(profile))
 
 		profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{
-			tRelArr[i] * profiler.InstallationAngle(0.5), 0,
+			tRelArr[i], 0,
 		})))
 		coordinatesArr[i][1] = geom.GetCoordinates(tArr, profiles.CircularSegment(profile))
 	}

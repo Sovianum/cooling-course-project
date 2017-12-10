@@ -8,7 +8,7 @@
 		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
 			Реактивность ступени & $\rho$ & - & <-<.Reactivity | Round1>->  \\ \hline
 			Радиальный зазор & $\delta_r$ & м & $<-<.DeltaR | MultiplyE3 | Round2>-> \cdot 10^{-3}$ \\ \hline
-			Относительная длина лопатки статора & $\left( \frac{l}{D} \right)_1$ & - & $<-<.StatorGeom.LRelOut | Round2>->$ \\ \hline
+			Относительная длина лопатки статора & $\left( \frac{l}{D} \right)_1$ & - & $<-<.StatorGeom.LRelOut | Round3>->$ \\ \hline
 			Удлинение лопатки статора & $\left( \frac{l}{b_a} \right)_{СА}$ & - & $<-<.StatorGeom.Elongation | Round2>->$ \\ \hline
 			Удлинение лопатки ротора & $\left( \frac{l}{b_a} \right)_{РК}$ & - & $<-<.RotorGeom.Elongation | Round2>->$ \\ \hline
 			Относительная ширина зазора между лопатками ротора и лопатками статора & $\left( \frac{\delta}{b_a} \right)_{СА}$ & - & $<-<.StatorGeom.DeltaRel | Round2>->$ \\ \hline
@@ -94,7 +94,7 @@
 			\frac{
 				<-<.StatorGeom.AreaOut | Round2>->
 			}{
-				\pi \cdot <-<.StatorGeom.LRelOut | Round2>->
+				\pi \cdot <-<.StatorGeom.LRelOut | Round3>->
 			}
 		} = <-<.StatorGeom.DMeanOut | Round3>-> \/\ м $$
 	\item Определим окружную скорость на среднем диаметре на входе в РК:
@@ -165,7 +165,7 @@
 			}{
 				2 \cdot <-<.RotorGeom.Elongation | Round2>->
 			}
-		} \cdot <-<.StatorGeom.DMeanOut | Round3>-> \cdot <-<.StatorGeom.LRelOut | Round2>-> = 
+		} \cdot <-<.StatorGeom.DMeanOut | Round3>-> \cdot <-<.StatorGeom.LRelOut | Round3>-> =
 			<-<.X | Round3>-> \/\ м
 		$$
 	 \item Определим средний диаметра на выходе из РК:
@@ -183,7 +183,7 @@
 	 	$$
 	 	$$
 	 		= <-<.StatorGeom.DMeanOut | Round3>-> \cdot 
-		 	<-<.StatorGeom.LRelOut | Round2>-> + 
+		 	<-<.StatorGeom.LRelOut | Round3>-> +
 		 	\frac{
 		 		\tan <-<.StatorGeom.GammaOut | Abs | Degree | Round1>-> \degree + 
 		 		\tan <-<.StatorGeom.GammaIn | Abs | Degree | Round1>-> \degree
@@ -196,7 +196,7 @@
 		 		<-<.RotorGeom.LOut | Round3>->
 		 	}{
 		 		<-<.RotorGeom.DMeanOut | Round3>->
-		 	} = <-<.RotorGeom.LRelOut | Round2>->$$
+		 	} = <-<.RotorGeom.LRelOut | Round3>->$$
 	 \item Определим окружную скорость на среднем диаметре на выходе из РК:
 		 $$u_2 = \frac{\pi D_2 n}{60} = 
 		 	\frac{
@@ -392,7 +392,7 @@
 	 		1 + 1.6 \cdot <-<.Reactivity | Round1>-> 
 	 	\right)
 	 	\left[ 
-	 		1 + <-<.RotorGeom.LRelOut | Round2>-> 
+	 		1 + <-<.RotorGeom.LRelOut | Round3>->
 	 	\right] \frac{
 	 		<-<.DeltaR | MultiplyE3 | Round2>-> \cdot 10^{-3}
 	 	}{

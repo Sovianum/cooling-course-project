@@ -16,13 +16,13 @@ const (
 	airGapRel  = 0.001
 	precision  = 0.05
 
-	lRelOut = 0.075
+	lRelOut = 0.08
 
-	gammaIn  = -5
-	gammaOut = 5
+	gammaIn  = -2
+	gammaOut = 2
 
-	baRelStator = 4
-	baRelRotor  = 4
+	baRelStator = 1.3
+	baRelRotor  = 1.75
 
 	deltaRelStator = 0.1
 	deltaRelRotor  = 0.1
@@ -31,7 +31,7 @@ const (
 	approxTRelRotor  = 0.7
 
 	alpha1 = 14
-	power  = 16e6
+	power  = 16e6/0.98
 )
 
 func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) nodes.TurbineStageNode {
