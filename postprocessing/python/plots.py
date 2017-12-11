@@ -1,6 +1,74 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+
+
+def plot_cooling_alpha(ps_data, ss_data):
+    data = concat_profiles(ps_data, ss_data)
+
+    plt.grid()
+
+    plt.plot(data.l * 1e3, data.alpha_air, color='blue')
+    plt.plot(data.l * 1e3, data.alpha_gas, color='red')
+
+    plt.legend([r'$\alpha_{в}$', r'$\alpha_{пл}$'], loc='best')
+
+    x_min = min(data.l) * 1e3
+    x_max = max(data.l) * 1e3
+    plt.xlim(x_min, x_max)
+
+    t_1 = min(data.alpha_air)
+    t_2 = max(data.alpha_gas)
+
+    t_min = min([t_1, t_2])
+    t_max = 825
+
+    t_min -= (t_max - t_min) * 0.05
+
+    plt.ylim(t_min, t_max)
+
+    plt.plot([0, 0], [t_min, t_max], color='black', lw=2)
+
+    plt.text(0.6 * x_min, t_max - 50, r'$спинка$', fontsize=16)
+    plt.text(0.4 * x_max, t_max - 50, r'$корыто$', fontsize=16)
+    plt.xlabel(r'$x,\ мм$', fontsize=14)
+    plt.ylabel(r'$\alpha,\ Вт/\left(м^2 \cdot К \right)$', fontsize=14)
+
+
+def plot_cooling_temperature(ps_data, ss_data):
+    data = concat_profiles(ps_data, ss_data)
+
+    plt.grid()
+
+    plt.plot(data.l * 1e3, data.t_wall, color='green')
+    plt.plot(data.l * 1e3, data.t_air, color='blue')
+    plt.plot(data.l * 1e3, data.t_film, color='red')
+
+    plt.legend(['$T_{ст}$', '$T_{возд}$', '$T_{пл}$'], loc='best')
+
+    x_min = min(data.l) * 1e3
+    x_max = max(data.l) * 1e3
+    plt.xlim(x_min, x_max)
+
+    t_min = min(data.t_air)
+    t_max = max(data.t_film)
+    t_max += (t_max - t_min) * 0.05
+    plt.ylim(t_min, t_max)
+
+    plt.plot([0, 0], [t_min, t_max], color='black', lw=2)
+
+    plt.text(0.6 * x_min, t_max - 50, r'$спинка$', fontsize=16)
+    plt.text(0.4 * x_max, t_max - 50, r'$корыто$', fontsize=16)
+    plt.xlabel(r'$x,\ мм$', fontsize=14)
+    plt.ylabel(r'$T,\ К$', fontsize=14)
+
+
+def concat_profiles(ps_data, ss_data) -> pd.DataFrame:
+    data = pd.concat([ps_data, ss_data], ignore_index=True)
+    data.l = pd.concat([ps_data.l, -ss_data.l], ignore_index=True)
+    data.sort_values(by='l', inplace=True)
+    return data
 
 
 def plot_profile_angles(data, angle_names):

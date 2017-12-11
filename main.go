@@ -86,6 +86,9 @@ const (
 	cooling2Template = "cooling_calc2_template.tex"
 	cooling2Out      = "cooling_calc2.tex"
 
+	cooling2PSData = "cooling_2_ps.csv"
+	cooling2SSData = "cooling_2_ss.csv"
+
 	inletAngleData  = "inlet_angle.csv"
 	outletAngleData = "outlet_angle.csv"
 
@@ -169,13 +172,13 @@ func main() {
 	var gapCalcDF = getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
 	saveCooling1Template(gapCalcDF)
 
-	//var psTemperatureSystem = getPSConvTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
 	var psTemperatureSystem = getPSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
 	var psSolution = psTemperatureSystem.Solve(0, theta0, 1, 0.001)
+	saveCoolingSolution(psSolution, cooling2PSData)
 
-	//var ssTemperatureSystem = getSSConvTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
 	var ssTemperatureSystem = getSSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
 	var ssSolution = ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
+	saveCoolingSolution(ssSolution, cooling2SSData)
 
 	var tempProfileDF = getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
 	saveCooling2Template(tempProfileDF)
@@ -239,6 +242,12 @@ func saveCooling2Template(df dataframes.TProfileCalcDF) {
 	}
 	if err := inserter.Insert(df); err != nil {
 		fmt.Println(err)
+		panic(err)
+	}
+}
+
+func saveCoolingSolution(solution profile.TemperatureSolution, fileName string) {
+	if err := profiling.SaveMatrix(dataDir+"/"+fileName, solution.ToMatrix()); err != nil {
 		panic(err)
 	}
 }
@@ -535,25 +544,25 @@ func saveProfiles(
 	}
 
 	var coordinatesArr = make([][][][]float64, len(hRelArr))
-	for i, profile := range profileArr {
+	for i, bladeProfile := range profileArr {
 		coordinatesArr[i] = make([][][]float64, 2)
 
 		if isRotor {
-			profile.Transform(geom.Reflection(0))
+			bladeProfile.Transform(geom.Reflection(0))
 		}
-		profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{-1, 0})))
+		bladeProfile.Transform(geom.Translation(mat.NewVecDense(2, []float64{-1, 0})))
 		if !isRotor {
-			profile.Transform(geom.Rotation(installationAngleArr[i] - math.Pi))
+			bladeProfile.Transform(geom.Rotation(installationAngleArr[i] - math.Pi))
 		} else {
-			profile.Transform(geom.Rotation(-installationAngleArr[i]))
+			bladeProfile.Transform(geom.Rotation(-installationAngleArr[i]))
 		}
 
-		coordinatesArr[i][0] = geom.GetCoordinates(tArr, profiles.CircularSegment(profile))
+		coordinatesArr[i][0] = geom.GetCoordinates(tArr, profiles.CircularSegment(bladeProfile))
 
-		profile.Transform(geom.Translation(mat.NewVecDense(2, []float64{
+		bladeProfile.Transform(geom.Translation(mat.NewVecDense(2, []float64{
 			tRelArr[i], 0,
 		})))
-		coordinatesArr[i][1] = geom.GetCoordinates(tArr, profiles.CircularSegment(profile))
+		coordinatesArr[i][1] = geom.GetCoordinates(tArr, profiles.CircularSegment(bladeProfile))
 	}
 
 	for i := range hRelArr {

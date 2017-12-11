@@ -2,6 +2,12 @@
 import pandas as pd
 
 
+def read_cooling_data(file_path):
+    return pd.read_csv(file_path, names=[
+        "t", "x", "y", "l", "alpha_air", "alpha_gas", "t_film", "t_air", "t_wall", "k_transfer"
+    ])
+
+
 def read_profile_angles(file_path):
     return pd.read_csv(file_path, names=["h", "angle_in", "angle_out"])
 
