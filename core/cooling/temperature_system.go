@@ -11,7 +11,7 @@ import (
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 )
 
-func GetInitedStatorTemperatureSystem(
+func GetInitedStatorConvTemperatureSystem(
 	airMassRate float64,
 	stage nodes.TurbineStageNode,
 	segment geom.Segment,
@@ -33,6 +33,50 @@ func GetInitedStatorTemperatureSystem(
 		},
 		alphaAirFunc,
 		alphaGasFunc,
+		func(x float64) float64 {
+			return wallThk
+		},
+		func(t float64) float64 {
+			return lambdaM
+		},
+		segment,
+	), nil
+}
+
+func GetInitedStatorConvFilmTemperatureSystem(
+	coolerMassRate0 float64,
+	stage nodes.TurbineStageNode,
+	segment geom.Segment,
+	alphaAirFunc cooling.AlphaLaw,
+	alphaGasFunc cooling.AlphaLaw,
+	law cooling.LambdaLaw,
+	slitInfoArray []profile.SlitInfo,
+) (profile.TemperatureSystem, error) {
+	var dataPack = stage.GetDataPack()
+	if dataPack.Err != nil {
+		return nil, dataPack.Err
+	}
+	var gas = stage.GasInput().GetState().(states.GasPortState).Gas
+	var tGas = stage.TemperatureInput().GetState().(states.TemperaturePortState).TStag
+	var pGas = stage.PressureInput().GetState().(states.PressurePortState).PStag
+
+	return profile.NewConvFilmTemperatureSystem(
+		ode.NewEulerSolver(),
+		coolerMassRate0,
+		gases.GetAir(), gas,
+		func(x float64) float64 {
+			return tGas
+		},
+		func(x float64) float64 {
+			return pGas * 0.95
+		},
+
+		func(x float64) float64 {
+			return pGas
+		},
+		law,
+		alphaAirFunc, alphaGasFunc,
+		slitInfoArray,
 		func(x float64) float64 {
 			return wallThk
 		},

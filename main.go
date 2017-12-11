@@ -27,6 +27,8 @@ import (
 	"os/exec"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
+	"github.com/Sovianum/turbocycle/common/gdf"
+	"github.com/Sovianum/turbocycle/material/gases"
 )
 
 const (
@@ -91,6 +93,9 @@ const (
 	coolAirMassRate = 0.05
 	theta0          = 500
 	gapWidth        = 2.4e-3
+
+	velocityCoef = 0.98
+	massRateCoef = 0.98
 )
 
 func main() {
@@ -164,10 +169,12 @@ func main() {
 	var gapCalcDF = getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
 	saveCooling1Template(gapCalcDF)
 
-	var psTemperatureSystem = getPSTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	//var psTemperatureSystem = getPSConvTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	var psTemperatureSystem = getPSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
 	var psSolution = psTemperatureSystem.Solve(0, theta0, 1, 0.001)
 
-	var ssTemperatureSystem = getSSTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	//var ssTemperatureSystem = getSSConvTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	var ssTemperatureSystem = getSSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
 	var ssSolution = ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
 
 	var tempProfileDF = getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
@@ -287,34 +294,14 @@ func getTempProfileDF(
 	return calcDF
 }
 
-func getSSTemperatureSystem(
+func getSSConvTemperatureSystem(
 	meanAlphaGas float64,
 	stage nodes.TurbineStageNode,
 	profile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.SSSegment(profile, 0.5, 0.5)
-	var pack = stage.GetDataPack()
-	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
-
-	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
-	var tStagIn = stage.TemperatureInput().GetState().(states2.TemperaturePortState).TStag
-	var pStagIn = stage.PressureInput().GetState().(states2.PressurePortState).PStag
-	var density0 = pStagIn / (gas.R() * tStagIn)
-
-	var massRateIntensity = density0 * inletTriangle.CA()
-
-	var dInlet = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-3)
-	var alphaInlet = cooling.CylinderAlphaLaw(gas, massRateIntensity, dInlet)(0, tStagIn)
-
-	var alphaGasFunc = cooling2.SSProfileGasAlphaLaw(
-		profile, alphaInlet, meanAlphaGas,
-	)
-	var alphaAirFunc = cooling.DefaultAirAlphaLaw(
-		stage.GasInput().GetState().(states2.GasPortState).Gas,
-		geometry.Height(0, pack.StageGeometry.StatorGeometry()),
-		gapWidth, coolAirMassRate,
-	)
-	if system, err := cooling2.GetInitedStatorTemperatureSystem(
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, profile, cooling2.SSProfileGasAlphaLaw)
+	if system, err := cooling2.GetInitedStatorConvTemperatureSystem(
 		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
 	); err != nil {
 		panic(err)
@@ -323,12 +310,123 @@ func getSSTemperatureSystem(
 	}
 }
 
-func getPSTemperatureSystem(
+func getPSConvTemperatureSystem(
 	meanAlphaGas float64,
 	stage nodes.TurbineStageNode,
 	profile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.PSSegment(profile, 0.5, 0.5)
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, profile, cooling2.PSProfileGasAlphaLaw)
+	if system, err := cooling2.GetInitedStatorConvTemperatureSystem(
+		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
+	); err != nil {
+		panic(err)
+	} else {
+		return system
+	}
+}
+
+func getSSConvFilmTemperatureSystem(
+	meanAlphaGas float64,
+	stage nodes.TurbineStageNode,
+	bladeProfile profiles.BladeProfile,
+) profile.TemperatureSystem {
+	var segment = profiles.SSSegment(bladeProfile, 0.5, 0.5)
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.SSProfileGasAlphaLaw)
+	var lambdaLaw = getLambdaLaw(stage, cooling.SSLambdaLaw)
+
+	var slitInfoArr = []profile.SlitInfo{
+		{
+			Coord:0,
+			Thickness:3e-4,
+			Area:5e-8,
+			VelocityCoef:velocityCoef,
+			MassRateCoef:massRateCoef,
+		},
+		{
+			Coord:1e-2,
+			Thickness:3e-4,
+			Area:5e-8,
+			VelocityCoef:velocityCoef,
+			MassRateCoef:massRateCoef,
+		},
+		{
+			Coord:2e-2,
+			Thickness:3e-4,
+			Area:5e-8,
+			VelocityCoef:velocityCoef,
+			MassRateCoef:massRateCoef,
+		},
+	}
+
+	if system, err := cooling2.GetInitedStatorConvFilmTemperatureSystem(
+		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc, lambdaLaw, slitInfoArr,
+	); err != nil {
+		panic(err)
+	} else {
+		return system
+	}
+}
+
+func getPSConvFilmTemperatureSystem(
+	meanAlphaGas float64,
+	stage nodes.TurbineStageNode,
+	bladeProfile profiles.BladeProfile,
+) profile.TemperatureSystem {
+	var segment = profiles.PSSegment(bladeProfile, 0.5, 0.5)
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.PSProfileGasAlphaLaw)
+	var lambdaLaw = getLambdaLaw(stage, cooling.PSLambdaLaw)
+
+	var slitInfoArr = []profile.SlitInfo{
+		{
+			Coord:0,
+			Thickness:3e-4,
+			Area:5e-8,
+			VelocityCoef:velocityCoef,
+			MassRateCoef:massRateCoef,
+		},
+		{
+			Coord:1e-2,
+			Thickness:3e-4,
+			Area:5e-8,
+			VelocityCoef:velocityCoef,
+			MassRateCoef:massRateCoef,
+		},
+		{
+			Coord:2e-2,
+			Thickness:3e-4,
+			Area:5e-8,
+			VelocityCoef:velocityCoef,
+			MassRateCoef:massRateCoef,
+		},
+	}
+
+	if system, err := cooling2.GetInitedStatorConvFilmTemperatureSystem(
+		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc, lambdaLaw, slitInfoArr,
+	); err != nil {
+		panic(err)
+	} else {
+		return system
+	}
+}
+
+func getLambdaLaw(stage nodes.TurbineStageNode, lambdaGenerator func(float64, float64) cooling.LambdaLaw) cooling.LambdaLaw {
+	var gas = stage.GasOutput().GetState().(states2.GasPortState).Gas
+	var tStagOut = stage.TemperatureOutput().GetState().(states2.TemperaturePortState).TStag
+	var velocityOut = stage.VelocityOutput().GetState().(states.VelocityPortState).Triangle.C()
+
+	var lambdaIn = 0.3
+	var lambdaOut = velocityOut / gdf.ACrit(gases.K(gas, tStagOut), gas.R(), tStagOut)
+
+	return lambdaGenerator(lambdaIn, lambdaOut)
+}
+
+func getAlphaLaws(
+	meanAlphaGas float64,
+	stage nodes.TurbineStageNode,
+	profile profiles.BladeProfile,
+	gasAlphaGenerator func(profiles.BladeProfile, float64, float64) cooling.AlphaLaw,
+) (alphaGas cooling.AlphaLaw, alphaAir cooling.AlphaLaw) {
 	var pack = stage.GetDataPack()
 	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
 
@@ -342,21 +440,15 @@ func getPSTemperatureSystem(
 	var dInlet = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-3)
 	var alphaInlet = cooling.CylinderAlphaLaw(gas, massRateIntensity, dInlet)(0, tStagIn)
 
-	var alphaGasFunc = cooling2.PSProfileGasAlphaLaw(
+	alphaGas = gasAlphaGenerator(
 		profile, alphaInlet, meanAlphaGas,
 	)
-	var alphaAirFunc = cooling.DefaultAirAlphaLaw(
+	alphaAir = cooling.DefaultAirAlphaLaw(
 		stage.GasInput().GetState().(states2.GasPortState).Gas,
 		geometry.Height(0, pack.StageGeometry.StatorGeometry()),
 		gapWidth, coolAirMassRate,
 	)
-	if system, err := cooling2.GetInitedStatorTemperatureSystem(
-		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
-	); err != nil {
-		panic(err)
-	} else {
-		return system
-	}
+	return
 }
 
 func saveCooling1Template(
