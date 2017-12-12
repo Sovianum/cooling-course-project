@@ -158,6 +158,11 @@ func main() {
 		true,
 	)
 
+	var inletGasProfiler, outletGasProfiler = getGasProfilers(stage, rotorProfiler)
+	fmt.Println(profilers.Reactivity(0, 0.5, inletGasProfiler, outletGasProfiler))
+	fmt.Println(profilers.Reactivity(0.5, 0.5, inletGasProfiler, outletGasProfiler))
+	fmt.Println(profilers.Reactivity(1, 0.5, inletGasProfiler, outletGasProfiler))
+
 	saveProfilingTemplate()
 
 	var statorMidProfile = profiles.NewBladeProfileFromProfiler(
@@ -603,6 +608,25 @@ func saveAngleData(
 	if err := profiling.SaveMatrix(dataDir+"/"+filename, angleArr); err != nil {
 		panic(err)
 	}
+}
+
+func getGasProfilers(stage nodes.TurbineStageNode, rotorProfiler profilers.Profiler) (inletProfiler, outletProfiler profilers.GasProfiler) {
+	var pack = stage.GetDataPack()
+	var triangleIn = states.NewInletTriangle(pack.U1, pack.C1, pack.Alpha1)
+	var triangleOut = stage.VelocityOutput().GetState().(states.VelocityPortState).Triangle
+
+	var tIn = pack.T1
+	var tOut = pack.T2
+
+	var pIn = pack.P1
+	var pOut = pack.P2
+
+	var reactivity = stage.Reactivity()
+	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
+
+	inletProfiler = profilers.InletGasProfiler(gas, tIn, pIn, reactivity, triangleIn, rotorProfiler)
+	outletProfiler = profilers.OutletGasProfiler(gas, tOut, pOut, reactivity, triangleOut, rotorProfiler)
+	return
 }
 
 func getRotorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {

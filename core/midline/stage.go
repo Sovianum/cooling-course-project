@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	n          = 1.3e4
-	reactivity = 0.4
+	n          = 1.15e4
+	reactivity = 0.30
 	phi        = 0.98
 	psi        = 0.98
 	airGapRel  = 0.001
