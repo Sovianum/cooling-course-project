@@ -4,7 +4,7 @@ import pandas as pd
 
 def read_cooling_data(file_path):
     return pd.read_csv(file_path, names=[
-        "t", "x", "y", "l", "alpha_air", "alpha_gas", "t_film", "t_air", "t_wall", "k_transfer"
+        "t", "x", "y", "l", "alpha_air", "alpha_gas", "t_film", "t_air", "t_wall", "k_transfer", "film_efficiency"
     ])
 
 

@@ -26,7 +26,7 @@ def plot_cooling_alpha(ps_data, ss_data):
 
     t_min -= (t_max - t_min) * 0.05
 
-    plt.ylim(t_min, t_max)
+    plt.ylim(0, 2e3)
 
     plt.plot([0, 0], [t_min, t_max], color='black', lw=2)
 

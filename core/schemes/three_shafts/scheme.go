@@ -41,7 +41,7 @@ const (
 	dgFreeTurbine                = -0.01
 	freeTurbinePressureLossSigma = 0.93
 
-	hptCoolMassRate = 0.05
+	hptCoolMassRate = 0.1
 	lptCoolMassRate = 0
 
 	hptLeakMassRate = 0.01

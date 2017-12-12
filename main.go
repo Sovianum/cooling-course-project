@@ -93,12 +93,15 @@ const (
 	outletAngleData = "outlet_angle.csv"
 
 	hPointNum       = 50
-	coolAirMassRate = 0.05
+	coolAirMassRate = 0.0533
 	theta0          = 500
 	gapWidth        = 2.4e-3
 
 	velocityCoef = 0.98
 	massRateCoef = 0.98
+
+	coolingBladeLength = 40e-3
+	coolingHoleNum = 20
 )
 
 func main() {
@@ -344,28 +347,27 @@ func getSSConvFilmTemperatureSystem(
 	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.SSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.SSLambdaLaw)
 
-	var slitInfoArr = []profile.SlitInfo{
-		{
-			Coord:0,
-			Thickness:3e-4,
-			Area:5e-8,
+	var slitGeomData = []struct{
+		coord float64
+		d float64
+	}{
+		{0, 0.5e-3},
+		{28e-3, 0.5e-3},
+		{39e-3, 0.25e-3},
+		{43e-3, 0.30e-3},
+		//{30e-3, 0.5e-3},
+		//{35e-3, 0.3e-3},
+	}
+
+	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
+	for i, item := range slitGeomData {
+		slitInfoArr[i] = profile.SlitInfo{
+			Coord: item.coord,
+			Thickness: getSlitThk(item.d),
+			Area: getSlitArea(item.d),
 			VelocityCoef:velocityCoef,
 			MassRateCoef:massRateCoef,
-		},
-		{
-			Coord:1e-2,
-			Thickness:3e-4,
-			Area:5e-8,
-			VelocityCoef:velocityCoef,
-			MassRateCoef:massRateCoef,
-		},
-		{
-			Coord:2e-2,
-			Thickness:3e-4,
-			Area:5e-8,
-			VelocityCoef:velocityCoef,
-			MassRateCoef:massRateCoef,
-		},
+		}
 	}
 
 	if system, err := cooling2.GetInitedStatorConvFilmTemperatureSystem(
@@ -386,28 +388,27 @@ func getPSConvFilmTemperatureSystem(
 	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.PSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.PSLambdaLaw)
 
-	var slitInfoArr = []profile.SlitInfo{
-		{
-			Coord:0,
-			Thickness:3e-4,
-			Area:5e-8,
+	var slitGeomData = []struct{
+		coord float64
+		d float64
+	}{
+		{0, 0.5e-3},
+		{16e-3, 0.25e-3},
+		{22e-3, 0.25e-3},
+		{27e-3, 0.25e-3},
+		{32e-3, 0.30e-3},
+		{37.5e-3, 0.30e-3},
+	}
+
+	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
+	for i, item := range slitGeomData {
+		slitInfoArr[i] = profile.SlitInfo{
+			Coord: item.coord,
+			Thickness: getSlitThk(item.d),
+			Area: getSlitArea(item.d),
 			VelocityCoef:velocityCoef,
 			MassRateCoef:massRateCoef,
-		},
-		{
-			Coord:1e-2,
-			Thickness:3e-4,
-			Area:5e-8,
-			VelocityCoef:velocityCoef,
-			MassRateCoef:massRateCoef,
-		},
-		{
-			Coord:2e-2,
-			Thickness:3e-4,
-			Area:5e-8,
-			VelocityCoef:velocityCoef,
-			MassRateCoef:massRateCoef,
-		},
+		}
 	}
 
 	if system, err := cooling2.GetInitedStatorConvFilmTemperatureSystem(
@@ -417,6 +418,14 @@ func getPSConvFilmTemperatureSystem(
 	} else {
 		return system
 	}
+}
+
+func getSlitThk(diameter float64) float64 {
+	return math.Pi * diameter * diameter / 4 * coolingHoleNum / coolingBladeLength
+}
+
+func getSlitArea(diameter float64) float64 {
+	return math.Pi * diameter * diameter / 4 * coolingHoleNum
 }
 
 func getLambdaLaw(stage nodes.TurbineStageNode, lambdaGenerator func(float64, float64) cooling.LambdaLaw) cooling.LambdaLaw {
