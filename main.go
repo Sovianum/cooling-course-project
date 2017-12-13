@@ -12,12 +12,16 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/common/gdf"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
 	"github.com/Sovianum/turbocycle/impl/turbine/states"
 	"github.com/Sovianum/turbocycle/library/schemes"
+	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
@@ -25,10 +29,6 @@ import (
 	"math"
 	"os"
 	"os/exec"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
-	"github.com/Sovianum/turbocycle/common/gdf"
-	"github.com/Sovianum/turbocycle/material/gases"
 )
 
 const (
@@ -57,7 +57,7 @@ const (
 	imgDir   = "build/img"
 
 	projectInputTemplate = "project_input_data_template.tex"
-	projectInputOut = "project_input_data.tex"
+	projectInputOut      = "project_input_data.tex"
 
 	cycleInputTemplate = "cycle_input_data_template.tex"
 	cycleInputOut      = "cycle_input_data.tex"
@@ -101,7 +101,7 @@ const (
 	massRateCoef = 0.98
 
 	coolingBladeLength = 40e-3
-	coolingHoleNum = 20
+	coolingHoleNum     = 20
 )
 
 func main() {
@@ -305,8 +305,10 @@ func getTempProfileDF(
 	gasDF.SetSSSolutionInfo(ssSolution)
 
 	var calcDF = dataframes.TProfileCalcDF{
-		Geom: geomDF,
-		Gas:  gasDF,
+		Geom:       geomDF,
+		Gas:        gasDF,
+		PSSolution: psSolution,
+		SSSolution: ssSolution,
 	}
 	return calcDF
 }
@@ -352,9 +354,9 @@ func getSSConvFilmTemperatureSystem(
 	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.SSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.SSLambdaLaw)
 
-	var slitGeomData = []struct{
+	var slitGeomData = []struct {
 		coord float64
-		d float64
+		d     float64
 	}{
 		{0, 0.5e-3},
 		{28e-3, 0.5e-3},
@@ -367,11 +369,11 @@ func getSSConvFilmTemperatureSystem(
 	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
 	for i, item := range slitGeomData {
 		slitInfoArr[i] = profile.SlitInfo{
-			Coord: item.coord,
-			Thickness: getSlitThk(item.d),
-			Area: getSlitArea(item.d),
-			VelocityCoef:velocityCoef,
-			MassRateCoef:massRateCoef,
+			Coord:        item.coord,
+			Thickness:    getSlitThk(item.d),
+			Area:         getSlitArea(item.d),
+			VelocityCoef: velocityCoef,
+			MassRateCoef: massRateCoef,
 		}
 	}
 
@@ -393,9 +395,9 @@ func getPSConvFilmTemperatureSystem(
 	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.PSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.PSLambdaLaw)
 
-	var slitGeomData = []struct{
+	var slitGeomData = []struct {
 		coord float64
-		d float64
+		d     float64
 	}{
 		{0, 0.5e-3},
 		{16e-3, 0.25e-3},
@@ -408,11 +410,11 @@ func getPSConvFilmTemperatureSystem(
 	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
 	for i, item := range slitGeomData {
 		slitInfoArr[i] = profile.SlitInfo{
-			Coord: item.coord,
-			Thickness: getSlitThk(item.d),
-			Area: getSlitArea(item.d),
-			VelocityCoef:velocityCoef,
-			MassRateCoef:massRateCoef,
+			Coord:        item.coord,
+			Thickness:    getSlitThk(item.d),
+			Area:         getSlitArea(item.d),
+			VelocityCoef: velocityCoef,
+			MassRateCoef: massRateCoef,
 		}
 	}
 
@@ -745,7 +747,7 @@ func saveSchemeData(data []core.DoubleCompressorDataPoint) {
 func getSchemeData(scheme schemes.ThreeShaftsScheme) []core.DoubleCompressorDataPoint {
 	if data, err := io.GetThreeShaftsSchemeData(
 		scheme,
-		power / etaR,
+		power/etaR,
 		startPi, piStep, piStepNum,
 		startPiFactor, piFactorStep, piFactorStepNum,
 	); err != nil {

@@ -7,6 +7,8 @@ import (
 type TProfileCalcDF struct {
 	Geom TProfileGeomDF
 	Gas  TProfileGasDF
+	PSSolution profile.TemperatureSolution
+	SSSolution profile.TemperatureSolution
 }
 
 type TProfileGeomDF struct {

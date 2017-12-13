@@ -111,7 +111,6 @@
 		$$
 			m = \frac{\rho_{в \/\ отв} v_{в \/\ отв}}{\rho_{г \/\ отв} v_{г \/\ отв}}
 		$$
-	\item 
 	\item Определим число Рейнольдса по ширине щели:
 		$$
 			Re_s = \frac{
@@ -172,7 +171,7 @@
 		$$
 	\item По формуле истечения из сопла определим расход через ряд отверстий:
 		$$
-			G_отв = N_{отв} \frac{\pi d_{отв}^2}{4} \mu_{отв} \sqrt{
+			G_отв = s \cdot l \cdot  \mu_{отв} \sqrt{
 				\frac{2k_в}{k_в - 1} p_{в0}^*\rho_{в \/\ отв}^* 
 				\left(
 					\frac{
@@ -197,9 +196,64 @@
 		$$
 			G_в \left( x \right) = G_{в0} - \sum_{i = 1}^{x_i \leq x} G_{отв \/\ i}
 		$$
-\end{enumerate}
 
-\begin{enumerate}
+В результате расчетов получим значения характерных параметров в отверстиях.
+
+Значения характерных параметров в отверстиях корыта:
+\begin{longtable}{|c|c|c|c|c|c|c|c|c|}
+	\hline
+	\textbf{№} &
+	\textbf{$x, \/\ мм$} & 
+	\textbf{$s, \/\ 10^{-3} \/\ мм$} &
+	\textbf{$\phi_{отв}$} &
+	\textbf{$\mu_{отв}$} &
+	\textbf{$m$} & 
+	\textbf{$\phi$} & 
+	\textbf{$G_{отв}, \/\ 10^{-3} \/\ кг/с$} &
+	\textbf{$G_{отв} / G_{в0}$} 
+	\\ \hline
+	<-<range .PSSolution.SlitsSolution>->
+		<-<.Id>-> & 
+		<-<.SlitInfo.Coord | MultiplyE3 | Round1>-> & 
+		<-<.SlitInfo.Thickness | MultiplyE6 | Round1>-> &
+		<-<.SlitInfo.VelocityCoef | Round2>-> &
+		<-<.SlitInfo.MassRateCoef | Round2>-> &
+		<-<.BlowingParameter | Round2>-> &
+		<-<.TemperatureFactor | Round2>-> &
+		<-<.MassRate | MultiplyE3 | Round2>-> &
+		<-<.MassRateRel |Round3>-> 
+		\\\hline
+	<-<end>->	
+\end{longtable}
+
+Значения характерных параметров в отверстиях спинки:
+\begin{longtable}{|c|c|c|c|c|c|c|c|c|}
+	\hline
+	\textbf{№} &
+	\textbf{$x, \/\ мм$} & 
+	\textbf{$s, \/\ 10^{-3} \/\ мм$} &
+	\textbf{$\phi_{отв}$} &
+	\textbf{$\mu_{отв}$} &
+	\textbf{$m$} & 
+	\textbf{$\phi$} & 
+	\textbf{$G_{отв}, \/\ 10^{-3} \/\ кг/с$} &
+	\textbf{$G_{отв} / G_{в0}$} 
+	\\ \hline
+	<-<range .SSSolution.SlitsSolution>->
+		<-<.Id>-> & 
+		<-<.SlitInfo.Coord | MultiplyE3 | Round1>-> & 
+		<-<.SlitInfo.Thickness | MultiplyE6 | Round1>-> &
+		<-<.SlitInfo.VelocityCoef | Round2>-> &
+		<-<.SlitInfo.MassRateCoef | Round2>-> &
+		<-<.BlowingParameter | Round2>-> &
+		<-<.TemperatureFactor | Round2>-> &
+		<-<.MassRate | MultiplyE3 | Round2>-> &
+		<-<.MassRateRel |Round3>-> 
+		\\\hline
+	<-<end>->	
+\end{longtable}
+
+
 	\item Определим коэффициент теплоотдачи от газа на входной кромке лопатки $\alpha_{г.вх.кр.}$:
 		$$
 			\alpha_{г.вх.кр.} = 0.74 \frac{
@@ -271,14 +325,14 @@
 			}{
 				\alpha_г
 			} \left( 
-				T_г^* - \theta
+				T_{пл}^* - \theta
 			\right),
 		$$
 	где $k_x$ - коэффициент теплопередачи, определяемый уравнением
 		$$
 			k_x = \frac{1}{
 				\frac{1}{
-					\alpha_г
+					\alpha_{пл}
 				} + 
 				\frac{1}{
 					\alpha_в
@@ -292,7 +346,7 @@
 		\hline
 		\textbf{№} &
 		\textbf{$x, \/\ м$} & 
-		\textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & 
+		\textbf{$\alpha_{пл} \/\ Вт/\left(м^2 \cdot К\right)$} & 
 		\textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & 
 		\textbf{$\theta_x, \/\ К$} & 
 		\textbf{$T_{ст.x}, \/\ К$} 
@@ -313,7 +367,7 @@
 		\hline
 		\textbf{№} &
 		\textbf{$x, \/\ 10^{-3} м$} & 
-		\textbf{$\alpha_г \/\ Вт/\left(м^2 \cdot К\right)$} & 
+		\textbf{$\alpha_{пл} \/\ Вт/\left(м^2 \cdot К\right)$} & 
 		\textbf{$\alpha_в \/\ Вт/\left(м^2 \cdot К\right)$} & 
 		\textbf{$\theta_x, \/\ К$} & 
 		\textbf{$T_{ст.x}, \/\ К$} 
@@ -330,3 +384,10 @@
 		\end{longtable}
 
 \end{enumerate}
+
+Ниже представлено распределение температур газа, воздуха и металла по профилю лопатки:
+\begin{figure}[!htbp]
+    \centering
+	\includegraphics[scale=0.8]{cooling_2_t}
+	\caption{Распределение температур газа, воздуха и металла}
+\end{figure}
