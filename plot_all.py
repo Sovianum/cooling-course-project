@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     cycle_eta_plot_name = "cycle_eta_plot.png"
     cycle_eta_df = loaders.get_max_eta_df(cycle_data)
-    plots.plot_scheme_characteristics(cycle_eta_df, 0.6)
+    plots.plot_scheme_characteristics(cycle_eta_df, 0.65)
     plt.savefig(os.path.join(img_dir, cycle_eta_plot_name))
     plt.close()
 

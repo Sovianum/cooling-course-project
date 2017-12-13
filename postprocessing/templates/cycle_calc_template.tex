@@ -431,8 +431,8 @@
 		$$L_{тс} = c_{p \/\ тс} \left( T_{тнд}^* - T_{тс}^* \right) = 
 			<-<.FreeTurbine.GasData.CpMean | Round1>-> \cdot \left( <-<.FreeTurbine.TIn | Round1>-> - <-<.FreeTurbine.TOut | Round1>-> \right) =
 			<-<.FreeTurbine.Labour | DivideE6 | Round3>-> \cdot 10^6\/\ Дж/кг$$
-	\item Определим удельную мощность ГТД:
-		$$N_{e \/\ уд} = L_{тс} \/\ g_{тс} =
+	\item Определим удельную работу ГТД:
+		$$L = L_{тс} \/\ g_{тс} =
 			<-<.FreeTurbine.Labour | DivideE6 | Round2>-> \cdot 10^6 \cdot <-<.FreeTurbine.MassRateRel | Round3>-> =
 			<-<.EngineLabour | DivideE6 | Round3>-> \cdot 10^6 Дж/кг$$
 	\item Определим экономичность ГТД:
@@ -448,7 +448,7 @@
 			N = N_e / \eta_р = <-<.Ne | DivideE3 | Round>-> \cdot 10^3 \cdot \ <-<.EtaR | Round2>-> = <-<.NeMech | DivideE3 | Round>-> \cdot 10^3 \/\ Вт
 		$$
 	\item Определим расход воздуха:
-		$$G_в = \frac{N}{N_{e \/\ уд}} =
+		$$G_в = \frac{N}{L} =
 			\frac{<-<.NeMech | DivideE3 | Round>-> \cdot 10^3}{<-<.EngineLabour | DivideE6 | Round3>-> \cdot 10^6} =
 			<-<.MassRate | Round1>-> \/\ кг/с$$
 \end{enumerate}

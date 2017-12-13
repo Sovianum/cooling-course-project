@@ -80,13 +80,16 @@ def plot_profile_angles(data, angle_names):
 
 
 def plot_scheme_characteristics(data, y_min=0.8, y_max=1.02):
+    local_data = data[data.pi <= 40]
     plt.title('$Приведенные \ характеристики \ установки \ (\overline{f} = f / f_{max})$')
-    plt.plot(data.pi, data.G / data.G.max())
-    plt.plot(data.pi, data.N_e / data.N_e.max())
-    plt.plot(data.pi, data.eta / data.eta.max())
+    plt.plot(local_data.pi, local_data.G / local_data.G.max(), '-bo', markevery=[20])
+    plt.plot(local_data.pi, local_data.N_e / local_data.N_e.max(), '-go', markevery=[20])
+    plt.plot(local_data.pi, local_data.eta / local_data.eta.max(), '-ro', markevery=[20])
+    plt.plot([20, 20], [y_min, y_max], color='black')
     plt.ylim([y_min, y_max])
+    plt.xlabel('$\pi_\Sigma$', fontsize=20)
     plt.grid()
-    plt.legend(['$\overline{G}$', '$\overline{N_e}$', '$\overline{\eta}$'], loc='lower right')
+    plt.legend(['$\overline{G}$', '$\overline{L}$', '$\overline{\eta}$'], loc='lower right')
 
 
 def plot_height_parameter(parameter, parameter_name):
