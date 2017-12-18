@@ -93,15 +93,17 @@ const (
 	outletAngleData = "outlet_angle.csv"
 
 	hPointNum       = 50
-	coolAirMassRate = 0.0533
+	coolAirMassRate = 0.04
 	theta0          = 500
-	gapWidth        = 2.4e-3
+	gapWidth        = 1e-3
 
 	velocityCoef = 0.98
 	massRateCoef = 0.98
 
 	coolingBladeLength = 40e-3
 	coolingHoleNum     = 20
+
+	dInlet = 2.2e-3
 )
 
 func main() {
@@ -162,6 +164,8 @@ func main() {
 	fmt.Println(profilers.Reactivity(0, 0.5, inletGasProfiler, outletGasProfiler))
 	fmt.Println(profilers.Reactivity(0.5, 0.5, inletGasProfiler, outletGasProfiler))
 	fmt.Println(profilers.Reactivity(1, 0.5, inletGasProfiler, outletGasProfiler))
+
+	//panic("stop")
 
 	saveProfilingTemplate()
 
@@ -269,8 +273,6 @@ func getTempProfileDF(
 ) dataframes.TProfileCalcDF {
 	var inletTriangle = stage.VelocityInput().GetState().(states.VelocityPortState).Triangle
 
-	var dInlet = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-3)
-
 	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
 	var tStagIn = stage.TemperatureInput().GetState().(states2.TemperaturePortState).TStag
 	var pStagIn = stage.PressureInput().GetState().(states2.PressurePortState).PStag
@@ -358,10 +360,10 @@ func getSSConvFilmTemperatureSystem(
 		coord float64
 		d     float64
 	}{
-		{0, 0.5e-3},
-		{28e-3, 0.5e-3},
-		{39e-3, 0.25e-3},
-		{43e-3, 0.30e-3},
+		{0e-3, 0.4e-3},
+		{27e-3, 0.5e-3},
+		{37e-3, 0.5e-3},
+		//{41e-3, 0.3e-3},
 		//{30e-3, 0.5e-3},
 		//{35e-3, 0.3e-3},
 	}
@@ -399,12 +401,12 @@ func getPSConvFilmTemperatureSystem(
 		coord float64
 		d     float64
 	}{
-		{0, 0.5e-3},
+		{0.0e-3, 0.4e-3},
 		{16e-3, 0.25e-3},
 		{22e-3, 0.25e-3},
-		{27e-3, 0.25e-3},
-		{32e-3, 0.30e-3},
-		{37.5e-3, 0.30e-3},
+		{27e-3, 0.3e-3},
+		{31e-3, 0.35e-3},
+		{36.5e-3, 0.40e-3},
 	}
 
 	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
@@ -462,7 +464,6 @@ func getAlphaLaws(
 
 	var massRateIntensity = density0 * inletTriangle.CA()
 
-	var dInlet = 2 * geom.CurvRadius2(profile.InletEdge(), 0.5, 1e-3)
 	var alphaInlet = cooling.CylinderAlphaLaw(gas, massRateIntensity, dInlet)(0, tStagIn)
 
 	alphaGas = gasAlphaGenerator(

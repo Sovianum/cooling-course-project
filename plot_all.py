@@ -70,8 +70,8 @@ if __name__ == '__main__':
     plt.close()
 
     inventor_data = savers.get_temperature_df(ps_profile_df, ss_profile_df)
-    savers.to_csv_air(os.path.join(data_dir, "cooling_t_air.csv"), inventor_data)
-    savers.to_csv_wall(os.path.join(data_dir, "cooling_t_wall.csv"), inventor_data)
-    savers.to_csv_film(os.path.join(data_dir, "cooling_t_film.csv"), inventor_data)
+    # savers.to_csv_air(os.path.join(data_dir, "cooling_t_air.csv"), inventor_data)
+    # savers.to_csv_wall(os.path.join(data_dir, "cooling_t_wall.csv"), inventor_data)
+    # savers.to_csv_film(os.path.join(data_dir, "cooling_t_film.csv"), inventor_data)
     savers.to_csv_complex(os.path.join(data_dir, "cooling_t_complex.csv"), inventor_data)
     savers.to_csv_efficiency(os.path.join(data_dir, "cooling_t_efficiency.csv"), inventor_data)
