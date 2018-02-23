@@ -75,7 +75,7 @@
 			<-<.LPCompressor.GasData.KMean | Round2>->
 		}{
 			<-<.LPCompressor.GasData.KMean | Round2>-> - 1
-		} \cdot <-<.LPCompressor.GasData.R | Round1>-> = <-<.LPCompressor.GasData.CpMean | Round1>-> \/\ Дж/кг$$
+		} \cdot <-<.LPCompressor.GasData.R | Round1>-> = <-<.LPCompressor.GasData.CpMean | Round1>-> \/\ Дж/(кг \cdot К)$$
 	\item Определим работу КНД:
 		$$L_{КНД} = c_{pв \/\ кнд} \left( T_{кнд}^* - T_a \right) =
 			<-<.LPCompressor.GasData.CpMean | Round1>-> \cdot \left(<-<.LPCompressor.TOut | Round1>-> - <-<.LPCompressor.TIn | Round1>->\right) =
@@ -150,7 +150,7 @@
 			<-<.HPCompressor.GasData.KMean | Round2>->
 		}{
 			<-<.HPCompressor.GasData.KMean | Round2>-> - 1
-		} \cdot <-<.HPCompressor.GasData.R | Round1>-> = <-<.HPCompressor.GasData.CpMean | Round1>-> \/\ Дж/кг$$
+		} \cdot <-<.HPCompressor.GasData.R | Round1>-> = <-<.HPCompressor.GasData.CpMean | Round1>-> \/\ Дж/(кг \cdot К)$$
 	\item Определим работу КВД:
 		$$L_{квд} = c_{pв \/\ квд} \left( T_{квд}^* - T_{кнд}^* \right) =
 			<-<.HPCompressor.GasData.CpMean | Round1>-> \cdot \left(<-<.HPCompressor.TOut | Round1>-> - <-<.HPCompressor.TIn | Round1>->\right) =
@@ -170,7 +170,7 @@
 		\item[5)] истинная теплоемкость воздуха при температуре определения теплофизических параметров веществ:
 			$$c_{pв \/\ г}\left( T_0 \right) = <-<.Burner.AirData0.Cp | Round1>-> \/\ Дж/(кг \cdot К);$$
 		\item[6)] низшая теплота сгорания топлива:
-			$$Q_н^р = <-<.Burner.Fuel.QLower | DivideE3 | Round>-> \cdot 10^3 \/\ Дж / (кг \cdot К);$$
+			$$Q_н^р = <-<.Burner.Fuel.QLower | DivideE3 | Round>-> \cdot 10^3 \/\ Дж / кг;$$
 		\item[7)] полнота сгорания:
 			$$\eta_г = <-<.Burner.Eta | Round2>->;$$
 		\item[8)] масса воздуха, необходимая для сжигания 1 кг топлива:

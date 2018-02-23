@@ -32,7 +32,12 @@ func GetSingleCompressorDataGenerator(
 ) func(pi float64) (SingleCompressorDataPoint, error) {
 	return func(pi float64) (SingleCompressorDataPoint, error) {
 		scheme.Compressor().SetPiStag(pi)
-		var converged, err = scheme.GetNetwork().Solve(relaxCoef, iterNum, 0.001)
+		network, netErr := scheme.GetNetwork()
+		if netErr != nil {
+			panic(netErr)
+		}
+
+		var converged, err = network.Solve(relaxCoef, 2, iterNum, 0.001)
 		if err != nil {
 			return SingleCompressorDataPoint{}, err
 		}

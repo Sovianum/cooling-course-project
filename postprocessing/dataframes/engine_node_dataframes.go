@@ -3,9 +3,9 @@ package dataframes
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
-	"github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/core/graph"
 )
 
 func NewGasDF(p, t float64, gas gases.Gas) GasDF {
@@ -65,7 +65,7 @@ func NewCompressorDF(node constructive.CompressorNode) CompressorDF {
 			node.PStagIn(),
 			node.TStagIn(),
 			node.TStagOut(),
-			node.ComplexGasInput().GetState().(states.ComplexGasPortState).Gas,
+			node.GasInput().GetState().Value().(gases.Gas),
 		),
 	}
 }
@@ -107,21 +107,18 @@ type PressureDropDF struct {
 }
 
 func NewRegeneratorNode(node constructive.RegeneratorNode) RegeneratorDF {
-	var coldInputState = node.ColdInput().GetState().(states.ComplexGasPortState)
-	var hotInputState = node.HotInput().GetState().(states.ComplexGasPortState)
-	var coldOutputState = node.ColdOutput().GetState().(states.ComplexGasPortState)
-	var hotOutputSTate = node.HotOutput().GetState().(states.ComplexGasPortState)
+	extractor := func(port graph.Port) float64 {return port.GetState().Value().(float64)}
 
 	return RegeneratorDF{
-		PColdIn:  coldInputState.PStag,
-		PColdOut: coldOutputState.PStag,
-		PHotIn:   hotInputState.PStag,
-		PHotOut:  hotOutputSTate.PStag,
+		PColdIn:  extractor(node.ColdInput().PressureInput()),
+		PColdOut: extractor(node.ColdOutput().PressureOutput()),
+		PHotIn:   extractor(node.HotInput().PressureInput()),
+		PHotOut:  extractor(node.HotOutput().PressureOutput()),
 
-		TColdIn:  coldInputState.TStag,
-		TColdOut: coldOutputState.TStag,
-		THotIn:   hotInputState.TStag,
-		THotOut:  hotOutputSTate.TStag,
+		TColdIn:  extractor(node.ColdInput().TemperatureInput()),
+		TColdOut: extractor(node.ColdOutput().TemperatureOutput()),
+		THotIn:   extractor(node.HotInput().TemperatureInput()),
+		THotOut:  extractor(node.HotOutput().TemperatureOutput()),
 
 		Sigma: node.Sigma(),
 	}
@@ -147,7 +144,7 @@ func NewFuelDF(TInit, T0 float64, fuel fuel.GasFuel) FuelDF {
 		TInit:  TInit,
 		T0:     T0,
 		QLower: fuel.QLower(),
-		L0:     fuel.AirMassTheory(),
+		L0:     fuel.GasMassTheory(gases.GetAir()),
 	}
 }
 
@@ -160,17 +157,15 @@ type FuelDF struct {
 }
 
 func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
-	var inletGasState = node.ComplexGasInput().GetState().(states.ComplexGasPortState)
-	var outletGasState = node.ComplexGasOutput().GetState().(states.ComplexGasPortState)
 	var t0 = node.T0()
-	var inletGas = inletGasState.Gas
-	var outletGas = outletGasState.Gas
+	var inletGas = node.GasInput().GetState().Value().(gases.Gas)
+	var outletGas = node.GasOutput().GetState().Value().(gases.Gas)
 
 	var df = BurnerDF{
 		Tg:              node.TStagOut(),
 		Eta:             node.Eta(),
 		Alpha:           node.Alpha(),
-		FuelMassRateRel: node.GetFuelRateRel(),
+		FuelMassRateRel: node.FuelRateRel(),
 		Sigma:           node.Sigma(),
 
 		Fuel: NewFuelDF(
@@ -179,13 +174,27 @@ func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
 			node.Fuel(),
 		),
 
-		AirDataInlet:  NewGasDF(inletGasState.PStag, inletGasState.TStag, inletGas),
-		AirData0:      NewGasDF(inletGasState.PStag, t0, inletGas),
-		GasData0:      NewGasDF(inletGasState.PStag, t0, outletGas),
-		GasDataOutlet: NewGasDF(outletGasState.PStag, outletGasState.TStag, outletGasState.Gas),
+		AirDataInlet:  NewGasDF(
+			node.PressureInput().GetState().Value().(float64),
+			node.TemperatureInput().GetState().Value().(float64),
+			inletGas,
+		),
+		AirData0:      NewGasDF(
+			node.PressureInput().GetState().Value().(float64),
+			t0, inletGas,
+		),
+		GasData0:      NewGasDF(
+			node.PressureInput().GetState().Value().(float64),
+			t0, outletGas,
+		),
+		GasDataOutlet: NewGasDF(
+			node.PressureOutput().GetState().Value().(float64),
+			node.TemperatureOutput().GetState().Value().(float64),
+			node.GasOutput().GetState().Value().(gases.Gas),
+		),
 	}
 
-	df.A = df.GasDataOutlet.Cp*df.Tg - df.AirDataInlet.Cp*inletGasState.TStag
+	df.A = df.GasDataOutlet.Cp*df.Tg - df.AirDataInlet.Cp*node.TemperatureInput().GetState().Value().(float64)
 	df.B = (df.GasData0.Cp - df.AirData0.Cp) * t0
 	df.C = df.GasDataOutlet.Cp*df.Tg - df.GasData0.Cp*t0
 	df.D = df.Fuel.C * (node.TFuel() - t0)
@@ -214,8 +223,8 @@ type BurnerDF struct {
 }
 
 func NewTurbineDFFromBlockedTurbine(node constructive.BlockedTurbineNode) TurbineDF {
-	var inletGasState = node.ComplexGasInput().GetState().(states.ComplexGasPortState)
-	var outletGasState = node.ComplexGasOutput().GetState().(states.ComplexGasPortState)
+	inletGas := node.GasInput().GetState().Value().(gases.Gas)
+	outletGas := node.GasOutput().GetState().Value().(gases.Gas)
 
 	return TurbineDF{
 		PIn:  node.PStagIn(),
@@ -224,13 +233,13 @@ func NewTurbineDFFromBlockedTurbine(node constructive.BlockedTurbineNode) Turbin
 		TIn:  node.TStagIn(),
 		TOut: node.TStagOut(),
 
-		InletGasData:  NewGasDF(node.PStagIn(), node.TStagIn(), inletGasState.Gas),
-		OutletGasData: NewGasDF(node.PStagOut(), node.TStagOut(), outletGasState.Gas),
+		InletGasData:  NewGasDF(node.PStagIn(), node.TStagIn(), inletGas),
+		OutletGasData: NewGasDF(node.PStagOut(), node.TStagOut(), outletGas),
 		GasData: NewGasMeanDF(
 			node.PStagIn(),
 			node.TStagIn(),
 			node.TStagOut(),
-			outletGasState.Gas,
+			outletGas,
 		),
 
 		MassRateRel:     node.MassRateRel(),
@@ -238,8 +247,8 @@ func NewTurbineDFFromBlockedTurbine(node constructive.BlockedTurbineNode) Turbin
 		CoolMassRateRel: node.CoolMassRateRel(),
 
 		LambdaOut: node.LambdaOut(),
-		POutStat:  node.PStatOut(),
-		TOutStat:  node.TStatOut(),
+		POutStat:  constructive.POut(node),
+		TOutStat:  constructive.TOut(node),
 
 		Labour: node.LSpecific(),
 		Eta:    node.Eta(),
@@ -247,8 +256,8 @@ func NewTurbineDFFromBlockedTurbine(node constructive.BlockedTurbineNode) Turbin
 }
 
 func NewTurbineDFFromFreeTurbine(node constructive.FreeTurbineNode) TurbineDF {
-	var inletGasState = node.ComplexGasInput().GetState().(states.ComplexGasPortState)
-	var outletGasState = node.GasOutput().GetState().(states.GasPortState)
+	inletGas := node.GasInput().GetState().Value().(gases.Gas)
+	outletGas := node.GasOutput().GetState().Value().(gases.Gas)
 
 	return TurbineDF{
 		PIn:  node.PStagIn(),
@@ -257,13 +266,13 @@ func NewTurbineDFFromFreeTurbine(node constructive.FreeTurbineNode) TurbineDF {
 		TIn:  node.TStagIn(),
 		TOut: node.TStagOut(),
 
-		InletGasData:  NewGasDF(node.PStagIn(), node.TStagIn(), inletGasState.Gas),
-		OutletGasData: NewGasDF(node.PStagOut(), node.TStagOut(), outletGasState.Gas),
+		InletGasData:  NewGasDF(node.PStagIn(), node.TStagIn(), inletGas),
+		OutletGasData: NewGasDF(node.PStagOut(), node.TStagOut(), outletGas),
 		GasData: NewGasMeanDF(
 			node.PStagIn(),
 			node.TStagIn(),
 			node.TStagOut(),
-			outletGasState.Gas,
+			outletGas,
 		),
 
 		MassRateRel:     node.MassRateRel(),
@@ -271,8 +280,8 @@ func NewTurbineDFFromFreeTurbine(node constructive.FreeTurbineNode) TurbineDF {
 		CoolMassRateRel: node.CoolMassRateRel(),
 
 		LambdaOut: node.LambdaOut(),
-		POutStat:  node.PStatOut(),
-		TOutStat:  node.TStatOut(),
+		POutStat:  constructive.POut(node),
+		TOutStat:  constructive.TOut(node),
 
 		Labour: node.LSpecific(),
 		Eta:    node.Eta(),

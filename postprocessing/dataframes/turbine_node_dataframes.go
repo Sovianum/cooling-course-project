@@ -62,7 +62,7 @@ func NewStageDF(node nodes.TurbineStageNode) (StageDF, error) {
 		T1Prime: pack.T1Prime,
 		Rho1:    pack.Density1,
 
-		MassRate: node.MassRateInput().GetState().(states.MassRatePortState).MassRate,
+		MassRate: node.MassRateInput().GetState().Value().(float64),
 		RPM:      pack.RPM,
 
 		Pw1: pack.Pw1,

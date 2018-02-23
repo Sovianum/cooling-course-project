@@ -38,7 +38,7 @@ const (
 )
 
 func GetInitedTwoShaftsRegeneratorScheme() schemes.TwoShaftsRegeneratorScheme {
-	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm)
+	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var turboCascade = compose.NewTurboCascadeNode(
 		etaComp, piComp, etaCompTurbine, lambdaOut,

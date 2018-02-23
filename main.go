@@ -115,9 +115,9 @@ func main() {
 
 	saveInputTemplates()
 
-	//var schemeData = getSchemeData(scheme)
-	//saveSchemeData(schemeData)
-	//saveVariantTemplate(schemeData)
+	var schemeData = getSchemeData(scheme)
+	saveSchemeData(schemeData)
+	saveVariantTemplate(schemeData)
 
 	solveParticularScheme(scheme, lowPiStag, highPiStag)
 	saveCycleTemplate(scheme)
@@ -360,7 +360,7 @@ func getSSConvFilmTemperatureSystem(
 		coord float64
 		d     float64
 	}{
-		{0e-3, 0.4e-3},
+		{3e-3, 0.4e-3},
 		{27e-3, 0.5e-3},
 		{37e-3, 0.5e-3},
 		//{41e-3, 0.3e-3},
@@ -401,7 +401,7 @@ func getPSConvFilmTemperatureSystem(
 		coord float64
 		d     float64
 	}{
-		{0.0e-3, 0.4e-3},
+		{3e-3, 0.4e-3},
 		{16e-3, 0.25e-3},
 		{22e-3, 0.25e-3},
 		{27e-3, 0.3e-3},
@@ -438,7 +438,7 @@ func getSlitArea(diameter float64) float64 {
 }
 
 func getLambdaLaw(stage nodes.TurbineStageNode, lambdaGenerator func(float64, float64) cooling.LambdaLaw) cooling.LambdaLaw {
-	var gas = stage.GasOutput().GetState().(states2.GasPortState).Gas
+	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
 	var tStagOut = stage.TemperatureOutput().GetState().(states2.TemperaturePortState).TStag
 	var velocityOut = stage.VelocityOutput().GetState().(states.VelocityPortState).Triangle.C()
 
@@ -686,7 +686,12 @@ func saveCycleTemplate(scheme schemes.ThreeShaftsScheme) {
 func solveParticularScheme(scheme schemes.ThreeShaftsScheme, lowPiStag, highPiStag float64) {
 	scheme.LowPressureCompressor().SetPiStag(lowPiStag)
 	scheme.HighPressureCompressor().SetPiStag(highPiStag)
-	if converged, err := scheme.GetNetwork().Solve(relaxCoef, iterNum, precision); !converged || err != nil {
+	network, netErr := scheme.GetNetwork()
+	if netErr != nil {
+		panic(netErr)
+	}
+
+	if converged, err := network.Solve(relaxCoef, 2, iterNum, precision); !converged || err != nil {
 		if err != nil {
 			panic(err)
 		}

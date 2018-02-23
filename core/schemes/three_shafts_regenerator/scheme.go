@@ -50,7 +50,7 @@ const (
 )
 
 func GetInitedThreeShaftsRegeneratorScheme() schemes.ThreeShaftsRegeneratorScheme {
-	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm)
+	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
 		etaMiddlePressureComp, piCompTotal*piCompFactor,

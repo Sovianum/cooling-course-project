@@ -2,15 +2,18 @@ package dataframes
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
-	"github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/library/schemes"
+	"github.com/Sovianum/turbocycle/material/gases"
 )
 
 func NewThreeShaftsDF(nE float64, etaR float64, scheme schemes.ThreeShaftsScheme) ThreeShaftsDF {
-	var gasSourceState = scheme.GasSource().ComplexGasOutput().GetState().(states.ComplexGasPortState)
+	gs := scheme.GasSource()
+	pStag := gs.PressureOutput().GetState().Value().(float64)
+	tStag := gs.PressureOutput().GetState().Value().(float64)
+	gas := gs.GasOutput().GetState().Value().(gases.Gas)
 
 	return ThreeShaftsDF{
-		GasSource: NewGasDF(gasSourceState.PStag, gasSourceState.TStag, gasSourceState.Gas),
+		GasSource: NewGasDF(pStag, tStag, gas),
 		InletPipe: NewPressureDropDF(scheme.InletPressureDrop()),
 
 		LPCompressor:     NewCompressorDF(scheme.LowPressureCompressor()),
