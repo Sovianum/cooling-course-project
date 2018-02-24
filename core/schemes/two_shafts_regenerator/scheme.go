@@ -69,7 +69,7 @@ func GetInitedTwoShaftsRegeneratorScheme() schemes.TwoShaftsRegeneratorScheme {
 		},
 		freeTurbinePressureLossSigma,
 	)
-	var regenerator = constructive.NewRegeneratorNode(regeneratorSigma, precision, constructive.SigmaByColdSide)
+	var regenerator = constructive.NewRegeneratorNode(regeneratorSigma, precision)
 
 	return schemes.NewTwoShaftsRegeneratorScheme(
 		gasSource, inletPressureDrop, turboCascade, burner, compressorTurbinePipe, freeTurbineBlock, regenerator,

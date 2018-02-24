@@ -27,7 +27,7 @@ func TestNewThreeShaftsDF_Smoke(t *testing.T) {
 	_, err := generator(pi, piFactor)
 	assert.Nil(t, err)
 
-	var df = NewThreeShaftsDF(power, scheme)
+	var df = NewThreeShaftsDF(power, 0.93, scheme)
 	_, err = json.MarshalIndent(df, "", "    ")
 	assert.Nil(t, err)
 }
@@ -52,7 +52,7 @@ func TestTemplateSmoke(t *testing.T) {
 	var generator = core.GetDoubleCompressorDataGenerator(scheme, power, relaxCoef, iterNum)
 	var _, err = generator(pi, piFactor)
 	assert.Nil(t, err)
-	var df = NewThreeShaftsDF(power, scheme)
+	var df = NewThreeShaftsDF(power, 0.93, scheme)
 
 	fileErr = templ.Execute(ioutil.Discard, &df)
 	assert.Nil(t, fileErr)

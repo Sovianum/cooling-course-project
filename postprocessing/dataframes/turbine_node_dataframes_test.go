@@ -70,7 +70,7 @@ func (suite *StageDFTestSuite) SetupTest() {
 
 	suite.node.TemperatureInput().SetState(states.NewTemperaturePortState(tg))
 	suite.node.PressureInput().SetState(states.NewPressurePortState(pg))
-	suite.node.MassRateInput().SetState(states2.NewMassRatePortState(massRate))
+	suite.node.MassRateInput().SetState(states.NewMassRatePortState(massRate))
 
 	suite.node.SetAlpha1FirstStage(common.ToRadians(alpha))
 

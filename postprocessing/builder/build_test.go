@@ -123,7 +123,7 @@ func getStageDf() dataframes.StageDF {
 
 	stage.TemperatureInput().SetState(states.NewTemperaturePortState(tg))
 	stage.PressureInput().SetState(states.NewPressurePortState(pg))
-	stage.MassRateInput().SetState(states2.NewMassRatePortState(massRate))
+	stage.MassRateInput().SetState(states.NewMassRatePortState(massRate))
 
 	stage.SetAlpha1FirstStage(common.ToRadians(alpha))
 
