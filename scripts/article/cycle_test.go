@@ -32,11 +32,16 @@ func (s *ParametricTestSuite) TestSamePoint() {
 	s.Require().Nil(e)
 
 	s.InDelta(pc.MassRate(), pb.MassRateInput().GetState().Value().(float64), 1e7)
-	s.True(common.ApproxEqual(
+	s.True(
+		common.ApproxEqual(
+			pb.MassRateInput().GetState().Value().(float64),
+			pct.MassRateInput().GetState().Value().(float64),
+			3e-2,
+		),
+		"expected: %f, got: %f",
 		pb.MassRateInput().GetState().Value().(float64),
 		pct.MassRateInput().GetState().Value().(float64),
-		3e-2,
-	))
+	)
 
 	fmt.Println(
 		pc.MassRateInput().GetState().Value().(float64),

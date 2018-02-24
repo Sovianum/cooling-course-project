@@ -7,9 +7,9 @@ import (
 
 const (
 	power     = 16e6
-	relaxCoef = 0.01
-	iterNum   = 1000
-	precision = 0.05
+	relaxCoef = 0.1
+	iterNum   = 10000
+	precision = 0.01
 	piStag = 10
 )
 

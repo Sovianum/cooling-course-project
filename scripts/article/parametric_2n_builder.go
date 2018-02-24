@@ -78,8 +78,8 @@ func (b *Parametric2NBuilder) buildCompressor() constructive.ParametricCompresso
 	p := constructive.NewParametricCompressorNode(
 		b.massRate(), c.PiStag(),
 		b.cRpm0, c.Eta(), t0, p0, b.precision,
-		ccGen.GetNormEtaCharConst(),	// todo make smth more accurate
-		ccGen.GetNormRPMCharConst(),	// todo make smth more accurate
+		ccGen.GetNormEtaChar(),
+		ccGen.GetNormRPMChar(),
 	)
 
 	copyAll(
@@ -125,7 +125,7 @@ func (b *Parametric2NBuilder) buildBurner() constructive.ParametricBurnerNode {
 
 func (b *Parametric2NBuilder) buildCompressorTurbine() constructive.ParametricTurbineNode {
 	ct := b.source.GasGenerator().TurboCascade().Turbine()
-	tcGen := methodics.NewTurbineCharacteristic(ct.Eta(), ct.PiTStag(), b.massRate()*ct.MassRateRel(), b.ctLambdaU0, b.ctStageNum)
+	tcGen := methodics.NewTurbineCharacteristic(ct.Eta(), ct.PiTStag(), b.ctLambdaU0, b.ctStageNum)
 	p0 := ct.PStagIn()
 	t0 := ct.TStagIn()
 
@@ -140,8 +140,8 @@ func (b *Parametric2NBuilder) buildCompressorTurbine() constructive.ParametricTu
 		func(node constructive.TurbineNode) float64 {
 			return 0
 		},
-		tcGen.GetNormMassRateCharConst(),	// todo make smth more accurate
-		tcGen.GetNormEtaCharConst(),		// todo make smth more accurate
+		tcGen.GetNormMassRateChar(),
+		tcGen.GetNormEtaChar(),
 	)
 
 	copyAll(
@@ -163,7 +163,7 @@ func (b *Parametric2NBuilder) buildCTPipe() constructive.PressureLossNode {
 
 func (b *Parametric2NBuilder) buildFreeTurbine() constructive.ParametricTurbineNode {
 	ft := b.source.FreeTurbineBlock().FreeTurbine()
-	tcGen := methodics.NewTurbineCharacteristic(ft.Eta(), ft.PiTStag(), b.massRate()*ft.MassRateRel(), b.ftLambdaU0, b.ftStageNum)
+	tcGen := methodics.NewTurbineCharacteristic(ft.Eta(), ft.PiTStag(), b.ftLambdaU0, b.ftStageNum)
 	p0 := ft.PStagIn()
 	t0 := ft.TStagIn()
 
@@ -178,8 +178,8 @@ func (b *Parametric2NBuilder) buildFreeTurbine() constructive.ParametricTurbineN
 		func(node constructive.TurbineNode) float64 {
 			return 0
 		},
-		tcGen.GetNormMassRateCharConst(),	// todo make smth more accurate
-		tcGen.GetNormEtaCharConst(),		// todo make smth more accurate
+		tcGen.GetNormMassRateChar(),
+		tcGen.GetNormEtaChar(),
 	)
 	copyAll(
 		[]graph.Port{

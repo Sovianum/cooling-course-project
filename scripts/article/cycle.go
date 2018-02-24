@@ -43,12 +43,11 @@ func solveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 		newton.NewUniformNewtonSolverGen(1e-5, newton.DefaultLog),
 	)
 
-	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.7, 10000)
+	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.5, 10000)
 	if sErr != nil {
 		return sErr
 	}
 
-	vSolver.Solve(vSolver.GetInit(), 1e-6, 0.7, 10000)
 	return nil
 }
 
