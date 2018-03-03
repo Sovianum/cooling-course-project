@@ -7,6 +7,8 @@ import (
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"fmt"
+	"encoding/json"
+	"os"
 )
 
 const (
@@ -48,6 +50,55 @@ func solveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 		return sErr
 	}
 
+	var data struct{
+		T       []float64 `json:"t"`
+		P       []float64 `json:"p"`
+		G       []float64 `json:"g"`
+		PiC     []float64 `json:"pi_c"`
+		PiTC    []float64 `json:"pi_tc"`
+		PiF     []float64 `json:"pi_f"`
+		GNormTC []float64 `json:"g_norm"`
+		GNormTF []float64 `json:"g_norm_tf"`
+		GNormC []float64 `json:"g_norm_c"`
+		RpmTC   []float64 `json:"rpm_tc"`
+		RpmFT   []float64 `json:"rpm_ft"`
+	}
+
+	for i := 0; i != 17; i++ {
+		t := pScheme.TemperatureSource().GetTemperature()
+		labour := pScheme.FreeTurbine().PowerOutput().GetState().Value().(float64)
+		massRate := pScheme.Compressor().MassRate()
+		normMassRateTC := pScheme.CompressorTurbine().NormMassRate()
+		normMassRateFT := pScheme.FreeTurbine().NormMassRate()
+
+		data.T = append(data.T, t)
+		data.P = append(data.P, labour * massRate / 1e6)
+		data.G = append(data.G, massRate)
+		data.PiC = append(data.PiC, pScheme.Compressor().PiStag())
+		data.PiTC = append(data.PiTC, pScheme.CompressorTurbine().PiTStag())
+		data.PiF = append(data.PiF, pScheme.FreeTurbine().PiTStag())
+		data.GNormC = append(data.GNormC, pScheme.Compressor().NormMassRate())
+		data.GNormTC = append(data.GNormTC, normMassRateTC)
+		data.GNormTF = append(data.GNormTF, normMassRateFT)
+		data.RpmTC = append(data.RpmTC, pScheme.CompressorTurbine().RPMInput().GetState().Value().(float64))
+		data.RpmFT = append(data.RpmFT, pScheme.FreeTurbine().RPMInput().GetState().Value().(float64))
+
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
+
+		r := 1.
+		//if i >= 8 {
+		//	r = 0.1
+		//}
+		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 1000)
+		if sErr != nil {
+			break
+		}
+		fmt.Println(i)
+	}
+
+	b, _ := json.Marshal(data)
+	f, _ := os.Create("/tmp/dat")
+	f.WriteString(string(b))
 	return nil
 }
 

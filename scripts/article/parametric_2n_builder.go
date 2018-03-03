@@ -125,12 +125,13 @@ func (b *Parametric2NBuilder) buildBurner() constructive.ParametricBurnerNode {
 
 func (b *Parametric2NBuilder) buildCompressorTurbine() constructive.ParametricTurbineNode {
 	ct := b.source.GasGenerator().TurboCascade().Turbine()
-	tcGen := methodics.NewTurbineCharacteristic(ct.Eta(), ct.PiTStag(), b.ctLambdaU0, b.ctStageNum)
+	tcGen := methodics.NewKazandjanTurbineCharacteristic()
 	p0 := ct.PStagIn()
 	t0 := ct.TStagIn()
 
 	pt := constructive.NewParametricTurbineNode(
-		b.massRate()*ct.MassRateRel(), ct.PiTStag(), ct.Eta(), t0, p0, b.ctInletMeanDiameter, b.precision,
+		b.massRate()*ct.MassRateInput().GetState().Value().(float64),
+		ct.PiTStag(), ct.Eta(), t0, p0, b.ctInletMeanDiameter, b.precision,
 		func(node constructive.TurbineNode) float64 {
 			return ct.LeakMassRateRel()
 		},
@@ -163,12 +164,13 @@ func (b *Parametric2NBuilder) buildCTPipe() constructive.PressureLossNode {
 
 func (b *Parametric2NBuilder) buildFreeTurbine() constructive.ParametricTurbineNode {
 	ft := b.source.FreeTurbineBlock().FreeTurbine()
-	tcGen := methodics.NewTurbineCharacteristic(ft.Eta(), ft.PiTStag(), b.ftLambdaU0, b.ftStageNum)
+	tcGen := methodics.NewKazandjanTurbineCharacteristic()
 	p0 := ft.PStagIn()
 	t0 := ft.TStagIn()
 
 	pt := constructive.NewParametricTurbineNode(
-		b.massRate()*ft.MassRateRel(), ft.PiTStag(), ft.Eta(), t0, p0, b.ftInletMeanDiameter, b.precision,
+		b.massRate()*ft.MassRateInput().GetState().Value().(float64),
+		ft.PiTStag(), ft.Eta(), t0, p0, b.ftInletMeanDiameter, b.precision,
 		func(node constructive.TurbineNode) float64 {
 			return ft.LeakMassRateRel()
 		},
@@ -201,9 +203,9 @@ func (b *Parametric2NBuilder) buildFreeTurbinePipe() constructive.PressureLossNo
 func (b *Parametric2NBuilder) buildPayload() constructive.Payload {
 	return constructive.NewPayload(
 		b.payloadRpm0, b.power, func(normRpm float64) float64 {
-			delta := normRpm - 1
-			return normRpm - delta * delta
-			//return normRpm*normRpm // todo add smth more precise
+			//delta := normRpm - 1
+			//return normRpm - delta * delta
+			return normRpm * normRpm * normRpm // todo add smth more precise
 		},
 	)
 }

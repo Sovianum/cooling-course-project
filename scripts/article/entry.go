@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	power     = 16e6
+	power     = 20e6
 	relaxCoef = 0.1
 	iterNum   = 10000
 	precision = 0.01
