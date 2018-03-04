@@ -1,24 +1,20 @@
-package article
+package p2nr
 
 import (
 	"fmt"
 )
 
 const (
-	power     = 20e6
-	relaxCoef = 0.1
-	iterNum   = 10000
-	precision = 0.01
-	piStag = 10
+	piStag = 8
 )
 
 func Entry() {
-	scheme := get2nScheme(piStag)
-	pScheme, pErr := getParametric(scheme)
+	scheme := GetScheme(piStag)
+	pScheme, pErr := GetParametric(scheme)
 	if pErr != nil {
 		panic(pErr)
 	}
-	err := solveParametric(pScheme)
+	err := SolveParametric(pScheme)
 	if err != nil {
 		panic(err)
 	}

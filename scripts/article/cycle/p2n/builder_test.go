@@ -1,4 +1,4 @@
-package article
+package p2n
 
 import (
 	"github.com/stretchr/testify/suite"
@@ -23,10 +23,10 @@ type P2NBuilderTestSuite struct {
 }
 
 func (s *P2NBuilderTestSuite) SetupTest() {
-	s.scheme = get2nScheme(piStag)
+	s.scheme = GetScheme(piStag)
 
 	var err error
-	s.pScheme, err = getParametric(s.scheme)
+	s.pScheme, err = GetParametric(s.scheme)
 	s.Require().Nil(err)
 
 	s.pNetwork, _ = s.pScheme.GetNetwork()

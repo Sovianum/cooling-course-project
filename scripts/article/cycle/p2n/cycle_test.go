@@ -1,4 +1,4 @@
-package article
+package p2n
 
 import (
 	"github.com/stretchr/testify/suite"
@@ -16,8 +16,8 @@ type ParametricTestSuite struct {
 }
 
 func (s *ParametricTestSuite) SetupTest() {
-	s.scheme = get2nScheme(piStag)
-	s.pScheme, _=  getParametric(s.scheme)
+	s.scheme = GetScheme(piStag)
+	s.pScheme, _=  GetParametric(s.scheme)
 }
 
 func (s *ParametricTestSuite) TestSamePoint() {

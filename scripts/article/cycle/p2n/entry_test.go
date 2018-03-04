@@ -1,4 +1,4 @@
-package article
+package p2n
 
 import "testing"
 
