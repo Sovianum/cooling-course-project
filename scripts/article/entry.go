@@ -1,7 +1,6 @@
 package article
 
 import (
-	"github.com/Sovianum/turbocycle/library/schemes"
 	"fmt"
 )
 
@@ -15,7 +14,7 @@ const (
 
 func Entry() {
 	scheme := get2nScheme(piStag)
-	pScheme, pErr := getParametric(scheme.(*schemes.TwoShaftsSchemeImpl))
+	pScheme, pErr := getParametric(scheme)
 	if pErr != nil {
 		panic(pErr)
 	}

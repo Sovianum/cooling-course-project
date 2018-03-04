@@ -102,7 +102,7 @@ func solveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 	return nil
 }
 
-func getParametric(scheme *schemes.TwoShaftsSchemeImpl) (free2n.DoubleShaftFreeScheme, error) {
+func getParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme, error) {
 	network, err := scheme.GetNetwork()
 	if err != nil {
 		return nil, err
@@ -119,9 +119,8 @@ func getParametric(scheme *schemes.TwoShaftsSchemeImpl) (free2n.DoubleShaftFreeS
 }
 
 func get2nParametricScheme(scheme schemes.TwoShaftsScheme) free2n.DoubleShaftFreeScheme {
-	casted := scheme.(*schemes.TwoShaftsSchemeImpl)
 	builder := NewParametric2NBuilder(
-		casted, power, t0, p0, cRpm0, cLambdaIn0,
+		scheme, power, t0, p0, cRpm0, cLambdaIn0,
 		ctID, ctLambdaU0, ctStageNum,
 		ftID, ftLambdaU0, ftStageNum,
 		payloadRpm0, etaM, precision, relaxCoef, iterNum,

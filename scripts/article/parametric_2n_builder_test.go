@@ -17,13 +17,13 @@ type P2NBuilderTestSuite struct {
 	suite.Suite
 	pScheme free2n.DoubleShaftFreeScheme
 	pNetwork graph.Network
-	scheme *schemes.TwoShaftsSchemeImpl
+	scheme schemes.TwoShaftsScheme
 
 	vSolver math.Solver
 }
 
 func (s *P2NBuilderTestSuite) SetupTest() {
-	s.scheme = get2nScheme(piStag).(*schemes.TwoShaftsSchemeImpl)
+	s.scheme = get2nScheme(piStag)
 
 	var err error
 	s.pScheme, err = getParametric(s.scheme)
@@ -49,9 +49,9 @@ func (s *P2NBuilderTestSuite) TestConsistency()  {
 	s.Require().Nil(err)
 
 	initMassRate := schemes.GetMassRate(power, s.scheme)
-	bOMR := s.scheme.GasGenerator().Burner().MassRateOutput().GetState().Value().(float64)
-	ctIMR := s.scheme.GasGenerator().TurboCascade().Turbine().MassRateInput().GetState().Value().(float64)
-	ctOMR := s.scheme.GasGenerator().TurboCascade().Turbine().MassRateOutput().GetState().Value().(float64)
+	bOMR := s.scheme.Burner().MassRateOutput().GetState().Value().(float64)
+	ctIMR := s.scheme.TurboCascade().Turbine().MassRateInput().GetState().Value().(float64)
+	ctOMR := s.scheme.TurboCascade().Turbine().MassRateOutput().GetState().Value().(float64)
 	ftIMR := s.scheme.FreeTurbineBlock().FreeTurbine().MassRateInput().GetState().Value().(float64)
 	ftOMR := s.scheme.FreeTurbineBlock().FreeTurbine().MassRateOutput().GetState().Value().(float64)
 
@@ -65,7 +65,7 @@ func (s *P2NBuilderTestSuite) TestConsistency()  {
 	)
 
 	s.approxEqual(initMassRate * bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-2)
-	s.InDelta(s.scheme.GasGenerator().Burner().Alpha(), s.pScheme.Burner().Alpha(), 1e-3)
+	s.InDelta(s.scheme.Burner().Alpha(), s.pScheme.Burner().Alpha(), 1e-3)
 
 	s.approxEqual(
 		initMassRate * ctIMR,
@@ -76,17 +76,17 @@ func (s *P2NBuilderTestSuite) TestConsistency()  {
 		s.pScheme.CompressorTurbine().MassRateOutput().GetState().Value().(float64), 3e-2,
 	)
 	s.approxEqual(
-		s.scheme.GasGenerator().TurboCascade().Turbine().PowerOutput().GetState().Value().(float64),
+		s.scheme.TurboCascade().Turbine().PowerOutput().GetState().Value().(float64),
 		s.pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64),
 		1e-2,
 	)
 	s.approxEqual(
-		s.scheme.GasGenerator().TurboCascade().Turbine().PiTStag(),
+		s.scheme.TurboCascade().Turbine().PiTStag(),
 		s.pScheme.CompressorTurbine().PiTStag(),
 		1e-4,
 	)
 	s.approxEqual(
-		s.scheme.GasGenerator().TurboCascade().Turbine().TStagOut(),
+		s.scheme.TurboCascade().Turbine().TStagOut(),
 		s.pScheme.CompressorTurbine().TStagOut(),
 		1e-2,
 	)

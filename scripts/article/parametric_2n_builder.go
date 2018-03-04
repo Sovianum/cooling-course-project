@@ -10,7 +10,7 @@ import (
 )
 
 func NewParametric2NBuilder(
-	source *schemes.TwoShaftsSchemeImpl,
+	source schemes.TwoShaftsScheme,
 	power, t0, p0,
 	cRpm0, lambdaIn0,
 	ctInletMeanDiameter, ctLambdaU0, ctStageNum,
@@ -31,7 +31,7 @@ func NewParametric2NBuilder(
 }
 
 type Parametric2NBuilder struct {
-	source *schemes.TwoShaftsSchemeImpl
+	source schemes.TwoShaftsScheme
 	power  float64
 	t0     float64
 	p0     float64
@@ -60,7 +60,7 @@ type Parametric2NBuilder struct {
 func (b *Parametric2NBuilder) Build() free2n.DoubleShaftFreeScheme {
 	return free2n.NewDoubleShaftFreeScheme(
 		b.source.GasSource().GasOutput().GetState().Value().(gases.Gas),
-		b.t0, b.p0, b.source.GasGenerator().Burner().TStagOut(),
+		b.t0, b.p0, b.source.Burner().TStagOut(),
 		b.etaM, b.buildCompressor(), b.buildCompressorPipe(),
 		b.buildBurner(), b.buildCompressorTurbine(), b.buildFreeTurbinePipe(),
 		b.buildFreeTurbine(), b.buildFreeTurbinePipe(), b.buildPayload(),
@@ -100,7 +100,7 @@ func (b *Parametric2NBuilder) buildCompressorPipe() constructive.PressureLossNod
 }
 
 func (b *Parametric2NBuilder) buildBurner() constructive.ParametricBurnerNode {
-	burn := b.source.GasGenerator().Burner()
+	burn := b.source.Burner()
 	pBurn := constructive.NewParametricBurnerNode(
 		burn.Fuel(), burn.TFuel(), burn.T0(), burn.Eta(),
 		b.lambdaIn0, burn.PStagIn(), burn.TStagIn(),
@@ -124,7 +124,7 @@ func (b *Parametric2NBuilder) buildBurner() constructive.ParametricBurnerNode {
 }
 
 func (b *Parametric2NBuilder) buildCompressorTurbine() constructive.ParametricTurbineNode {
-	ct := b.source.GasGenerator().TurboCascade().Turbine()
+	ct := b.source.TurboCascade().Turbine()
 	tcGen := methodics.NewKazandjanTurbineCharacteristic()
 	p0 := ct.PStagIn()
 	t0 := ct.TStagIn()
