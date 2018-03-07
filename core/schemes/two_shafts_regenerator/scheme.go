@@ -15,7 +15,7 @@ const (
 	sigmaInlet     = 0.98
 	etaComp        = 0.86
 	piComp         = 11
-	tGas           = 1223
+	tGas           = 1450
 	tFuel          = 300
 	sigmaBurn      = 0.99
 	etaBurn        = 0.98

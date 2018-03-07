@@ -42,6 +42,8 @@ const (
 	iterNum   = 10000
 	precision = 0.01
 
+	schemePrecision = 0.1
+
 	lpcPiStag = 4
 	hpcPiStag = 2.5
 )
@@ -66,60 +68,13 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 		return sErr
 	}
 
-	var data struct {
-		T []float64 `json:"t"`
-		P []float64 `json:"p"`
-		G []float64 `json:"g"`
-
-		PiLPC []float64 `json:"pi_lpc"`
-		PiHPC []float64 `json:"pi_hpc"`
-
-		PiHPT []float64 `json:"pi_hpt"`
-		PiLPT []float64 `json:"pi_hpt"`
-		PiFT  []float64 `json:"pi_ft"`
-
-		GNormHPT []float64 `json:"g_norm_hpt"`
-		GNormLPT []float64 `json:"g_norm_lpt"`
-		GNormFT  []float64 `json:"g_norm_ft"`
-
-		RpmHPT []float64 `json:"rpm_hpt"`
-		RpmLPT []float64 `json:"rpm_lpt"`
-		RpmFT  []float64 `json:"rpm_ft"`
-	}
-
+	data := NewData3n()
 	for i := 0; i != 17; i++ {
-		t := pScheme.TemperatureSource().GetTemperature()
-		labour := pScheme.FT().PowerOutput().GetState().Value().(float64)
-		massRate := pScheme.FT().MassRateInput().GetState().Value().(float64)
-		normMassRateHPT := pScheme.HPT().NormMassRate()
-		normMassRateLPT := pScheme.LPT().NormMassRate()
-		normMassRateFT := pScheme.FT().NormMassRate()
-
-		data.T = append(data.T, t)
-		data.P = append(data.P, labour*massRate/1e6)
-		data.G = append(data.G, massRate)
-
-		data.PiLPC = append(data.PiLPC, pScheme.LPC().PiStag())
-		data.PiHPC = append(data.PiHPC, pScheme.HPC().PiStag())
-
-		data.PiHPT = append(data.PiHPT, pScheme.HPT().PiTStag())
-		data.PiLPT = append(data.PiLPT, pScheme.LPT().PiTStag())
-		data.PiFT = append(data.PiFT, pScheme.FT().PiTStag())
-
-		data.GNormHPT = append(data.GNormHPT, normMassRateHPT)
-		data.GNormLPT = append(data.GNormLPT, normMassRateLPT)
-		data.GNormFT = append(data.GNormFT, normMassRateFT)
-
-		data.RpmHPT = append(data.RpmHPT, pScheme.HPT().RPMInput().GetState().Value().(float64))
-		data.RpmLPT = append(data.RpmLPT, pScheme.LPT().RPMInput().GetState().Value().(float64))
-		data.RpmFT = append(data.RpmFT, pScheme.FT().RPMInput().GetState().Value().(float64))
+		data.Load(pScheme)
 
 		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
 
-		r := 0.5
-		//if i >= 8 {
-		//	r = 0.1
-		//}
+		r := 1.
 		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 1000)
 		if sErr != nil {
 			break
@@ -128,7 +83,7 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 	}
 
 	b, _ := json.Marshal(data)
-	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/3n.csv")
+	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/3n.json")
 	f.WriteString(string(b))
 	return nil
 }
@@ -138,7 +93,7 @@ func GetParametric(scheme schemes.ThreeShaftsScheme) (free3n.ThreeShaftFreeSchem
 	if err != nil {
 		return nil, err
 	}
-	converged, solveErr := network.Solve(relaxCoef, 2, iterNum, precision)
+	converged, solveErr := network.Solve(relaxCoef, 2, iterNum, schemePrecision)
 	if solveErr != nil {
 		return nil, solveErr
 	}
