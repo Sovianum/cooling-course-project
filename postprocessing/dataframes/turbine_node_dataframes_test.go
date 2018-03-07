@@ -37,7 +37,7 @@ const (
 	deltaRel = 0.1
 
 	statorApproxTRel = 0.7
-	rotorApproxTRel = 0.7
+	rotorApproxTRel  = 0.7
 
 	alpha = 14
 

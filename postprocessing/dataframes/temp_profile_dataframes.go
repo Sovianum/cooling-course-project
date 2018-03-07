@@ -5,8 +5,8 @@ import (
 )
 
 type TProfileCalcDF struct {
-	Geom TProfileGeomDF
-	Gas  TProfileGasDF
+	Geom       TProfileGeomDF
+	Gas        TProfileGasDF
 	PSSolution profile.TemperatureSolution
 	SSSolution profile.TemperatureSolution
 }
@@ -72,7 +72,7 @@ type TProfileRow struct {
 
 func (df TProfileGasDF) PSRows() chan TProfileRow {
 	var rowFunc = func(ch chan TProfileRow) {
-		for i, j := 0, 1; i < len(df.LengthPSArr); i, j = i + df.SkipSteps, j + 1 {
+		for i, j := 0, 1; i < len(df.LengthPSArr); i, j = i+df.SkipSteps, j+1 {
 			ch <- TProfileRow{
 				Id:       j,
 				X:        df.LengthPSArr[i],
@@ -91,7 +91,7 @@ func (df TProfileGasDF) PSRows() chan TProfileRow {
 
 func (df TProfileGasDF) SSRows() chan TProfileRow {
 	var rowFunc = func(ch chan TProfileRow) {
-		for i, j := 0, 1; i < len(df.LengthPSArr); i, j = i + df.SkipSteps, j + 1 {
+		for i, j := 0, 1; i < len(df.LengthPSArr); i, j = i+df.SkipSteps, j+1 {
 			ch <- TProfileRow{
 				Id:       j,
 				X:        df.LengthSSArr[i],

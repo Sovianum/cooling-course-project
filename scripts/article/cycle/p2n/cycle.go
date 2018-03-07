@@ -93,9 +93,6 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
 
 		r := 1.
-		//if i >= 8 {
-		//	r = 0.1
-		//}
 		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 1000)
 		if sErr != nil {
 			break
@@ -104,9 +101,13 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 	}
 
 	b, _ := json.Marshal(data)
-	f, _ := os.Create("/tmp/dat")
-	f.WriteString(string(b))
-	return nil
+	f, e := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/2n.csv")
+	if e != nil {
+		return e
+	}
+
+	_, e = f.WriteString(string(b))
+	return e
 }
 
 func GetParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme, error) {

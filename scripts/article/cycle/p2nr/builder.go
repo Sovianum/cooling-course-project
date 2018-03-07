@@ -1,12 +1,12 @@
 package p2nr
 
 import (
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/p2n"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/helper"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/gases"
-	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/p2n"
 )
 
 func NewBuilder(
@@ -28,25 +28,25 @@ func NewBuilder(
 		HydraulicDiameterHot:  hydraulicDiameterHot,
 		HydraulicDiameterCold: hydraulicDiameterCold,
 		NuColdFunc:            nuColdFunc, NuHotFunc: nuHotFunc,
-		TDropFunc:             tDropFunc,
+		TDropFunc: tDropFunc,
 		Builder: &p2n.Builder{
-			Source: source,
-			Power:  power,
-			T0:     t0,
-			P0: p0,
-			CRpm0: cRpm0,
-			LambdaIn0: lambdaIn0,
+			Source:              source,
+			Power:               power,
+			T0:                  t0,
+			P0:                  p0,
+			CRpm0:               cRpm0,
+			LambdaIn0:           lambdaIn0,
 			CtInletMeanDiameter: ctInletMeanDiameter,
-			CtLambdaU0: ctLambdaU0,
-			CtStageNum: ctStageNum,
+			CtLambdaU0:          ctLambdaU0,
+			CtStageNum:          ctStageNum,
 			FtInletMeanDiameter: ftInletMeanDiameter,
-			FtLambdaU0: ftLambdaU0,
-			FtStageNum: ftStageNum,
-			PayloadRpm0: payloadRpm0,
-			EtaM: etaM,
-			Precision: precision,
-			RelaxCoef: relaxCoef,
-			IterLimit: iterLimit,
+			FtLambdaU0:          ftLambdaU0,
+			FtStageNum:          ftStageNum,
+			PayloadRpm0:         payloadRpm0,
+			EtaM:                etaM,
+			Precision:           precision,
+			RelaxCoef:           relaxCoef,
+			IterLimit:           iterLimit,
 		},
 	}
 }

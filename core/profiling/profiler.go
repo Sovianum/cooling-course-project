@@ -1,11 +1,11 @@
 package profiling
 
 import (
-	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
+	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 	"github.com/Sovianum/turbocycle/impl/turbine/states"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/laws"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 )
 
 func GetInitedStatorProfiler(
@@ -117,7 +117,7 @@ func GetInitedRotorProfiler(
 			return common.InterpTolerate(
 				hRel,
 				[]float64{0, 1},
-				[]float64{1/3, 1},
+				[]float64{1 / 3, 1},
 			)
 		},
 	)

@@ -1,15 +1,15 @@
 package templ
 
 import (
-	"text/template"
 	"fmt"
-	"math"
 	"github.com/Sovianum/turbocycle/common"
+	"math"
+	"text/template"
 )
 
 func GetTemplate(name, content string, funcMap template.FuncMap) (*template.Template, error) {
 	return template.
-	New(name).
+		New(name).
 		Delims("<-<", ">->").
 		Funcs(funcMap).
 		Parse(content)

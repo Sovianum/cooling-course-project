@@ -1,9 +1,9 @@
 package core
 
 import (
+	"errors"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"strconv"
-	"errors"
 )
 
 type SingleCompressorScheme interface {
@@ -53,4 +53,3 @@ func GetSingleCompressorDataGenerator(
 		}, nil
 	}
 }
-

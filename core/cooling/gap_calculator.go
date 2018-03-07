@@ -1,19 +1,19 @@
 package cooling
 
 import (
-	"github.com/Sovianum/turbocycle/material/gases"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
 	"github.com/Sovianum/turbocycle/impl/engine/states"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
 	states2 "github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
 	"math"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
 )
 
 const (
-	wallThk = 1e-3
-	lambdaM = 20
-	tWallOuter = 1000
+	wallThk      = 1e-3
+	lambdaM      = 20
+	tWallOuter   = 1000
 	tCoolerInlet = 500
 )
 

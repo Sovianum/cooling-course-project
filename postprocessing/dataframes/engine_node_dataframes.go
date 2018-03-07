@@ -1,11 +1,11 @@
 package dataframes
 
 import (
+	"github.com/Sovianum/turbocycle/core/graph"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
-	"github.com/Sovianum/turbocycle/core/graph"
 )
 
 func NewGasDF(p, t float64, gas gases.Gas) GasDF {
@@ -107,7 +107,7 @@ type PressureDropDF struct {
 }
 
 func NewRegeneratorNode(node constructive.RegeneratorNode) RegeneratorDF {
-	extractor := func(port graph.Port) float64 {return port.GetState().Value().(float64)}
+	extractor := func(port graph.Port) float64 { return port.GetState().Value().(float64) }
 
 	return RegeneratorDF{
 		PColdIn:  extractor(node.ColdInput().PressureInput()),
@@ -174,16 +174,16 @@ func NewBurnerDF(node constructive.BurnerNode) BurnerDF {
 			node.Fuel(),
 		),
 
-		AirDataInlet:  NewGasDF(
+		AirDataInlet: NewGasDF(
 			node.PressureInput().GetState().Value().(float64),
 			node.TemperatureInput().GetState().Value().(float64),
 			inletGas,
 		),
-		AirData0:      NewGasDF(
+		AirData0: NewGasDF(
 			node.PressureInput().GetState().Value().(float64),
 			t0, inletGas,
 		),
-		GasData0:      NewGasDF(
+		GasData0: NewGasDF(
 			node.PressureInput().GetState().Value().(float64),
 			t0, outletGas,
 		),

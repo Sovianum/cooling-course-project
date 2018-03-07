@@ -1,12 +1,12 @@
 package p2n
 
 import (
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
-	"github.com/Sovianum/turbocycle/impl/engine/nodes/methodics"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/gases"
-	"github.com/Sovianum/turbocycle/core/graph"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes/methodics"
 )
 
 func NewBuilder(
@@ -78,30 +78,16 @@ func (b *Builder) Build() free2n.DoubleShaftFreeScheme {
 
 func (b *Builder) BuildCompressor() constructive.ParametricCompressorNode {
 	c := b.Source.Compressor()
-	ccGen := methodics.NewCompressorCharGen(
-		c.PiStag(), c.Eta(), b.massRate(), b.Precision, b.RelaxCoef, b.IterLimit,
+	massRate0 := common.GetMassRate(b.Power, b.Source, c)
+	return common.BuildCompressor(
+		c,
+		methodics.NewCompressorCharGen(
+			c.PiStag(), c.Eta(), massRate0, precision, relaxCoef, b.IterLimit,
+		),
+		b.CRpm0,
+		common.GetMassRate(b.Power, b.Source, b.Source.Compressor()),
+		b.Precision,
 	)
-	p0 := c.PStagIn()
-	t0 := c.TStagIn()
-
-	p := constructive.NewParametricCompressorNode(
-		b.massRate(), c.PiStag(),
-		b.CRpm0, c.Eta(), t0, p0, b.Precision,
-		ccGen.GetNormEtaChar(),
-		ccGen.GetNormRPMChar(),
-	)
-
-	copyAll(
-		[]graph.Port{
-			c.GasInput(), c.TemperatureInput(), c.PressureInput(), c.MassRateInput(),
-			c.GasOutput(), c.TemperatureOutput(), c.PressureOutput(), c.MassRateOutput(),
-		},
-		[]graph.Port{
-			p.GasInput(), p.TemperatureInput(), p.PressureInput(), p.MassRateInput(),
-			p.GasOutput(), p.TemperatureOutput(), p.PressureOutput(), p.MassRateOutput(),
-		},
-	)
-	return p
 }
 
 func (b *Builder) BuildCompressorPipe() constructive.PressureLossNode {
@@ -110,61 +96,21 @@ func (b *Builder) BuildCompressorPipe() constructive.PressureLossNode {
 
 func (b *Builder) BuildBurner() constructive.ParametricBurnerNode {
 	burn := b.Source.Burner()
-	pBurn := constructive.NewParametricBurnerNode(
-		burn.Fuel(), burn.TFuel(), burn.T0(), burn.Eta(),
-		b.LambdaIn0, burn.PStagIn(), burn.TStagIn(),
-		b.massRate()*burn.MassRateInput().GetState().Value().(float64),
-		burn.FuelRateRel(), b.Precision, func(lambda float64) float64 {
-			return burn.Sigma() // todo make something more precise
-		},
+	return common.BuildBurner(
+		burn, b.LambdaIn0,
+		common.GetMassRate(b.Power, b.Source, burn),
+		b.Precision,
 	)
-
-	copyAll(
-		[]graph.Port{
-			burn.GasInput(), burn.TemperatureInput(), burn.PressureInput(), burn.MassRateInput(),
-			burn.GasOutput(), burn.TemperatureOutput(), burn.PressureOutput(), burn.MassRateOutput(),
-		},
-		[]graph.Port{
-			pBurn.GasInput(), pBurn.TemperatureInput(), pBurn.PressureInput(), pBurn.MassRateInput(),
-			pBurn.GasOutput(), pBurn.TemperatureOutput(), pBurn.PressureOutput(), pBurn.MassRateOutput(),
-		},
-	)
-	return pBurn
 }
 
 func (b *Builder) BuildCompressorTurbine() constructive.ParametricTurbineNode {
 	ct := b.Source.TurboCascade().Turbine()
-	tcGen := methodics.NewKazandjanTurbineCharacteristic()
-	p0 := ct.PStagIn()
-	t0 := ct.TStagIn()
-
-	pt := constructive.NewParametricTurbineNode(
-		b.massRate()*ct.MassRateInput().GetState().Value().(float64),
-		ct.PiTStag(), ct.Eta(), t0, p0, b.CtInletMeanDiameter, b.Precision,
-		func(node constructive.TurbineNode) float64 {
-			return ct.LeakMassRateRel()
-		},
-		func(node constructive.TurbineNode) float64 {
-			return ct.CoolMassRateRel()
-		},
-		func(node constructive.TurbineNode) float64 {
-			return 0
-		},
-		tcGen.GetNormMassRateChar(),
-		tcGen.GetNormEtaChar(),
+	return common.BuildTurbine(
+		ct,
+		methodics.NewKazandjanTurbineCharacteristic(),
+		common.GetMassRate(b.Power, b.Source, ct),
+		b.CtInletMeanDiameter, b.Precision,
 	)
-
-	copyAll(
-		[]graph.Port{
-			ct.GasInput(), ct.TemperatureInput(), ct.PressureInput(),
-			ct.GasOutput(), ct.TemperatureOutput(), ct.PressureOutput(), ct.MassRateOutput(),
-		},
-		[]graph.Port{
-			pt.GasInput(), pt.TemperatureInput(), pt.PressureInput(),
-			pt.GasOutput(), pt.TemperatureOutput(), pt.PressureOutput(), pt.MassRateOutput(),
-		},
-	)
-	return pt
 }
 
 func (b *Builder) BuildCTPipe() constructive.PressureLossNode {
@@ -173,36 +119,12 @@ func (b *Builder) BuildCTPipe() constructive.PressureLossNode {
 
 func (b *Builder) BuildFreeTurbine() constructive.ParametricTurbineNode {
 	ft := b.Source.FreeTurbineBlock().FreeTurbine()
-	tcGen := methodics.NewKazandjanTurbineCharacteristic()
-	p0 := ft.PStagIn()
-	t0 := ft.TStagIn()
-
-	pt := constructive.NewParametricTurbineNode(
-		b.massRate()*ft.MassRateInput().GetState().Value().(float64),
-		ft.PiTStag(), ft.Eta(), t0, p0, b.FtInletMeanDiameter, b.Precision,
-		func(node constructive.TurbineNode) float64 {
-			return ft.LeakMassRateRel()
-		},
-		func(node constructive.TurbineNode) float64 {
-			return ft.CoolMassRateRel()
-		},
-		func(node constructive.TurbineNode) float64 {
-			return 0
-		},
-		tcGen.GetNormMassRateChar(),
-		tcGen.GetNormEtaChar(),
+	return common.BuildTurbine(
+		ft,
+		methodics.NewKazandjanTurbineCharacteristic(),
+		common.GetMassRate(b.Power, b.Source, ft),
+		b.FtInletMeanDiameter, b.Precision,
 	)
-	copyAll(
-		[]graph.Port{
-			ft.GasInput(), ft.TemperatureInput(), ft.PressureInput(),
-			ft.GasOutput(), ft.TemperatureOutput(), ft.PressureOutput(), ft.MassRateOutput(),
-		},
-		[]graph.Port{
-			pt.GasInput(), pt.TemperatureInput(), pt.PressureInput(),
-			pt.GasOutput(), pt.TemperatureOutput(), pt.PressureOutput(), pt.MassRateOutput(),
-		},
-	)
-	return pt
 }
 
 func (b *Builder) BuildFreeTurbinePipe() constructive.PressureLossNode {
@@ -217,18 +139,4 @@ func (b *Builder) BuildPayload() constructive.Payload {
 			return normRpm * normRpm * normRpm // todo add smth more precise
 		},
 	)
-}
-
-func (b *Builder) massRate() float64 {
-	return schemes.GetMassRate(b.Power, b.Source)
-}
-
-func copyAll(p1s, p2s []graph.Port) {
-	for i, p1 := range p1s {
-		copyState(p1, p2s[i])
-	}
-}
-
-func copyState(p1, p2 graph.Port) {
-	p2.SetState(p1.GetState())
 }

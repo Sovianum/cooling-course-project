@@ -1,22 +1,22 @@
 package diploma
 
 import (
-	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
-	"github.com/Sovianum/turbocycle/common/gdf"
-	"github.com/Sovianum/turbocycle/material/gases"
+	"fmt"
+	cooling2 "github.com/Sovianum/cooling-course-project/core/cooling"
+	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
-	"fmt"
-	"github.com/Sovianum/cooling-course-project/core/profiling"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
-	"math"
-	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/common/gdf"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
-	cooling2 "github.com/Sovianum/cooling-course-project/core/cooling"
 	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
+	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
+	"math"
 )
 
 func saveCooling2Template(df dataframes.TProfileCalcDF) {

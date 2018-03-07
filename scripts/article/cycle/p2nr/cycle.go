@@ -3,14 +3,14 @@ package p2nr
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Sovianum/cooling-course-project/core/schemes/two_shafts_regenerator"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"os"
-	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
-	"github.com/Sovianum/cooling-course-project/core/schemes/two_shafts_regenerator"
 	"gonum.org/v1/gonum/mat"
+	"os"
 )
 
 const (
@@ -31,17 +31,17 @@ const (
 	t0 = 300
 	p0 = 1e5
 
-	velocityHotIn0 = 20
-	velocityColdIn0 = 20
-	hydraulicDiameterHot = 1e-3
+	velocityHotIn0        = 20
+	velocityColdIn0       = 20
+	hydraulicDiameterHot  = 1e-3
 	hydraulicDiameterCold = 1e-3
 
-	power     = 20e6
+	power = 20e6
 
-	relaxCoef = 0.1
+	relaxCoef       = 0.1
 	schemeRelaxCoef = 0.5
-	iterNum   = 10000
-	precision = 0.01
+	iterNum         = 10000
+	precision       = 0.01
 	schemePrecision = 0.01
 )
 
@@ -126,7 +126,7 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 	}
 
 	b, _ := json.Marshal(data)
-	f, _ := os.Create("/tmp/dat")
+	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/2nr.csv")
 	f.WriteString(string(b))
 	return nil
 }

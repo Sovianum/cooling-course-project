@@ -1,18 +1,18 @@
 package diploma
 
 import (
-	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
-	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
-	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
-	"github.com/Sovianum/turbocycle/utils/turbine/geom"
-	"gonum.org/v1/gonum/mat"
 	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/turbine/states"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
+	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/utils/turbine/geom"
+	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
+	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
+	"gonum.org/v1/gonum/mat"
 	"math"
 )
 

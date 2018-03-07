@@ -1,14 +1,14 @@
 package cooling
 
 import (
+	"github.com/Sovianum/turbocycle/impl/engine/states"
+	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/ode"
-	"github.com/Sovianum/turbocycle/material/gases"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/impl/engine/states"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 )
 
 func GetInitedStatorConvTemperatureSystem(
@@ -116,7 +116,7 @@ func SSProfileGasAlphaLaw(
 	var totalLength = inletEdgeLength + ssLength
 
 	var boundary1 = inletEdgeLength
-	var boundary2 = inletEdgeLength + 2 * ssLength / 3
+	var boundary2 = inletEdgeLength + 2*ssLength/3
 
 	return cooling.JoinedAlphaLaw(
 		[]cooling.AlphaLaw{

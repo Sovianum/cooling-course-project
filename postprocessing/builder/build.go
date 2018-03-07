@@ -2,8 +2,8 @@ package builder
 
 import (
 	"fmt"
-	"os/exec"
 	"os"
+	"os/exec"
 )
 
 func BuildLatex(rootDir, rootFileName string) error {

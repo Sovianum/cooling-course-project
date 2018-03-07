@@ -1,9 +1,9 @@
-package p2n
+package p3n
 
 import (
 	"fmt"
 	"github.com/Sovianum/turbocycle/common"
-	"github.com/Sovianum/turbocycle/library/parametric/free2n"
+	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/stretchr/testify/suite"
 	"testing"
@@ -11,34 +11,38 @@ import (
 
 type ParametricTestSuite struct {
 	suite.Suite
-	scheme  schemes.TwoShaftsScheme
-	pScheme free2n.DoubleShaftFreeScheme
+	scheme  schemes.ThreeShaftsScheme
+	pScheme free3n.ThreeShaftFreeScheme
 }
 
 func (s *ParametricTestSuite) SetupTest() {
-	s.scheme = GetScheme(piStag)
+	s.scheme = GetScheme(lpcPiStag, hpcPiStag)
 	s.pScheme, _ = GetParametric(s.scheme)
 }
 
 func (s *ParametricTestSuite) TestSamePoint() {
-	pc := s.pScheme.Compressor()
-	pb := s.pScheme.Burner()
-	pct := s.pScheme.CompressorTurbine()
+	lpc := s.pScheme.LPC()
+	//hpc := s.pScheme.LPC()
+
+	b := s.pScheme.Burner()
+
+	hpt := s.pScheme.HPT()
+	//lpt := s.pScheme.LPT()
 
 	n, _ := s.pScheme.GetNetwork()
 	_, e := n.Solve(0.1, 2, 100, 0.01)
 	s.Require().Nil(e)
 
-	s.InDelta(pc.MassRate(), pb.MassRateInput().GetState().Value().(float64), 1e-7)
+	s.InDelta(lpc.MassRate(), b.MassRateInput().GetState().Value().(float64), 1e-7)
 	s.True(
 		common.ApproxEqual(
-			pb.MassRateInput().GetState().Value().(float64),
-			pct.MassRateInput().GetState().Value().(float64),
-			5e-2,
+			b.MassRateOutput().GetState().Value().(float64),
+			hpt.MassRateInput().GetState().Value().(float64),
+			1e-5,
 		),
 		"expected: %f, got: %f",
-		pb.MassRateInput().GetState().Value().(float64),
-		pct.MassRateInput().GetState().Value().(float64),
+		b.MassRateOutput().GetState().Value().(float64),
+		hpt.MassRateInput().GetState().Value().(float64),
 	)
 
 	for _, nv := range s.pScheme.Assembler().GetNamedReport() {

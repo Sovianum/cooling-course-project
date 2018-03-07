@@ -1,18 +1,18 @@
 package builder
 
 import (
-	"testing"
-	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
 	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
-	"github.com/stretchr/testify/suite"
-	"github.com/Sovianum/turbocycle/material/gases"
-	"math"
+	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
 	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/impl/engine/states"
 	states2 "github.com/Sovianum/turbocycle/impl/turbine/states"
-	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/stretchr/testify/suite"
+	"math"
+	"testing"
 )
 
 const (
@@ -36,7 +36,7 @@ const (
 	deltaRel = 0.1
 
 	statorApproxTRel = 0.7
-	rotorApproxTRel = 0.7
+	rotorApproxTRel  = 0.7
 
 	alpha = 14
 
@@ -45,7 +45,7 @@ const (
 
 type insertionInfo struct {
 	outputPath string
-	data interface{}
+	data       interface{}
 }
 
 type BuildTestSuite struct {
@@ -65,24 +65,24 @@ func getInsertionMap() map[string]insertionInfo {
 	var templateDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/postprocessing/templates"
 	var outputDir = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
 
-	var getTemplateFile = func(name string) string {return templateDir + "/" + name}
-	var getOutputFile = func(name string) string {return outputDir + "/" + name}
+	var getTemplateFile = func(name string) string { return templateDir + "/" + name }
+	var getOutputFile = func(name string) string { return outputDir + "/" + name }
 
 	var result = make(map[string]insertionInfo)
 
 	result[getTemplateFile("root.tex")] = insertionInfo{
-		outputPath:getOutputFile("root.tex"),
+		outputPath: getOutputFile("root.tex"),
 	}
 	result[getTemplateFile("var_list_template.tex")] = insertionInfo{
-		outputPath:getOutputFile("var_list.tex"),
+		outputPath: getOutputFile("var_list.tex"),
 	}
 	result[getTemplateFile("cycle_calc_template.tex")] = insertionInfo{
-		outputPath:getOutputFile("cycle_calc.tex"),
-		data: getCycleDf(),
+		outputPath: getOutputFile("cycle_calc.tex"),
+		data:       getCycleDf(),
 	}
 	result[getTemplateFile("mean_line_calc_template.tex")] = insertionInfo{
-		outputPath:getOutputFile("mean_line_calc.tex"),
-		data: getStageDf(),
+		outputPath: getOutputFile("mean_line_calc.tex"),
+		data:       getStageDf(),
 	}
 
 	return result

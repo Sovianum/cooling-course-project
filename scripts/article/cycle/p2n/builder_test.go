@@ -1,28 +1,28 @@
 package p2n
 
 import (
-	"github.com/stretchr/testify/suite"
-	"github.com/Sovianum/turbocycle/library/parametric/free2n"
-	"github.com/Sovianum/turbocycle/library/schemes"
-	"testing"
-	"github.com/Sovianum/turbocycle/core/math/variator"
-	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
+	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/core/graph"
 	"github.com/Sovianum/turbocycle/core/math"
-	"github.com/Sovianum/turbocycle/common"
+	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
+	"github.com/Sovianum/turbocycle/core/math/variator"
+	"github.com/Sovianum/turbocycle/library/parametric/free2n"
+	"github.com/Sovianum/turbocycle/library/schemes"
+	"github.com/stretchr/testify/suite"
 	math2 "math"
+	"testing"
 )
 
-type P2NBuilderTestSuite struct {
+type BuilderTestSuite struct {
 	suite.Suite
-	pScheme free2n.DoubleShaftFreeScheme
+	pScheme  free2n.DoubleShaftFreeScheme
 	pNetwork graph.Network
-	scheme schemes.TwoShaftsScheme
+	scheme   schemes.TwoShaftsScheme
 
 	vSolver math.Solver
 }
 
-func (s *P2NBuilderTestSuite) SetupTest() {
+func (s *BuilderTestSuite) SetupTest() {
 	s.scheme = GetScheme(piStag)
 
 	var err error
@@ -44,7 +44,7 @@ func (s *P2NBuilderTestSuite) SetupTest() {
 	//s.Require().Nil(sErr)
 }
 
-func (s *P2NBuilderTestSuite) TestConsistency()  {
+func (s *BuilderTestSuite) TestConsistency() {
 	_, err := s.pNetwork.Solve(1, 2, 100, 1e-5)
 	s.Require().Nil(err)
 
@@ -64,15 +64,15 @@ func (s *P2NBuilderTestSuite) TestConsistency()  {
 		5e-2,
 	)
 
-	s.approxEqual(initMassRate * bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-2)
+	s.approxEqual(initMassRate*bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-2)
 	s.InDelta(s.scheme.Burner().Alpha(), s.pScheme.Burner().Alpha(), 1e-3)
 
 	s.approxEqual(
-		initMassRate * ctIMR,
+		initMassRate*ctIMR,
 		s.pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64), 3e-2,
 	)
 	s.approxEqual(
-		initMassRate * ctOMR,
+		initMassRate*ctOMR,
 		s.pScheme.CompressorTurbine().MassRateOutput().GetState().Value().(float64), 3e-2,
 	)
 	s.approxEqual(
@@ -92,11 +92,11 @@ func (s *P2NBuilderTestSuite) TestConsistency()  {
 	)
 
 	s.approxEqual(
-		initMassRate * ftIMR,
+		initMassRate*ftIMR,
 		s.pScheme.FreeTurbine().MassRateInput().GetState().Value().(float64), 5e-2,
 	)
 	s.approxEqual(
-		initMassRate * ftOMR,
+		initMassRate*ftOMR,
 		s.pScheme.FreeTurbine().MassRateOutput().GetState().Value().(float64), 5e-2,
 	)
 	s.approxEqual(
@@ -116,14 +116,14 @@ func (s *P2NBuilderTestSuite) TestConsistency()  {
 	)
 }
 
-func (s *P2NBuilderTestSuite) approxEqual(x1, x2, precision float64) {
+func (s *BuilderTestSuite) approxEqual(x1, x2, precision float64) {
 	s.True(
 		common.ApproxEqual(x1, x2, precision), "need %f got %f",
 		precision,
-		math2.Abs(x1 - x2) / math2.Max(math2.Abs(x1), math2.Abs(x2)),
+		math2.Abs(x1-x2)/math2.Max(math2.Abs(x1), math2.Abs(x2)),
 	)
 }
 
 func TestP2NBuilderTestSuite(t *testing.T) {
-	suite.Run(t, new(P2NBuilderTestSuite))
+	suite.Run(t, new(BuilderTestSuite))
 }

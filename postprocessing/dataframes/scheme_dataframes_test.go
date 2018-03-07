@@ -1,19 +1,19 @@
 package dataframes
 
 import (
-	"testing"
-	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
-	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/stretchr/testify/assert"
 	"encoding/json"
-	"io/ioutil"
+	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
 	templ2 "github.com/Sovianum/cooling-course-project/postprocessing/templ"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"testing"
 )
 
 const (
-	power = 16000e3
+	power     = 16000e3
 	relaxCoef = 0.1
-	iterNum = 100
+	iterNum   = 100
 
 	cycleTemplateFilePath = "../templates/cycle_calc_template.tex"
 )

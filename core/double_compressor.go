@@ -79,7 +79,7 @@ func GetDoubleCompressorDataGenerator(
 	return func(pi, piFactor float64) (DoubleCompressorDataPoint, error) {
 		var piLow, piHigh = getCompressorPiPair(pi, piFactor)
 
-		scheme.LowPressureCompressor().SetPiStag(piLow)
+		scheme.LPC().SetPiStag(piLow)
 		scheme.HighPressureCompressor().SetPiStag(piHigh)
 		network, netErr := scheme.GetNetwork()
 		if netErr != nil {
@@ -104,7 +104,7 @@ func GetDoubleCompressorDataGenerator(
 			Efficiency:    schemes.GetEfficiency(scheme),
 			MassRate:      schemes.GetMassRate(power, scheme),
 			SpecificPower: scheme.GetSpecificPower(),
-			LabourLPC:     constructive.CompressorLabour(scheme.LowPressureCompressor()),
+			LabourLPC:     constructive.CompressorLabour(scheme.LPC()),
 			LabourHPC:     constructive.CompressorLabour(scheme.HighPressureCompressor()),
 			LabourLPT:     constructive.TurbineLabour(scheme.LowPressureTurbine()),
 			LabourHPT:     constructive.TurbineLabour(scheme.HighPressureTurbine()),

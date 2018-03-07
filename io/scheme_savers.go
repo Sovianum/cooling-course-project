@@ -1,17 +1,16 @@
 package io
 
 import (
-	"os"
 	"encoding/csv"
-	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/turbocycle/library/schemes"
+	"os"
 )
 
 const (
 	relaxCoef = 0.1
 	iterNum   = 100
 )
-
 
 func GetThreeShaftsSchemeData(
 	scheme schemes.ThreeShaftsScheme,

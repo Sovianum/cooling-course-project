@@ -117,7 +117,7 @@ func NewStageDF(node nodes.TurbineStageNode) (StageDF, error) {
 			pack.T2,
 			node.GasInput().GetState().(states2.GasPortState).Gas,
 		),
-		Gas:NewGasMeanDF(
+		Gas: NewGasMeanDF(
 			pack.P0,
 			node.TemperatureInput().GetState().(states2.TemperaturePortState).TStag,
 			node.TemperatureOutput().GetState().(states2.TemperaturePortState).TStag,

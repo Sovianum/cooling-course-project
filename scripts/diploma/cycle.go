@@ -1,14 +1,14 @@
 package diploma
 
 import (
-	"github.com/Sovianum/turbocycle/library/schemes"
-	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
-	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"fmt"
-	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
-	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/core/profiling"
+	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
 	"github.com/Sovianum/cooling-course-project/io"
+	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
+	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
+	"github.com/Sovianum/turbocycle/library/schemes"
 )
 
 func saveCycleTemplate(scheme schemes.ThreeShaftsScheme) {
@@ -23,7 +23,7 @@ func saveCycleTemplate(scheme schemes.ThreeShaftsScheme) {
 }
 
 func solveParticularScheme(scheme schemes.ThreeShaftsScheme, lowPiStag, highPiStag float64) {
-	scheme.LowPressureCompressor().SetPiStag(lowPiStag)
+	scheme.LPC().SetPiStag(lowPiStag)
 	scheme.HighPressureCompressor().SetPiStag(highPiStag)
 	network, netErr := scheme.GetNetwork()
 	if netErr != nil {
@@ -104,7 +104,7 @@ func getSchemeData(scheme schemes.ThreeShaftsScheme) []core.DoubleCompressorData
 
 func getScheme(lowPiStag, highPiStag float64) schemes.ThreeShaftsScheme {
 	var scheme = three_shafts.GetInitedThreeShaftsScheme()
-	scheme.LowPressureCompressor().SetPiStag(lowPiStag)
+	scheme.LPC().SetPiStag(lowPiStag)
 	scheme.HighPressureCompressor().SetPiStag(highPiStag)
 	return scheme
 }

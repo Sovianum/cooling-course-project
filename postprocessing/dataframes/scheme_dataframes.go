@@ -16,26 +16,26 @@ func NewThreeShaftsDF(nE float64, etaR float64, scheme schemes.ThreeShaftsScheme
 		GasSource: NewGasDF(pStag, tStag, gas),
 		InletPipe: NewPressureDropDF(scheme.InletPressureDrop()),
 
-		LPCompressor:     NewCompressorDF(scheme.LowPressureCompressor()),
+		LPCompressor:     NewCompressorDF(scheme.LPC()),
 		LPCompressorPipe: NewPressureDropDF(scheme.MiddlePressureCompressorPipe()),
 		LPTurbine: NewTurbineDFFromBlockedTurbine(
 			scheme.MiddlePressureCascade().Turbine().(constructive.BlockedTurbineNode),
 		),
-		LPTurbinePipe: NewPressureDropDF(scheme.MiddlePressureTurbinePipe()),
+		LPTurbinePipe: NewPressureDropDF(scheme.LPTPipe()),
 		LPShaft:       NewShaftDF(scheme.MiddlePressureCascade().Transmission()),
 
 		HPCompressor: NewCompressorDF(scheme.HighPressureCompressor()),
 		HPTurbine: NewTurbineDFFromBlockedTurbine(
 			scheme.GasGenerator().TurboCascade().Turbine().(constructive.BlockedTurbineNode),
 		),
-		HPTurbinePipe: NewPressureDropDF(scheme.HighPressureTurbinePipe()),
+		HPTurbinePipe: NewPressureDropDF(scheme.HPTPipe()),
 		HPShaft:       NewShaftDF(scheme.MiddlePressureCascade().Transmission()),
 
 		Burner:      NewBurnerDF(scheme.GasGenerator().Burner()),
-		FreeTurbine: NewTurbineDFFromFreeTurbine(scheme.FreeTurbineBlock().FreeTurbine()),
-		OutletPipe:  NewPressureDropDF(scheme.FreeTurbineBlock().OutletPressureLoss()),
+		FreeTurbine: NewTurbineDFFromFreeTurbine(scheme.FTBlock().FreeTurbine()),
+		OutletPipe:  NewPressureDropDF(scheme.FTBlock().OutletPressureLoss()),
 
-		EngineLabour: scheme.FreeTurbineBlock().FreeTurbine().LSpecific(),
+		EngineLabour: scheme.FTBlock().FreeTurbine().LSpecific(),
 		Ce:           schemes.GetSpecificFuelRate(scheme),
 		MassRate:     schemes.GetMassRate(nE, scheme),
 		Eta:          schemes.GetEfficiency(scheme),

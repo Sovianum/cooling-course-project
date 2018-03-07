@@ -1,9 +1,9 @@
 package profiling
 
 import (
-	"os"
 	"encoding/csv"
 	"fmt"
+	"os"
 )
 
 func SaveMatrix(path string, matrix [][]float64) error {

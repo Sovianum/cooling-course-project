@@ -31,7 +31,7 @@ const (
 	approxTRelRotor  = 0.7
 
 	alpha1 = 14
-	power  = 16e6/0.98
+	power  = 16e6 / 0.98
 )
 
 func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) nodes.TurbineStageNode {
