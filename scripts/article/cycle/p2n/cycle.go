@@ -9,6 +9,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"os"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 )
 
 const (
@@ -29,8 +30,8 @@ const (
 	t0 = 300
 	p0 = 1e5
 
-	power     = 20e6
-	relaxCoef = 0.1
+	power     = 16e6
+	relaxCoef = 1
 	iterNum   = 10000
 	precision = 0.01
 
@@ -49,7 +50,7 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 	)
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),
-		newton.NewUniformNewtonSolverGen(1e-5, newton.DefaultLog),
+		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog),
 	)
 
 	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.5, 10000)

@@ -11,6 +11,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"gonum.org/v1/gonum/mat"
 	"os"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 )
 
 const (
@@ -57,21 +58,7 @@ func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) error {
 	)
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),
-		newton.NewUniformNewtonSolverGen(1e-5, func(iterNum int, precision float64, residual *mat.VecDense) {
-			result := fmt.Sprintf("i: %d\t", iterNum)
-			result += fmt.Sprintf("precision: %f\t", precision)
-			result += fmt.Sprintf(
-				"ggmr: %.5f\t ggPower: %.5f\t ftMR: %.5f\t ftPower: %.5f\t ftPressure: %.5f\t ggTemp: %.5f\t",
-				residual.At(0, 0),
-				residual.At(1, 0),
-				residual.At(2, 0),
-				residual.At(3, 0),
-				residual.At(4, 0),
-				residual.At(5, 0),
-			)
-			result += fmt.Sprintf("residual: %f", mat.Norm(residual, 2))
-			fmt.Println(result)
-		}),
+		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog),
 	)
 
 	_, sErr := vSolver.Solve(vSolver.GetInit(), precision, relaxCoef, 10000)

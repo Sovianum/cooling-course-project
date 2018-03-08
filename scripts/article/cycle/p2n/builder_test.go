@@ -78,7 +78,7 @@ func (s *BuilderTestSuite) TestConsistency() {
 	s.approxEqual(
 		s.scheme.TurboCascade().Turbine().PowerOutput().GetState().Value().(float64),
 		s.pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64),
-		1e-2,
+		2e-2,
 	)
 	s.approxEqual(
 		s.scheme.TurboCascade().Turbine().PiTStag(),
@@ -88,7 +88,7 @@ func (s *BuilderTestSuite) TestConsistency() {
 	s.approxEqual(
 		s.scheme.TurboCascade().Turbine().TStagOut(),
 		s.pScheme.CompressorTurbine().TStagOut(),
-		1e-2,
+		2e-2,
 	)
 
 	s.approxEqual(

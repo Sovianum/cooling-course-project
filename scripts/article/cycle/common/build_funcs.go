@@ -25,7 +25,7 @@ func BuildCompressor(
 		ccGen.GetNormRPMChar(),
 	)
 
-	CopyAll(
+	graph.CopyAll(
 		[]graph.Port{
 			c.GasInput(), c.TemperatureInput(), c.PressureInput(), c.MassRateInput(),
 			c.GasOutput(), c.TemperatureOutput(), c.PressureOutput(), c.MassRateOutput(),
@@ -61,7 +61,7 @@ func BuildTurbine(
 		tChar.GetNormEtaChar(),
 	)
 
-	CopyAll(
+	graph.CopyAll(
 		[]graph.Port{
 			t.GasInput(), t.TemperatureInput(), t.PressureInput(),
 			t.GasOutput(), t.TemperatureOutput(), t.PressureOutput(), t.MassRateOutput(),
@@ -84,7 +84,7 @@ func BuildBurner(b constructive.BurnerNode, lambdaIn0, massRate0, precision, rel
 		},
 	)
 
-	CopyAll(
+	graph.CopyAll(
 		[]graph.Port{
 			b.GasInput(), b.TemperatureInput(), b.PressureInput(), b.MassRateInput(),
 			b.GasOutput(), b.TemperatureOutput(), b.PressureOutput(), b.MassRateOutput(),
