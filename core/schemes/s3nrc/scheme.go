@@ -1,4 +1,4 @@
-package s3rc
+package s3nrc
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/compose"
@@ -7,6 +7,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 )
 
 const (
@@ -82,7 +83,7 @@ func GetInitedThreeShaftsCoolRegeneratorScheme() schemes.ThreeShaftsCoolingRegen
 		func(node constructive.TurbineNode) float64 {
 			return 0
 		},
-		regeneratorSigma, regeneratorPipeSigma, etaM, precision,
+		regeneratorSigma, regeneratorPipeSigma, etaM, precision, 1, nodes.DefaultN,
 	)
 	var middlePressureCompressorPipe = constructive.NewPressureLossNode(middlePressureCompressorPipeSigma)
 	var cooler = constructive.NewCoolerNode(coolerTOut, coolerSigma)

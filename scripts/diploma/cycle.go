@@ -1,10 +1,9 @@
 package diploma
 
 import (
-	"fmt"
 	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/core/profiling"
-	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s3n"
 	"github.com/Sovianum/cooling-course-project/io"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
@@ -24,18 +23,15 @@ func saveCycleTemplate(scheme schemes.ThreeShaftsScheme) {
 
 func solveParticularScheme(scheme schemes.ThreeShaftsScheme, lowPiStag, highPiStag float64) {
 	scheme.LPC().SetPiStag(lowPiStag)
-	scheme.HighPressureCompressor().SetPiStag(highPiStag)
+	scheme.HPC().SetPiStag(highPiStag)
 	network, netErr := scheme.GetNetwork()
 	if netErr != nil {
 		panic(netErr)
 	}
 
-	if converged, err := network.Solve(relaxCoef, 2, iterNum, precision); !converged || err != nil {
+	if err := network.Solve(relaxCoef, 2, iterNum, precision); err != nil {
 		if err != nil {
 			panic(err)
-		}
-		if !converged {
-			panic(fmt.Errorf("not converged"))
 		}
 	}
 }
@@ -67,7 +63,7 @@ func saveInputTemplates() {
 		buildDir+"/"+projectInputOut,
 	)
 
-	var df = three_shafts.GetInitDF()
+	var df = s3n.GetInitDF()
 	df.Ne = power
 	df.EtaR = etaR
 	if err := cycleInputInserter.Insert(df); err != nil {
@@ -103,8 +99,8 @@ func getSchemeData(scheme schemes.ThreeShaftsScheme) []core.DoubleCompressorData
 }
 
 func getScheme(lowPiStag, highPiStag float64) schemes.ThreeShaftsScheme {
-	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+	var scheme = s3n.GetInitedThreeShaftsScheme()
 	scheme.LPC().SetPiStag(lowPiStag)
-	scheme.HighPressureCompressor().SetPiStag(highPiStag)
+	scheme.HPC().SetPiStag(highPiStag)
 	return scheme
 }

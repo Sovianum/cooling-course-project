@@ -93,12 +93,9 @@ func GetParametric(scheme schemes.ThreeShaftsScheme) (free3n.ThreeShaftFreeSchem
 	if err != nil {
 		return nil, err
 	}
-	converged, solveErr := network.Solve(relaxCoef, 2, iterNum, schemePrecision)
+	solveErr := network.Solve(relaxCoef, 2, iterNum, schemePrecision)
 	if solveErr != nil {
 		return nil, solveErr
-	}
-	if !converged {
-		return nil, fmt.Errorf("failed to converge")
 	}
 
 	return get3nParametricScheme(scheme), nil

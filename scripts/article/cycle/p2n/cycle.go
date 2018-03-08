@@ -85,12 +85,9 @@ func GetParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme
 	if err != nil {
 		return nil, err
 	}
-	converged, solveErr := network.Solve(relaxCoef, 2, iterNum, precision)
+	solveErr := network.Solve(relaxCoef, 2, iterNum, precision)
 	if solveErr != nil {
 		return nil, solveErr
-	}
-	if !converged {
-		return nil, fmt.Errorf("failed to converge")
 	}
 
 	return get2nParametricScheme(scheme), nil

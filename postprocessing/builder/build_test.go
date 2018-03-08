@@ -2,7 +2,7 @@ package builder
 
 import (
 	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s3n"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/impl/engine/states"
@@ -89,7 +89,7 @@ func getInsertionMap() map[string]insertionInfo {
 }
 
 func getCycleDf() dataframes.ThreeShaftsDF {
-	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+	var scheme = s3n.GetInitedThreeShaftsScheme()
 	var pi = 10.
 	var piFactor = 0.5
 	var iterNum = 100

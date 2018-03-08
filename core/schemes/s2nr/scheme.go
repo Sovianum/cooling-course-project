@@ -1,4 +1,4 @@
-package two_shafts_regenerator
+package s2nr
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/compose"
@@ -7,6 +7,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 )
 
 const (
@@ -53,7 +54,7 @@ func GetInitedTwoShaftsRegeneratorScheme() schemes.TwoShaftsRegeneratorScheme {
 		},
 		etaM, precision,
 	)
-	var burner = constructive.NewBurnerNode(fuel.GetCH4(), tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0, precision)
+	var burner = constructive.NewBurnerNode(fuel.GetCH4(), tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0, precision, 1, nodes.DefaultN)
 	var compressorTurbinePipe = constructive.NewPressureLossNode(sigmaCompTurbinePipe)
 	var freeTurbineBlock = compose.NewFreeTurbineBlock(
 		pAtm,

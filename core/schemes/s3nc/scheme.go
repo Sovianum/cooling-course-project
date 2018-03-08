@@ -1,4 +1,4 @@
-package three_shafts_cool
+package s3nc
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/compose"
@@ -7,6 +7,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 )
 
 const (
@@ -79,7 +80,7 @@ func GetInitedThreeShaftsCoolingScheme() schemes.ThreeShaftsCoolerScheme {
 		func(node constructive.TurbineNode) float64 {
 			return 0
 		},
-		etaM, precision,
+		etaM, precision, 1, nodes.DefaultN,
 	)
 	var middlePressureCompressorPipe = constructive.NewPressureLossNode(middlePressureCompressorPipeSigma)
 	var cooler = constructive.NewCoolerNode(coolerTOut, coolerSigma)

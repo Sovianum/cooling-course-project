@@ -42,7 +42,7 @@ func (s *BuilderTestSuite) SetupTest() {
 }
 
 func (s *BuilderTestSuite) TestConsistency() {
-	_, err := s.pNetwork.Solve(1, 2, 100, 1e-5)
+	err := s.pNetwork.Solve(1, 2, 100, 1e-5)
 	s.Require().Nil(err)
 
 	initMassRate := schemes.GetMassRate(power, s.scheme)

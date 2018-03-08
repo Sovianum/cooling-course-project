@@ -26,7 +26,7 @@ func (s *ParametricTestSuite) TestSamePoint() {
 	pct := s.pScheme.CompressorTurbine()
 
 	n, _ := s.pScheme.GetNetwork()
-	_, e := n.Solve(0.1, 2, 100, 0.01)
+	e := n.Solve(0.1, 2, 100, 0.01)
 	s.Require().Nil(e)
 
 	s.InDelta(pc.MassRate(), pb.MassRateInput().GetState().Value().(float64), 1e-7)

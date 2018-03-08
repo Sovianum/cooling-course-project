@@ -30,7 +30,7 @@ func (s *ParametricTestSuite) TestSamePoint() {
 	//lpt := s.pScheme.LPT()
 
 	n, _ := s.pScheme.GetNetwork()
-	_, e := n.Solve(0.1, 2, 100, 0.01)
+	e := n.Solve(0.1, 2, 100, 0.01)
 	s.Require().Nil(e)
 
 	s.InDelta(lpc.MassRate(), b.MassRateInput().GetState().Value().(float64), 1e-7)

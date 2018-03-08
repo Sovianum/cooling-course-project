@@ -1,4 +1,4 @@
-package two_shafts
+package s2n
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/compose"
@@ -7,6 +7,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 )
 
 const (
@@ -51,7 +52,7 @@ func GetInitedTwoShaftsScheme() schemes.TwoShaftsScheme {
 		func(node constructive.TurbineNode) float64 {
 			return 0
 		},
-		etaM, precision,
+		etaM, precision,1, nodes.DefaultN,
 	)
 	var compressorTurbinePipe = constructive.NewPressureLossNode(sigmaCompTurbinePipe)
 	var freeTurbineBlock = compose.NewFreeTurbineBlock(

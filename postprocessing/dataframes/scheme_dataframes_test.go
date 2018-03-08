@@ -3,7 +3,7 @@ package dataframes
 import (
 	"encoding/json"
 	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/Sovianum/cooling-course-project/core/schemes/three_shafts"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s3n"
 	templ2 "github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
@@ -19,7 +19,7 @@ const (
 )
 
 func TestNewThreeShaftsDF_Smoke(t *testing.T) {
-	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+	var scheme = s3n.GetInitedThreeShaftsScheme()
 	var pi = 10.
 	var piFactor = 0.5
 
@@ -44,7 +44,7 @@ func TestTemplateSmoke(t *testing.T) {
 	)
 	assert.Nil(t, tErr)
 
-	var scheme = three_shafts.GetInitedThreeShaftsScheme()
+	var scheme = s3n.GetInitedThreeShaftsScheme()
 	var pi = 10.
 	var piFactor = 0.5
 	var iterNum = 100

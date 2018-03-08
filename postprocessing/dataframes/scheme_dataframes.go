@@ -17,14 +17,14 @@ func NewThreeShaftsDF(nE float64, etaR float64, scheme schemes.ThreeShaftsScheme
 		InletPipe: NewPressureDropDF(scheme.InletPressureDrop()),
 
 		LPCompressor:     NewCompressorDF(scheme.LPC()),
-		LPCompressorPipe: NewPressureDropDF(scheme.MiddlePressureCompressorPipe()),
+		LPCompressorPipe: NewPressureDropDF(scheme.LPCPipe()),
 		LPTurbine: NewTurbineDFFromBlockedTurbine(
 			scheme.MiddlePressureCascade().Turbine().(constructive.BlockedTurbineNode),
 		),
 		LPTurbinePipe: NewPressureDropDF(scheme.LPTPipe()),
 		LPShaft:       NewShaftDF(scheme.MiddlePressureCascade().Transmission()),
 
-		HPCompressor: NewCompressorDF(scheme.HighPressureCompressor()),
+		HPCompressor: NewCompressorDF(scheme.HPC()),
 		HPTurbine: NewTurbineDFFromBlockedTurbine(
 			scheme.GasGenerator().TurboCascade().Turbine().(constructive.BlockedTurbineNode),
 		),

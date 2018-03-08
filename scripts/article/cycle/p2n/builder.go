@@ -99,7 +99,7 @@ func (b *Builder) BuildBurner() constructive.ParametricBurnerNode {
 	return common.BuildBurner(
 		burn, b.LambdaIn0,
 		common.GetMassRate(b.Power, b.Source, burn),
-		b.Precision,
+		b.Precision, b.RelaxCoef, b.IterLimit,
 	)
 }
 

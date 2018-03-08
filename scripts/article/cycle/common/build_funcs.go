@@ -74,11 +74,12 @@ func BuildTurbine(
 	return pt
 }
 
-func BuildBurner(b constructive.BurnerNode, lambdaIn0, massRate0, precision float64) constructive.ParametricBurnerNode {
+func BuildBurner(b constructive.BurnerNode, lambdaIn0, massRate0, precision, relaxCoef float64, iterLimit int) constructive.ParametricBurnerNode {
 	pBurn := constructive.NewParametricBurnerNode(
 		b.Fuel(), b.TFuel(), b.T0(), b.Eta(),
 		lambdaIn0, b.PStagIn(), b.TStagIn(),
-		massRate0, b.FuelRateRel(), precision, func(lambda float64) float64 {
+		massRate0, b.FuelRateRel(), precision, relaxCoef, iterLimit,
+		func(lambda float64) float64 {
 			return b.Sigma() // todo make something more precise
 		},
 	)

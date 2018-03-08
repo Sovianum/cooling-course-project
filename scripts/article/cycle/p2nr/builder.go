@@ -7,6 +7,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 )
 
 func NewBuilder(
@@ -91,7 +92,7 @@ func (b *Builder) buildRegenerator() constructive.RegeneratorNode {
 		r.Sigma(),
 		b.HydraulicDiameterHot,
 		b.HydraulicDiameterCold,
-		b.Precision,
+		b.Precision, 1, nodes.DefaultN,
 		b.TDropFunc,
 		b.NuHotFunc, b.NuColdFunc,
 	)

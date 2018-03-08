@@ -1,7 +1,6 @@
 package core
 
 import (
-	"errors"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/library/schemes"
 )
@@ -10,9 +9,9 @@ type DoubleCompressorScheme interface {
 	schemes.Scheme
 	schemes.DoubleCompressor
 	MainBurner() constructive.BurnerNode
-	HighPressureTurbine() constructive.TurbineNode
-	LowPressureTurbine() constructive.TurbineNode
-	FreeTurbine() constructive.TurbineNode
+	HPT() constructive.StaticTurbineNode
+	LPT() constructive.StaticTurbineNode
+	FT() constructive.StaticTurbineNode
 }
 
 func EtaOptimalPoint(points []DoubleCompressorDataPoint) DoubleCompressorDataPoint {
@@ -80,18 +79,15 @@ func GetDoubleCompressorDataGenerator(
 		var piLow, piHigh = getCompressorPiPair(pi, piFactor)
 
 		scheme.LPC().SetPiStag(piLow)
-		scheme.HighPressureCompressor().SetPiStag(piHigh)
+		scheme.HPC().SetPiStag(piHigh)
 		network, netErr := scheme.GetNetwork()
 		if netErr != nil {
 			panic(netErr)
 		}
 
-		var converged, err = network.Solve(relaxCoef, 2, iterNum, 0.001)
+		var err = network.Solve(relaxCoef, 2, iterNum, 0.001)
 		if err != nil {
 			return DoubleCompressorDataPoint{}, err
-		}
-		if !converged {
-			return DoubleCompressorDataPoint{}, errors.New("not converged")
 		}
 
 		return DoubleCompressorDataPoint{
@@ -99,16 +95,16 @@ func GetDoubleCompressorDataGenerator(
 			PiFactor:      piFactor,
 			PiLow:         piLow,
 			PiHigh:        piHigh,
-			PiTLow:        scheme.LowPressureTurbine().PiTStag(),
-			PiTHigh:       scheme.HighPressureTurbine().PiTStag(),
+			PiTLow:        scheme.LPT().PiTStag(),
+			PiTHigh:       scheme.HPT().PiTStag(),
 			Efficiency:    schemes.GetEfficiency(scheme),
 			MassRate:      schemes.GetMassRate(power, scheme),
 			SpecificPower: scheme.GetSpecificPower(),
 			LabourLPC:     constructive.CompressorLabour(scheme.LPC()),
-			LabourHPC:     constructive.CompressorLabour(scheme.HighPressureCompressor()),
-			LabourLPT:     constructive.TurbineLabour(scheme.LowPressureTurbine()),
-			LabourHPT:     constructive.TurbineLabour(scheme.HighPressureTurbine()),
-			LabourFT:      constructive.TurbineLabour(scheme.FreeTurbine()),
+			LabourHPC:     constructive.CompressorLabour(scheme.HPC()),
+			LabourLPT:     constructive.TurbineLabour(scheme.LPT()),
+			LabourHPT:     constructive.TurbineLabour(scheme.HPT()),
+			LabourFT:      constructive.TurbineLabour(scheme.FT()),
 			Heat:          constructive.FuelMassRate(scheme.MainBurner()) * scheme.GetQLower(),
 		}, nil
 	}

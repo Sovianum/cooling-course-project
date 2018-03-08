@@ -1,7 +1,6 @@
 package core
 
 import (
-	"errors"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"strconv"
 )
@@ -37,12 +36,9 @@ func GetSingleCompressorDataGenerator(
 			panic(netErr)
 		}
 
-		var converged, err = network.Solve(relaxCoef, 2, iterNum, 0.001)
+		var err = network.Solve(relaxCoef, 2, iterNum, 0.001)
 		if err != nil {
 			return SingleCompressorDataPoint{}, err
-		}
-		if !converged {
-			return SingleCompressorDataPoint{}, errors.New("not converged")
 		}
 
 		return SingleCompressorDataPoint{
