@@ -3,7 +3,7 @@ package p2n
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Sovianum/cooling-course-project/core/schemes/two_shafts"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s2n"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
@@ -107,7 +107,7 @@ func get2nParametricScheme(scheme schemes.TwoShaftsScheme) free2n.DoubleShaftFre
 }
 
 func GetScheme(piStag float64) schemes.TwoShaftsScheme {
-	scheme := two_shafts.GetInitedTwoShaftsScheme()
+	scheme := s2n.GetInitedTwoShaftsScheme()
 	scheme.Compressor().SetPiStag(piStag)
 	return scheme
 }

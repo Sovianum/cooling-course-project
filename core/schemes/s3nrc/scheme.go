@@ -1,4 +1,4 @@
-package three_shafts_regenerator
+package s3rc
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/compose"
@@ -46,10 +46,13 @@ const (
 	regeneratorSigma     = 0.8
 	regeneratorPipeSigma = 0.98
 
+	coolerTOut  = 320
+	coolerSigma = 0.98
+
 	precision = 0.05
 )
 
-func GetInitedThreeShaftsRegeneratorScheme() schemes.ThreeShaftsRegeneratorScheme {
+func GetInitedThreeShaftsCoolRegeneratorScheme() schemes.ThreeShaftsCoolingRegeneratorScheme {
 	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
@@ -82,6 +85,7 @@ func GetInitedThreeShaftsRegeneratorScheme() schemes.ThreeShaftsRegeneratorSchem
 		regeneratorSigma, regeneratorPipeSigma, etaM, precision,
 	)
 	var middlePressureCompressorPipe = constructive.NewPressureLossNode(middlePressureCompressorPipeSigma)
+	var cooler = constructive.NewCoolerNode(coolerTOut, coolerSigma)
 	var highPressureTurbinePipe = constructive.NewPressureLossNode(highPressureTurbinePipeSigma)
 	var middlePressureTurbinePipe = constructive.NewPressureLossNode(middlePressureTurbinePipeSigma)
 	var freeTurbineBlock = compose.NewFreeTurbineBlock(
@@ -99,8 +103,8 @@ func GetInitedThreeShaftsRegeneratorScheme() schemes.ThreeShaftsRegeneratorSchem
 		freeTurbinePressureLossSigma,
 	)
 
-	return schemes.NewThreeShaftsRegeneratorScheme(
-		gasSource, inletPressureDrop, middlePressureCascade, regenerativeGasGenerator, middlePressureCompressorPipe,
-		highPressureTurbinePipe, middlePressureTurbinePipe, freeTurbineBlock,
+	return schemes.NewThreeShaftsCoolingRegeneratorScheme(
+		gasSource, inletPressureDrop, middlePressureCascade, cooler, regenerativeGasGenerator,
+		middlePressureCompressorPipe, highPressureTurbinePipe, middlePressureTurbinePipe, freeTurbineBlock,
 	)
 }

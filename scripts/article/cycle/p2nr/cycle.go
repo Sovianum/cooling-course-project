@@ -3,7 +3,7 @@ package p2nr
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Sovianum/cooling-course-project/core/schemes/two_shafts_regenerator"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s2nr"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
@@ -132,7 +132,7 @@ func getParametricScheme(scheme schemes.TwoShaftsRegeneratorScheme) free2n.Doubl
 }
 
 func GetScheme(piStag float64) schemes.TwoShaftsRegeneratorScheme {
-	scheme := two_shafts_regenerator.GetInitedTwoShaftsRegeneratorScheme()
+	scheme := s2nr.GetInitedTwoShaftsRegeneratorScheme()
 	scheme.Compressor().SetPiStag(piStag)
 	return scheme
 }

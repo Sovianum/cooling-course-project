@@ -3,7 +3,7 @@ package p3n
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Sovianum/cooling-course-project/core/schemes/s3n"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s3nb"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
@@ -38,8 +38,8 @@ const (
 	lpEtaM = 0.99
 	hpEtaM = 0.99
 
-	relaxCoef = 0.1
-	iterNum   = 10000
+	relaxCoef = 1
+	iterNum   = 1000
 	precision = 0.01
 
 	schemePrecision = 0.1
@@ -83,28 +83,25 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 	}
 
 	b, _ := json.Marshal(data)
-	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/3n.json")
+	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/3nc.json")
 	f.WriteString(string(b))
 	return nil
 }
 
-func GetParametric(scheme schemes.ThreeShaftsScheme) (free3n.ThreeShaftFreeScheme, error) {
+func GetParametric(scheme schemes.ThreeShaftsBurnScheme) (free3n.ThreeShaftBurnFreeScheme, error) {
 	network, err := scheme.GetNetwork()
 	if err != nil {
 		return nil, err
 	}
-	converged, solveErr := network.Solve(relaxCoef, 2, iterNum, schemePrecision)
+	solveErr := network.Solve(relaxCoef, 2, iterNum, schemePrecision)
 	if solveErr != nil {
 		return nil, solveErr
 	}
-	if !converged {
-		return nil, fmt.Errorf("failed to converge")
-	}
 
-	return get3nParametricScheme(scheme), nil
+	return get3nbBurnParametricScheme(scheme), nil
 }
 
-func get3nParametricScheme(scheme schemes.ThreeShaftsScheme) free3n.ThreeShaftFreeScheme {
+func get3nbBurnParametricScheme(scheme schemes.ThreeShaftsBurnScheme) free3n.ThreeShaftBurnFreeScheme {
 	builder := NewBuilder(
 		scheme, power, t0, p0,
 		lpcRpm0, hpcRpm0,
@@ -119,8 +116,8 @@ func get3nParametricScheme(scheme schemes.ThreeShaftsScheme) free3n.ThreeShaftFr
 	return builder.Build()
 }
 
-func GetScheme(piStagLow, piStagHigh float64) schemes.ThreeShaftsScheme {
-	scheme := s3n.GetInitedThreeShaftsScheme()
+func GetScheme(piStagLow, piStagHigh float64) schemes.ThreeShaftsBurnScheme {
+	scheme := s3nb.GetInitedThreeShaftsBurnScheme()
 	scheme.LPC().SetPiStag(piStagLow)
 	scheme.HPC().SetPiStag(piStagHigh)
 	return scheme

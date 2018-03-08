@@ -93,20 +93,20 @@ func (b *Builder) Build() free3n.ThreeShaftFreeScheme {
 		b.Source.GasSource().GasOutput().GetState().Value().(gases.Gas),
 		b.T0, b.P0, b.Source.MainBurner().TStagOut(),
 
-		b.buildLPC(), b.buildLPCPipe(),
-		b.buildLPT(), b.buildLPTPipe(),
+		b.BuildLPC(), b.BuildLPCPipe(),
+		b.BuildLPT(), b.BuildLPTPipe(),
 		b.LPEtaM,
 
-		b.buildHPC(), b.buildHPCPipe(),
-		b.buildHPT(), b.buildHPTPipe(),
+		b.BuildHPC(), b.BuildHPCPipe(),
+		b.BuildHPT(), b.BuildHPTPipe(),
 		b.HPEtaM,
 
-		b.buildFT(), b.buildFTPipe(),
-		b.BuildBurner(), b.buildPayload(),
+		b.BuildFT(), b.BuildFTPipe(),
+		b.BuildBurner(), b.BuildPayload(),
 	)
 }
 
-func (b *Builder) buildLPC() constructive.ParametricCompressorNode {
+func (b *Builder) BuildLPC() constructive.ParametricCompressorNode {
 	c := b.Source.LPC()
 	massRate0 := common.GetMassRate(b.Power, b.Source, c)
 	charGen := methodics.NewCompressorCharGen(
@@ -121,11 +121,11 @@ func (b *Builder) buildLPC() constructive.ParametricCompressorNode {
 	)
 }
 
-func (b *Builder) buildLPCPipe() constructive.PressureLossNode {
+func (b *Builder) BuildLPCPipe() constructive.PressureLossNode {
 	return constructive.NewPressureLossNode(b.Source.LPCPipe().Sigma())
 }
 
-func (b *Builder) buildHPC() constructive.ParametricCompressorNode {
+func (b *Builder) BuildHPC() constructive.ParametricCompressorNode {
 	c := b.Source.LPC()
 	massRate0 := common.GetMassRate(b.Power, b.Source, c)
 	charGen := methodics.NewCompressorCharGen(
@@ -140,7 +140,7 @@ func (b *Builder) buildHPC() constructive.ParametricCompressorNode {
 	)
 }
 
-func (b *Builder) buildHPCPipe() constructive.PressureLossNode {
+func (b *Builder) BuildHPCPipe() constructive.PressureLossNode {
 	return constructive.NewPressureLossNode(b.Source.HPCPipe().Sigma())
 }
 
@@ -153,7 +153,7 @@ func (b *Builder) BuildBurner() constructive.ParametricBurnerNode {
 	)
 }
 
-func (b *Builder) buildHPT() constructive.ParametricTurbineNode {
+func (b *Builder) BuildHPT() constructive.ParametricTurbineNode {
 	return common.BuildTurbine(
 		b.Source.HPT(),
 		methodics.NewKazandjanTurbineCharacteristic(),
@@ -162,11 +162,11 @@ func (b *Builder) buildHPT() constructive.ParametricTurbineNode {
 	)
 }
 
-func (b *Builder) buildHPTPipe() constructive.PressureLossNode {
+func (b *Builder) BuildHPTPipe() constructive.PressureLossNode {
 	return constructive.NewPressureLossNode(b.Source.HPTPipe().Sigma())
 }
 
-func (b *Builder) buildLPT() constructive.ParametricTurbineNode {
+func (b *Builder) BuildLPT() constructive.ParametricTurbineNode {
 	return common.BuildTurbine(
 		b.Source.LPT(),
 		methodics.NewKazandjanTurbineCharacteristic(),
@@ -175,11 +175,11 @@ func (b *Builder) buildLPT() constructive.ParametricTurbineNode {
 	)
 }
 
-func (b *Builder) buildLPTPipe() constructive.PressureLossNode {
+func (b *Builder) BuildLPTPipe() constructive.PressureLossNode {
 	return constructive.NewPressureLossNode(b.Source.LPTPipe().Sigma())
 }
 
-func (b *Builder) buildFT() constructive.ParametricTurbineNode {
+func (b *Builder) BuildFT() constructive.ParametricTurbineNode {
 	return common.BuildTurbine(
 		b.Source.FT(),
 		methodics.NewKazandjanTurbineCharacteristic(),
@@ -188,11 +188,11 @@ func (b *Builder) buildFT() constructive.ParametricTurbineNode {
 	)
 }
 
-func (b *Builder) buildFTPipe() constructive.PressureLossNode {
+func (b *Builder) BuildFTPipe() constructive.PressureLossNode {
 	return constructive.NewPressureLossNode(b.Source.FTBlock().OutletPressureLoss().Sigma())
 }
 
-func (b *Builder) buildPayload() constructive.Payload {
+func (b *Builder) BuildPayload() constructive.Payload {
 	return constructive.NewPayload(
 		b.PayloadRpm0, b.Power, func(normRpm float64) float64 {
 			//delta := normRpm - 1
