@@ -9,7 +9,6 @@ import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"gonum.org/v1/gonum/mat"
 	"os"
 	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 )

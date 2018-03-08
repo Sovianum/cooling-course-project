@@ -113,9 +113,9 @@ func (b *Builder) BuildLPC() constructive.ParametricCompressorNode {
 		c.PiStag(), c.Eta(), massRate0, precision, relaxCoef, b.IterLimit,
 	)
 
-	return common.BuildCompressor(
+	return constructive.NewParametricCompressorNodeFromProto(
 		c,
-		charGen,
+		charGen.GetNormEtaChar(), charGen.GetNormRPMChar(),
 		b.LPCRpm0, common.GetMassRate(b.Power, b.Source, b.Source.LPC()),
 		b.Precision,
 	)
@@ -132,10 +132,10 @@ func (b *Builder) BuildHPC() constructive.ParametricCompressorNode {
 		c.PiStag(), c.Eta(), massRate0, precision, relaxCoef, b.IterLimit,
 	)
 
-	return common.BuildCompressor(
+	return constructive.NewParametricCompressorNodeFromProto(
 		c,
-		charGen,
-		b.HPCRpm0, common.GetMassRate(b.Power, b.Source, b.Source.HPC()),
+		charGen.GetNormEtaChar(), charGen.GetNormRPMChar(),
+		b.LPCRpm0, common.GetMassRate(b.Power, b.Source, b.Source.LPC()),
 		b.Precision,
 	)
 }
@@ -146,7 +146,7 @@ func (b *Builder) BuildHPCPipe() constructive.PressureLossNode {
 
 func (b *Builder) BuildBurner() constructive.ParametricBurnerNode {
 	burn := b.Source.MainBurner()
-	return common.BuildBurner(
+	return constructive.NewParametricBurnerFromProto(
 		burn, b.LambdaIn0,
 		common.GetMassRate(b.Power, b.Source, burn),
 		b.Precision, b.RelaxCoef, b.IterLimit,
@@ -154,9 +154,10 @@ func (b *Builder) BuildBurner() constructive.ParametricBurnerNode {
 }
 
 func (b *Builder) BuildHPT() constructive.ParametricTurbineNode {
-	return common.BuildTurbine(
+	char := methodics.NewKazandjanTurbineCharacteristic()
+	return constructive.NewParametricTurbineNodeFromProto(
 		b.Source.HPT(),
-		methodics.NewKazandjanTurbineCharacteristic(),
+		char.GetNormMassRateChar(), char.GetNormEtaChar(),
 		common.GetMassRate(b.Power, b.Source, b.Source.HPT()),
 		b.HPTInletMeanDiameter, b.Precision,
 	)
@@ -167,9 +168,10 @@ func (b *Builder) BuildHPTPipe() constructive.PressureLossNode {
 }
 
 func (b *Builder) BuildLPT() constructive.ParametricTurbineNode {
-	return common.BuildTurbine(
+	char := methodics.NewKazandjanTurbineCharacteristic()
+	return constructive.NewParametricTurbineNodeFromProto(
 		b.Source.LPT(),
-		methodics.NewKazandjanTurbineCharacteristic(),
+		char.GetNormMassRateChar(), char.GetNormEtaChar(),
 		common.GetMassRate(b.Power, b.Source, b.Source.LPT()),
 		b.LPTInletMeanDiameter, b.Precision,
 	)
@@ -180,9 +182,10 @@ func (b *Builder) BuildLPTPipe() constructive.PressureLossNode {
 }
 
 func (b *Builder) BuildFT() constructive.ParametricTurbineNode {
-	return common.BuildTurbine(
+	char := methodics.NewKazandjanTurbineCharacteristic()
+	return constructive.NewParametricTurbineNodeFromProto(
 		b.Source.FT(),
-		methodics.NewKazandjanTurbineCharacteristic(),
+		char.GetNormMassRateChar(), char.GetNormEtaChar(),
 		common.GetMassRate(b.Power, b.Source, b.Source.FT()),
 		b.FTInletMeanDiameter, b.Precision,
 	)

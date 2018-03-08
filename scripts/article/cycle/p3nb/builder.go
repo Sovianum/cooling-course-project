@@ -64,7 +64,7 @@ func (b *Builder) Build() free3n.ThreeShaftBurnFreeScheme {
 
 func (b *Builder) buildMidBurner() constructive.ParametricBurnerNode {
 	casted := b.Source.(schemes.ThreeShaftsBurnScheme)
-	return common.BuildBurner(
+	return constructive.NewParametricBurnerFromProto(
 		casted.MidBurner(), b.lambdaIn0Mid,
 		common.GetMassRate(b.Power, casted, casted.MidBurner()),
 		b.Precision, b.RelaxCoef, b.IterLimit,

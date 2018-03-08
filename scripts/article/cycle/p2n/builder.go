@@ -79,11 +79,13 @@ func (b *Builder) Build() free2n.DoubleShaftFreeScheme {
 func (b *Builder) BuildCompressor() constructive.ParametricCompressorNode {
 	c := b.Source.Compressor()
 	massRate0 := common.GetMassRate(b.Power, b.Source, c)
-	return common.BuildCompressor(
+	ccGen := methodics.NewCompressorCharGen(
+		c.PiStag(), c.Eta(), massRate0, precision, relaxCoef, b.IterLimit,
+	)
+	return constructive.NewParametricCompressorNodeFromProto(
 		c,
-		methodics.NewCompressorCharGen(
-			c.PiStag(), c.Eta(), massRate0, precision, relaxCoef, b.IterLimit,
-		),
+		ccGen.GetNormEtaChar(),
+		ccGen.GetNormRPMChar(),
 		b.CRpm0,
 		common.GetMassRate(b.Power, b.Source, b.Source.Compressor()),
 		b.Precision,
@@ -96,7 +98,7 @@ func (b *Builder) BuildCompressorPipe() constructive.PressureLossNode {
 
 func (b *Builder) BuildBurner() constructive.ParametricBurnerNode {
 	burn := b.Source.Burner()
-	return common.BuildBurner(
+	return constructive.NewParametricBurnerFromProto(
 		burn, b.LambdaIn0,
 		common.GetMassRate(b.Power, b.Source, burn),
 		b.Precision, b.RelaxCoef, b.IterLimit,
@@ -105,9 +107,10 @@ func (b *Builder) BuildBurner() constructive.ParametricBurnerNode {
 
 func (b *Builder) BuildCompressorTurbine() constructive.ParametricTurbineNode {
 	ct := b.Source.TurboCascade().Turbine()
-	return common.BuildTurbine(
+	char := methodics.NewKazandjanTurbineCharacteristic()
+	return constructive.NewParametricTurbineNodeFromProto(
 		ct,
-		methodics.NewKazandjanTurbineCharacteristic(),
+		char.GetNormMassRateChar(), char.GetNormEtaChar(),
 		common.GetMassRate(b.Power, b.Source, ct),
 		b.CtInletMeanDiameter, b.Precision,
 	)
@@ -119,11 +122,12 @@ func (b *Builder) BuildCTPipe() constructive.PressureLossNode {
 
 func (b *Builder) BuildFreeTurbine() constructive.ParametricTurbineNode {
 	ft := b.Source.FreeTurbineBlock().FreeTurbine()
-	return common.BuildTurbine(
+	char := methodics.NewKazandjanTurbineCharacteristic()
+	return constructive.NewParametricTurbineNodeFromProto(
 		ft,
-		methodics.NewKazandjanTurbineCharacteristic(),
+		char.GetNormMassRateChar(), char.GetNormEtaChar(),
 		common.GetMassRate(b.Power, b.Source, ft),
-		b.FtInletMeanDiameter, b.Precision,
+		b.CtInletMeanDiameter, b.Precision,
 	)
 }
 
