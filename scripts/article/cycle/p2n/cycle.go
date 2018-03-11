@@ -43,7 +43,7 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 
 	sysCall := variator.SysCallFromNetwork(
 		network, pScheme.Assembler().GetVectorPort(),
-		relaxCoef, 2, iterNum, 0.1,
+		relaxCoef, 2, iterNum, precision,
 	)
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),

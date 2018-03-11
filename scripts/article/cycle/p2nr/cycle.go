@@ -28,21 +28,18 @@ const (
 
 	payloadRpm0 = 3000
 
-	t0 = 300
-	p0 = 1e5
-
 	velocityHotIn0        = 20
 	velocityColdIn0       = 20
 	hydraulicDiameterHot  = 1e-3
 	hydraulicDiameterCold = 1e-3
 
-	power = 20e6
+	power = 16e6
 
 	relaxCoef       = 1
 	schemeRelaxCoef = 0.5
 	iterNum         = 10000
-	precision       = 0.01
-	schemePrecision = 0.1
+	precision       = 1e-7
+	schemePrecision = 1e-5
 )
 
 func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) error {
@@ -60,15 +57,18 @@ func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) error {
 		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog),
 	)
 
-	_, sErr := vSolver.Solve(vSolver.GetInit(), precision, relaxCoef, 10000)
+	init := variator.NoiseUniformly(vSolver.GetInit(), 0.05)
+	_, sErr := vSolver.Solve(init, precision, relaxCoef, 10000)
 	if sErr != nil {
 		return sErr
 	}
+	pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() + 50)
+	vSolver.Solve(init, precision, relaxCoef, 10000)
 
 	data := NewData2nr()
-	for i := 0; i != 17; i++ {
+	for i := 0; i != 100; i++ {
 		data.Load(pScheme)
-		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 2)
 
 		r := 1.
 		_, sErr = vSolver.Solve(vSolver.GetInit(), precision, r, 1000)
@@ -100,7 +100,7 @@ func GetParametric(scheme schemes.TwoShaftsRegeneratorScheme) (free2n.DoubleShaf
 func getParametricScheme(scheme schemes.TwoShaftsRegeneratorScheme) free2n.DoubleShaftRegFreeScheme {
 	builder := NewBuilder(
 		scheme,
-		power, t0, p0,
+		power,
 		cRpm0, cLambdaIn0,
 		ctID, ctLambdaU0, ctStageNum,
 		ftID, ftLambdaU0, ftStageNum,

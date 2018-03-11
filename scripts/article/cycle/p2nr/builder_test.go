@@ -51,74 +51,102 @@ func (s *BuilderTestSuite) TestConsistency() {
 	initMassRate := schemes.GetMassRate(power, s.scheme)
 	bOMR := s.scheme.Burner().MassRateOutput().GetState().Value().(float64)
 	ctIMR := s.scheme.TurboCascade().Turbine().MassRateInput().GetState().Value().(float64)
-	ctOMR := s.scheme.TurboCascade().Turbine().MassRateOutput().GetState().Value().(float64)
 	ftIMR := s.scheme.FreeTurbineBlock().FreeTurbine().MassRateInput().GetState().Value().(float64)
-	ftOMR := s.scheme.FreeTurbineBlock().FreeTurbine().MassRateOutput().GetState().Value().(float64)
 
+	s.InDelta(
+		initMassRate,
+		s.pScheme.Compressor().MassRateInput().GetState().Value().(float64),
+		1e-6,
+	)
 	s.InDelta(s.scheme.Compressor().PStagIn(), s.pScheme.Compressor().PStagIn(), 1e-6)
 	s.InDelta(s.scheme.Compressor().PStagOut(), s.pScheme.Compressor().PStagOut(), 1e-6)
 	s.InDelta(s.scheme.Compressor().TStagIn(), s.pScheme.Compressor().TStagIn(), 1e-6)
-	s.InDelta(s.scheme.Compressor().TStagOut(), s.pScheme.Compressor().TStagOut(), 1e-3)
-	s.InDelta(s.scheme.Compressor().PiStag(), s.pScheme.Compressor().PiStag(), 1e-6)
-
-	s.approxEqual(initMassRate, s.pScheme.Compressor().MassRateInput().GetState().Value().(float64), 1e-4)
-	s.approxEqual(initMassRate, s.pScheme.Compressor().MassRateOutput().GetState().Value().(float64), 1e-4)
-
+	s.InDelta(s.scheme.Compressor().TStagOut(), s.pScheme.Compressor().TStagOut(), 1.5e-3)
+	s.InDelta(s.scheme.Compressor().PiStag(), s.pScheme.Compressor().PiStag(), 1e-8)
+	s.InDelta(s.scheme.Compressor().Eta(), s.pScheme.Compressor().Eta(), 1e-8)
 	s.approxEqual(
 		s.scheme.Compressor().PowerOutput().GetState().Value().(float64),
 		s.pScheme.Compressor().PowerOutput().GetState().Value().(float64),
-		2e-3,
+		1e-3,
 	)
 
-	s.approxEqual(initMassRate*bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-2)
-	s.InDelta(s.scheme.Burner().Alpha(), s.pScheme.Burner().Alpha(), 1e-3)
+	s.InDelta(
+		s.scheme.Regenerator().ColdInput().PressureInput().GetState().Value().(float64),
+		s.pScheme.Regenerator().ColdInput().PressureInput().GetState().Value().(float64),
+		1e-6,
+	)
+	s.InDelta(
+		s.scheme.Regenerator().ColdInput().TemperatureInput().GetState().Value().(float64),
+		s.pScheme.Regenerator().ColdInput().TemperatureInput().GetState().Value().(float64),
+		1e-3,
+	)
+	s.InDelta(
+		s.scheme.Regenerator().HotInput().PressureInput().GetState().Value().(float64),
+		s.pScheme.Regenerator().HotInput().PressureInput().GetState().Value().(float64),
+		1e-6,
+	)
+	s.InDelta(
+		s.scheme.Regenerator().HotInput().TemperatureInput().GetState().Value().(float64),
+		s.pScheme.Regenerator().HotInput().TemperatureInput().GetState().Value().(float64),
+		1e-3,
+	)
+	s.InDelta(
+		s.scheme.Regenerator().Sigma(), s.pScheme.Regenerator().Sigma(), 3e-3,
+	)
 
+	s.InDelta(
+		s.scheme.Regenerator().ColdOutput().PressureOutput().GetState().Value().(float64),
+		s.pScheme.Regenerator().ColdOutput().PressureOutput().GetState().Value().(float64),
+		1e-6,
+	)
+	s.InDelta(
+		s.scheme.Regenerator().ColdOutput().TemperatureOutput().GetState().Value().(float64),
+		s.pScheme.Regenerator().ColdOutput().TemperatureOutput().GetState().Value().(float64),
+		1,
+	)
+
+	s.InDelta(s.scheme.Burner().PStagIn(), s.pScheme.Burner().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.Burner().PStagOut(), s.pScheme.Burner().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.Burner().TStagIn(), s.pScheme.Burner().TStagIn(), 1)
+	s.InDelta(s.scheme.Burner().TStagOut(), s.pScheme.Burner().TStagOut(), 1)
+	s.approxEqual(initMassRate*bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-6)
+	s.InDelta(s.scheme.Burner().Alpha(), s.pScheme.Burner().Alpha(), 5e-4)
+
+	s.InDelta(s.scheme.TurboCascade().Turbine().PStagIn(), s.pScheme.CompressorTurbine().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.TurboCascade().Turbine().PStagOut(), s.pScheme.CompressorTurbine().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.TurboCascade().Turbine().TStagIn(), s.pScheme.CompressorTurbine().TStagIn(), 1)
+	s.InDelta(s.scheme.TurboCascade().Turbine().TStagOut(), s.pScheme.CompressorTurbine().TStagOut(), 1)
 	s.approxEqual(
 		initMassRate*ctIMR,
-		s.pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64), 3e-2,
+		s.pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64), 1e-3,
 	)
-	s.approxEqual(
-		initMassRate*ctOMR,
-		s.pScheme.CompressorTurbine().MassRateOutput().GetState().Value().(float64), 3e-2,
-	)
-	s.approxEqual(
-		s.scheme.TurboCascade().Turbine().PowerOutput().GetState().Value().(float64),
-		s.pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64),
-		1e-2,
-	)
-	s.approxEqual(
-		s.scheme.TurboCascade().Turbine().PiTStag(),
-		s.pScheme.CompressorTurbine().PiTStag(),
-		1e-4,
-	)
-	s.approxEqual(
-		s.scheme.TurboCascade().Turbine().TStagOut(),
-		s.pScheme.CompressorTurbine().TStagOut(),
-		1e-2,
-	)
+	s.InDelta(s.scheme.TurboCascade().Turbine().Eta(), s.pScheme.CompressorTurbine().Eta(), 1e-6)
 
+	s.InDelta(s.scheme.CompressorTurbinePipe().PStagIn(), s.pScheme.CompressorTurbinePipe().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.CompressorTurbinePipe().PStagOut(), s.pScheme.CompressorTurbinePipe().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.CompressorTurbinePipe().TStagIn(), s.pScheme.CompressorTurbinePipe().TStagIn(), 1)
+	s.InDelta(s.scheme.CompressorTurbinePipe().TStagOut(), s.pScheme.CompressorTurbinePipe().TStagOut(), 1)
+
+	s.InDelta(s.scheme.FreeTurbineBlock().FreeTurbine().PStagIn(), s.pScheme.FreeTurbine().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.FreeTurbineBlock().FreeTurbine().PStagOut(), s.pScheme.FreeTurbine().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.FreeTurbineBlock().FreeTurbine().TStagIn(), s.pScheme.FreeTurbine().TStagIn(), 1)
+	s.InDelta(s.scheme.FreeTurbineBlock().FreeTurbine().TStagOut(), s.pScheme.FreeTurbine().TStagOut(), 1)
 	s.approxEqual(
 		initMassRate*ftIMR,
-		s.pScheme.FreeTurbine().MassRateInput().GetState().Value().(float64), 5e-2,
+		s.pScheme.FreeTurbine().MassRateInput().GetState().Value().(float64), 1e-3,
 	)
-	s.approxEqual(
-		initMassRate*ftOMR,
-		s.pScheme.FreeTurbine().MassRateOutput().GetState().Value().(float64), 5e-2,
-	)
+	s.InDelta(s.scheme.FreeTurbineBlock().FreeTurbine().Eta(), s.pScheme.FreeTurbine().Eta(), 1e-6)
+
 	s.approxEqual(
 		s.scheme.FreeTurbineBlock().FreeTurbine().PowerOutput().GetState().Value().(float64),
 		s.pScheme.FreeTurbine().PowerOutput().GetState().Value().(float64),
-		4e-2,
+		1e-3,
 	)
+
 	s.approxEqual(
-		s.scheme.FreeTurbineBlock().FreeTurbine().PiTStag(),
-		s.pScheme.FreeTurbine().PiTStag(),
-		1e-4,
-	)
-	s.approxEqual(
-		s.scheme.FreeTurbineBlock().FreeTurbine().TStagOut(),
-		s.pScheme.FreeTurbine().TStagOut(),
-		2e-2,
+		-s.scheme.FreeTurbineBlock().FreeTurbine().PowerOutput().GetState().Value().(float64) * initMassRate*ftIMR,
+		s.pScheme.Payload().PowerOutput().GetState().Value().(float64),
+		1e-6,
 	)
 	s.approxEqual(
 		s.scheme.Regenerator().Sigma(),

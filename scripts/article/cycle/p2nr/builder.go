@@ -8,6 +8,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 )
 
 func NewBuilder(
@@ -33,8 +34,6 @@ func NewBuilder(
 		Builder: &p2n.Builder{
 			Source:              source,
 			Power:               power,
-			T0:                  t0,
-			P0:                  p0,
 			CRpm0:               cRpm0,
 			LambdaIn0:           lambdaIn0,
 			CtInletMeanDiameter: ctInletMeanDiameter,
@@ -71,7 +70,7 @@ func (b *Builder) Build() free2n.DoubleShaftRegFreeScheme {
 		b.Source.Burner().TStagOut(),
 		b.EtaM, b.BuildCompressor(), b.BuildCompressorPipe(),
 		b.buildRegenerator(), b.buildCycleBreaker(),
-		b.BuildBurner(), b.BuildCompressorTurbine(), b.BuildFreeTurbinePipe(),
+		b.BuildBurner(), b.BuildCompressorTurbine(), b.BuildCTPipe(),
 		b.BuildFreeTurbine(), b.BuildFreeTurbinePipe(), b.BuildPayload(),
 	)
 }
@@ -81,11 +80,14 @@ func (b *Builder) buildRegenerator() constructive.RegeneratorNode {
 	r := s.Regenerator()
 	hi := r.HotInput()
 	ci := r.ColdInput()
+
+	hotMassRate := common.GetMassRate(b.Power, b.Source, b.Source.Compressor())
+	coldMassRate := common.GetMassRate(b.Power, b.Source, b.Source.FreeTurbineBlock().FreeTurbine())
+
 	return constructive.NewParametricRegeneratorNode(
 		hi.GasInput().GetState().Value().(gases.Gas),
 		ci.GasInput().GetState().Value().(gases.Gas),
-		hi.MassRateInput().GetState().Value().(float64),
-		ci.MassRateInput().GetState().Value().(float64),
+		hotMassRate, coldMassRate,
 		hi.TemperatureInput().GetState().Value().(float64),
 		ci.TemperatureInput().GetState().Value().(float64),
 		hi.PressureInput().GetState().Value().(float64),
@@ -101,11 +103,11 @@ func (b *Builder) buildRegenerator() constructive.RegeneratorNode {
 }
 
 func (b *Builder) buildCycleBreaker() helper.ComplexCycleBreakNode {
-	ft := b.Source.FreeTurbineBlock().FreeTurbine()
+	reg := b.Source.(schemes.TwoShaftsRegeneratorScheme).Regenerator()
 	return helper.NewComplexCycleBreakNode(
-		ft.InputGas(),
-		ft.TStagOut(),
-		ft.PStagOut(),
+		reg.HotInput().GasInput().GetState().Value().(gases.Gas),
+		reg.HotInput().TemperatureInput().GetState().Value().(float64),
+		reg.HotInput().PressureInput().GetState().Value().(float64),
 		schemes.GetMassRate(b.Power, b.Source),
 	)
 }
