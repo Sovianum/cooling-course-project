@@ -1,4 +1,4 @@
-package p3n
+package p3nc
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
@@ -23,7 +23,7 @@ func NewBuilder(
 	return &Builder{
 		Builder: p3n.NewBuilder(
 			source,
-			power, t0, p0,
+			power,
 			lpcRpm0, hpcRpm0,
 			lambdaIn0,
 			lptInletMeanDiameter, lptLambdaU0, lptStageNum,
@@ -45,7 +45,9 @@ type Builder struct {
 func (b *Builder) Build() free3n.ThreeShaftCoolFreeScheme {
 	return free3n.NewThreeShaftCoolFreeScheme(
 		b.Source.GasSource().GasOutput().GetState().Value().(gases.Gas),
-		b.T0, b.P0, b.Source.MainBurner().TStagOut(),
+		b.Source.LPC().TemperatureInput().GetState().Value().(float64),
+		b.Source.LPC().PressureInput().GetState().Value().(float64),
+		b.Source.MainBurner().TStagOut(),
 
 		b.BuildLPC(), b.BuildLPCPipe(),
 		b.BuildLPT(), b.BuildLPTPipe(),

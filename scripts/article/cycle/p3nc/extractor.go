@@ -1,4 +1,4 @@
-package p3n
+package p3nc
 
 import (
 	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
