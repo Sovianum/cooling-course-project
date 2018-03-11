@@ -27,12 +27,13 @@ type Data2n struct {
 func (data *Data2n) Load(scheme free2n.DoubleShaftFreeScheme) {
 	t := scheme.TemperatureSource().GetTemperature()
 	labour := scheme.FreeTurbine().PowerOutput().GetState().Value().(float64)
-	massRate := scheme.Compressor().MassRate()
+	freeTurbineMassRate := scheme.FreeTurbine().MassRateInput().GetState().Value().(float64)
+
 	normMassRateTC := scheme.CompressorTurbine().NormMassRate()
 	normMassRateFT := scheme.FreeTurbine().NormMassRate()
 
-	data.Power.Append(labour*massRate/1e6)
-	data.MassRate.Append(massRate)
+	data.Power.Append(labour * freeTurbineMassRate / 1e6)
+	data.MassRate.Append(scheme.Compressor().MassRate())
 
 	data.T.Append(t)
 	data.PiC.Append(scheme.Compressor().PiStag())

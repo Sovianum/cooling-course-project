@@ -55,13 +55,19 @@ func (s *BuilderTestSuite) TestConsistency() {
 	ftIMR := s.scheme.FreeTurbineBlock().FreeTurbine().MassRateInput().GetState().Value().(float64)
 	ftOMR := s.scheme.FreeTurbineBlock().FreeTurbine().MassRateOutput().GetState().Value().(float64)
 
-	s.approxEqual(initMassRate, s.pScheme.Compressor().MassRateInput().GetState().Value().(float64), 3e-2)
-	s.approxEqual(initMassRate, s.pScheme.Compressor().MassRateOutput().GetState().Value().(float64), 3e-2)
+	s.InDelta(s.scheme.Compressor().PStagIn(), s.pScheme.Compressor().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.Compressor().PStagOut(), s.pScheme.Compressor().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.Compressor().TStagIn(), s.pScheme.Compressor().TStagIn(), 1e-6)
+	s.InDelta(s.scheme.Compressor().TStagOut(), s.pScheme.Compressor().TStagOut(), 1e-3)
 	s.InDelta(s.scheme.Compressor().PiStag(), s.pScheme.Compressor().PiStag(), 1e-6)
+
+	s.approxEqual(initMassRate, s.pScheme.Compressor().MassRateInput().GetState().Value().(float64), 1e-4)
+	s.approxEqual(initMassRate, s.pScheme.Compressor().MassRateOutput().GetState().Value().(float64), 1e-4)
+
 	s.approxEqual(
 		s.scheme.Compressor().PowerOutput().GetState().Value().(float64),
 		s.pScheme.Compressor().PowerOutput().GetState().Value().(float64),
-		5e-2,
+		2e-3,
 	)
 
 	s.approxEqual(initMassRate*bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-2)
@@ -129,6 +135,6 @@ func (s *BuilderTestSuite) approxEqual(x1, x2, precision float64) {
 	)
 }
 
-func TestP2NBuilderTestSuite(t *testing.T) {
+func TestBuilderTestSuite(t *testing.T) {
 	suite.Run(t, new(BuilderTestSuite))
 }

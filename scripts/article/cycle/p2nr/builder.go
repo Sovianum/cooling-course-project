@@ -12,7 +12,7 @@ import (
 
 func NewBuilder(
 	source schemes.TwoShaftsRegeneratorScheme,
-	power, t0, p0,
+	power,
 	cRpm0, lambdaIn0,
 	ctInletMeanDiameter, ctLambdaU0, ctStageNum,
 	ftInletMeanDiameter, ftLambdaU0, ftStageNum,
@@ -66,7 +66,9 @@ type Builder struct {
 func (b *Builder) Build() free2n.DoubleShaftRegFreeScheme {
 	return free2n.NewDoubleShaftRegFreeScheme(
 		b.Source.GasSource().GasOutput().GetState().Value().(gases.Gas),
-		b.T0, b.P0, b.Source.Burner().TStagOut(),
+		b.Source.Compressor().TStagIn(),
+		b.Source.Compressor().PStagIn(),
+		b.Source.Burner().TStagOut(),
 		b.EtaM, b.BuildCompressor(), b.BuildCompressorPipe(),
 		b.buildRegenerator(), b.buildCycleBreaker(),
 		b.BuildBurner(), b.BuildCompressorTurbine(), b.BuildFreeTurbinePipe(),

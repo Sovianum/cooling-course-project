@@ -11,7 +11,7 @@ import (
 
 func NewBuilder(
 	source schemes.TwoShaftsScheme,
-	power, t0, p0,
+	power,
 	cRpm0, lambdaIn0,
 	ctInletMeanDiameter, ctLambdaU0, ctStageNum,
 	ftInletMeanDiameter, ftLambdaU0, ftStageNum,
@@ -21,8 +21,6 @@ func NewBuilder(
 	return &Builder{
 		Source:              source,
 		Power:               power,
-		T0:                  t0,
-		P0:                  p0,
 		CRpm0:               cRpm0,
 		LambdaIn0:           lambdaIn0,
 		CtInletMeanDiameter: ctInletMeanDiameter,
@@ -42,8 +40,6 @@ func NewBuilder(
 type Builder struct {
 	Source schemes.TwoShaftsScheme
 	Power  float64
-	T0     float64
-	P0     float64
 
 	CRpm0 float64
 
@@ -69,9 +65,12 @@ type Builder struct {
 func (b *Builder) Build() free2n.DoubleShaftFreeScheme {
 	return free2n.NewDoubleShaftFreeScheme(
 		b.Source.GasSource().GasOutput().GetState().Value().(gases.Gas),
-		b.T0, b.P0, b.Source.Burner().TStagOut(),
+		b.Source.Compressor().TStagIn(),
+		b.Source.Compressor().PStagIn(),
+		b.Source.Compressor().PStagIn(),	// todo set real atm pressure (set less cos does not converge otherwise)
+		b.Source.Burner().TStagOut(),
 		b.EtaM, b.BuildCompressor(), b.BuildCompressorPipe(),
-		b.BuildBurner(), b.BuildCompressorTurbine(), b.BuildFreeTurbinePipe(),
+		b.BuildBurner(), b.BuildCompressorTurbine(), b.BuildCTPipe(),
 		b.BuildFreeTurbine(), b.BuildFreeTurbinePipe(), b.BuildPayload(),
 	)
 }
@@ -80,7 +79,7 @@ func (b *Builder) BuildCompressor() constructive.ParametricCompressorNode {
 	c := b.Source.Compressor()
 	massRate0 := common.GetMassRate(b.Power, b.Source, c)
 	ccGen := methodics.NewCompressorCharGen(
-		c.PiStag(), c.Eta(), massRate0, precision, relaxCoef, b.IterLimit,
+		c.PiStag(), c.Eta(), massRate0, b.Precision, b.RelaxCoef, b.IterLimit,
 	)
 	return constructive.NewParametricCompressorNodeFromProto(
 		c,

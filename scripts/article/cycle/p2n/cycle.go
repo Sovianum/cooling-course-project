@@ -27,13 +27,10 @@ const (
 
 	payloadRpm0 = 3000
 
-	t0 = 300
-	p0 = 1e5
-
 	power     = 16e6
 	relaxCoef = 1
 	iterNum   = 10000
-	precision = 0.01
+	precision = 1e-4
 
 	piStag = 10
 )
@@ -46,14 +43,14 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 
 	sysCall := variator.SysCallFromNetwork(
 		network, pScheme.Assembler().GetVectorPort(),
-		relaxCoef, 2, iterNum, precision,
+		relaxCoef, 2, iterNum, 0.1,
 	)
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),
 		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog),
 	)
 
-	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.5, 10000)
+	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 1, 10000)
 	if sErr != nil {
 		return sErr
 	}
@@ -86,7 +83,7 @@ func GetParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme
 	if err != nil {
 		return nil, err
 	}
-	solveErr := network.Solve(relaxCoef, 2, iterNum, precision)
+	solveErr := network.Solve(relaxCoef, 2, iterNum, precision / 10)
 	if solveErr != nil {
 		return nil, solveErr
 	}
@@ -96,7 +93,7 @@ func GetParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme
 
 func get2nParametricScheme(scheme schemes.TwoShaftsScheme) free2n.DoubleShaftFreeScheme {
 	builder := NewBuilder(
-		scheme, power, t0, p0, cRpm0, cLambdaIn0,
+		scheme, power, cRpm0, cLambdaIn0,
 		ctID, ctLambdaU0, ctStageNum,
 		ftID, ftLambdaU0, ftStageNum,
 		payloadRpm0, etaM, precision, relaxCoef, iterNum,
