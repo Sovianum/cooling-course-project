@@ -1,4 +1,4 @@
-package p3n
+package p3nb
 
 import (
 	"encoding/json"
@@ -9,10 +9,11 @@ import (
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"os"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 )
 
 const (
-	power = 20e6
+	power = 16e6
 	t0    = 300
 	p0    = 1e5
 
@@ -40,9 +41,9 @@ const (
 
 	relaxCoef = 1
 	iterNum   = 1000
-	precision = 0.01
+	precision = 1e-4
 
-	schemePrecision = 0.1
+	schemePrecision = 1e-4
 
 	lpcPiStag = 4
 	hpcPiStag = 2.5
@@ -60,7 +61,7 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 	)
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),
-		newton.NewUniformNewtonSolverGen(1e-5, newton.DefaultLog),
+		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog3ShaftMidBurn),
 	)
 
 	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.5, 10000)
@@ -83,7 +84,7 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 	}
 
 	b, _ := json.Marshal(data)
-	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/3nc.json")
+	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/3nb.json")
 	f.WriteString(string(b))
 	return nil
 }

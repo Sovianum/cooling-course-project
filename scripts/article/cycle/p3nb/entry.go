@@ -1,4 +1,4 @@
-package p3n
+package p3nb
 
 func Entry() {
 	scheme := GetScheme(lpcPiStag, hpcPiStag)
