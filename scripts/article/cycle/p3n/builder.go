@@ -11,7 +11,7 @@ import (
 
 func NewBuilder(
 	source schemes.ThreeShaftsScheme,
-	power, t0, p0,
+	power,
 	lpcRpm0, hpcRpm0,
 	lambdaIn0 float64,
 	lptInletMeanDiameter, lptLambdaU0, lptStageNum,
@@ -24,8 +24,6 @@ func NewBuilder(
 	return &Builder{
 		Source: source,
 		Power:  power,
-		T0:     t0,
-		P0:     p0,
 
 		LPCRpm0: lpcRpm0,
 		HPCRpm0: hpcRpm0,
@@ -58,8 +56,6 @@ func NewBuilder(
 type Builder struct {
 	Source schemes.ThreeShaftsScheme
 	Power  float64
-	T0     float64
-	P0     float64
 
 	LPCRpm0 float64
 	HPCRpm0 float64
@@ -91,7 +87,9 @@ type Builder struct {
 func (b *Builder) Build() free3n.ThreeShaftFreeScheme {
 	return free3n.NewThreeShaftFreeScheme(
 		b.Source.GasSource().GasOutput().GetState().Value().(gases.Gas),
-		b.T0, b.P0, b.Source.MainBurner().TStagOut(),
+		b.Source.LPC().TemperatureInput().GetState().Value().(float64),
+		b.Source.LPC().PressureInput().GetState().Value().(float64),
+		b.Source.MainBurner().TStagOut(),
 
 		b.BuildLPC(), b.BuildLPCPipe(),
 		b.BuildLPT(), b.BuildLPTPipe(),
@@ -126,7 +124,7 @@ func (b *Builder) BuildLPCPipe() constructive.PressureLossNode {
 }
 
 func (b *Builder) BuildHPC() constructive.ParametricCompressorNode {
-	c := b.Source.LPC()
+	c := b.Source.HPC()
 	massRate0 := common.GetMassRate(b.Power, b.Source, c)
 	charGen := methodics.NewCompressorCharGen(
 		c.PiStag(), c.Eta(), massRate0, precision, relaxCoef, b.IterLimit,

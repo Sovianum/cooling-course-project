@@ -9,12 +9,11 @@ import (
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"os"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 )
 
 const (
-	power = 20e6
-	t0    = 300
-	p0    = 1e5
+	power = 16e6
 
 	lpcRpm0 = 6000
 	hpcRpm0 = 10000
@@ -40,9 +39,9 @@ const (
 
 	relaxCoef = 0.1
 	iterNum   = 10000
-	precision = 0.01
+	precision = 1e-5
 
-	schemePrecision = 0.1
+	schemePrecision = 1e-5
 
 	lpcPiStag = 4
 	hpcPiStag = 2.5
@@ -56,14 +55,14 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 
 	sysCall := variator.SysCallFromNetwork(
 		network, pScheme.Assembler().GetVectorPort(),
-		relaxCoef, 2, iterNum, precision,
+		relaxCoef, 2, iterNum, schemePrecision,
 	)
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),
-		newton.NewUniformNewtonSolverGen(1e-5, newton.DefaultLog),
+		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog3Shaft),
 	)
 
-	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.5, 10000)
+	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 1, 10000)
 	if sErr != nil {
 		return sErr
 	}
@@ -77,7 +76,7 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 		r := 1.
 		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 1000)
 		if sErr != nil {
-			break
+			fmt.Println(sErr)
 		}
 		fmt.Println(i)
 	}
@@ -103,7 +102,7 @@ func GetParametric(scheme schemes.ThreeShaftsScheme) (free3n.ThreeShaftFreeSchem
 
 func get3nParametricScheme(scheme schemes.ThreeShaftsScheme) free3n.ThreeShaftFreeScheme {
 	builder := NewBuilder(
-		scheme, power, t0, p0,
+		scheme, power,
 		lpcRpm0, hpcRpm0,
 		lambdaIn0,
 		lptInletDiameter, lptLambdaU0, lptStageNum,

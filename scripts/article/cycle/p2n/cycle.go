@@ -47,7 +47,7 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 	)
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),
-		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog),
+		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog2Shaft),
 	)
 
 	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 1, 10000)

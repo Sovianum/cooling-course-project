@@ -5,7 +5,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-func DetailedLog(iterNum int, precision float64, residual *mat.VecDense) {
+func DetailedLog2Shaft(iterNum int, precision float64, residual *mat.VecDense) {
 	result := fmt.Sprintf("i: %d\t", iterNum)
 	result += fmt.Sprintf("precision: %f\t", precision)
 	result += fmt.Sprintf(
@@ -16,6 +16,24 @@ func DetailedLog(iterNum int, precision float64, residual *mat.VecDense) {
 		residual.At(3, 0),
 		residual.At(4, 0),
 		residual.At(5, 0),
+	)
+	result += fmt.Sprintf("residual: %f", mat.Norm(residual, 2))
+	fmt.Println(result)
+}
+
+func DetailedLog3Shaft(iterNum int, precision float64, residual *mat.VecDense) {
+	result := fmt.Sprintf("i: %d\t", iterNum)
+	result += fmt.Sprintf("precision: %f\t", precision)
+	result += fmt.Sprintf(
+		"hpc_mr: %.5f\t hpt_mr: %.5f\t lpt_mr: %.5f\t hp_power: %.5f\t lp_power: %.5f\t free_power: %.5f\t free_p: %.5f\t burn: %.5f\t",
+		residual.At(0, 0),
+		residual.At(1, 0),
+		residual.At(2, 0),
+		residual.At(3, 0),
+		residual.At(4, 0),
+		residual.At(5, 0),
+		residual.At(6, 0),
+		residual.At(7, 0),
 	)
 	result += fmt.Sprintf("residual: %f", mat.Norm(residual, 2))
 	fmt.Println(result)

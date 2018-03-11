@@ -33,7 +33,7 @@ func (s *BuilderTestSuite) SetupTest() {
 
 	sysCall := variator.SysCallFromNetwork(
 		s.pNetwork, s.pScheme.Assembler().GetVectorPort(),
-		relaxCoef, 2, iterNum, precision,
+		0.1, 2, iterNum, schemePrecision,
 	)
 	s.vSolver = variator.NewVariatorSolver(
 		sysCall, s.pScheme.Variators(),
@@ -47,114 +47,95 @@ func (s *BuilderTestSuite) TestConsistency() {
 
 	initMassRate := schemes.GetMassRate(power, s.scheme)
 
-	lpcIMR := s.scheme.LPC().MassRateInput().GetState().Value().(float64)
-	lpcOMR := s.scheme.LPC().MassRateOutput().GetState().Value().(float64)
-
-	hpcIMR := s.scheme.HPC().MassRateInput().GetState().Value().(float64)
-	hpcOMR := s.scheme.HPC().MassRateOutput().GetState().Value().(float64)
-
 	bOMR := s.scheme.MainBurner().MassRateOutput().GetState().Value().(float64)
 
 	hptIMR := s.scheme.HPT().MassRateInput().GetState().Value().(float64)
-	hptOMR := s.scheme.HPT().MassRateOutput().GetState().Value().(float64)
 
 	lptIMR := s.scheme.LPT().MassRateInput().GetState().Value().(float64)
-	lptOMR := s.scheme.LPT().MassRateOutput().GetState().Value().(float64)
 
 	ftIMR := s.scheme.FT().MassRateInput().GetState().Value().(float64)
-	ftOMR := s.scheme.FT().MassRateOutput().GetState().Value().(float64)
 
-	s.approxEqual(initMassRate, lpcIMR, 3e-2)
-	s.approxEqual(initMassRate, lpcOMR, 3e-2)
-	s.InDelta(s.scheme.LPC().PiStag(), s.pScheme.LPC().PiStag(), 1e-6)
+	s.InDelta(
+		initMassRate,
+		s.pScheme.LPC().MassRateInput().GetState().Value().(float64),
+		1e-6,
+	)
+	s.InDelta(s.scheme.LPC().PStagIn(), s.pScheme.LPC().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.LPC().PStagOut(), s.pScheme.LPC().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.LPC().TStagIn(), s.pScheme.LPC().TStagIn(), 1e-6)
+	s.InDelta(s.scheme.LPC().TStagOut(), s.pScheme.LPC().TStagOut(), 1)
+	s.InDelta(s.scheme.LPC().PiStag(), s.pScheme.LPC().PiStag(), 1e-8)
+	s.InDelta(s.scheme.LPC().Eta(), s.pScheme.LPC().Eta(), 1e-8)
 	s.approxEqual(
 		s.scheme.LPC().PowerOutput().GetState().Value().(float64),
 		s.pScheme.LPC().PowerOutput().GetState().Value().(float64),
-		5e-2,
+		1e-3,
 	)
 
-	s.approxEqual(initMassRate, hpcIMR, 3e-2)
-	s.approxEqual(initMassRate, hpcOMR, 3e-2)
-	s.InDelta(s.scheme.HPC().PiStag(), s.pScheme.HPC().PiStag(), 1e-6)
+	s.InDelta(
+		initMassRate,
+		s.pScheme.HPC().MassRateInput().GetState().Value().(float64),
+		5e-3,
+	)
+	s.InDelta(s.scheme.HPC().PStagIn(), s.pScheme.HPC().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.HPC().PStagOut(), s.pScheme.HPC().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.HPC().TStagIn(), s.pScheme.HPC().TStagIn(), 1)
+	s.InDelta(s.scheme.HPC().TStagOut(), s.pScheme.HPC().TStagOut(), 1)
+	s.InDelta(s.scheme.HPC().PiStag(), s.pScheme.HPC().PiStag(), 1e-8)
+	s.InDelta(s.scheme.HPC().Eta(), s.pScheme.HPC().Eta(), 1e-8)
 	s.approxEqual(
 		s.scheme.HPC().PowerOutput().GetState().Value().(float64),
 		s.pScheme.HPC().PowerOutput().GetState().Value().(float64),
-		5e-2,
+		1e-3,
 	)
 
-	s.approxEqual(initMassRate*bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-2)
-	s.InDelta(s.scheme.MainBurner().Alpha(), s.pScheme.Burner().Alpha(), 1e-3)
+	s.InDelta(s.scheme.MainBurner().PStagIn(), s.pScheme.Burner().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.MainBurner().PStagOut(), s.pScheme.Burner().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.MainBurner().TStagIn(), s.pScheme.Burner().TStagIn(), 1)
+	s.InDelta(s.scheme.MainBurner().TStagOut(), s.pScheme.Burner().TStagOut(), 5e-1)
+	s.approxEqual(initMassRate*bOMR, s.pScheme.Burner().MassRateOutput().GetState().Value().(float64), 1e-4)
+	s.InDelta(s.scheme.MainBurner().Alpha(), s.pScheme.Burner().Alpha(), 5e-4)
 
+	s.InDelta(s.scheme.HPT().PStagIn(), s.pScheme.HPT().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.HPT().PStagOut(), s.pScheme.HPT().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.HPT().TStagIn(), s.pScheme.HPT().TStagIn(), 1)
+	s.InDelta(s.scheme.HPT().TStagOut(), s.pScheme.HPT().TStagOut(), 1)
 	s.approxEqual(
 		initMassRate*hptIMR,
-		s.pScheme.HPT().MassRateInput().GetState().Value().(float64), 3e-2,
+		s.pScheme.HPT().MassRateInput().GetState().Value().(float64), 1e-4,
 	)
-	s.approxEqual(
-		initMassRate*hptOMR,
-		s.pScheme.HPT().MassRateOutput().GetState().Value().(float64), 3e-2,
-	)
-	s.approxEqual(
-		s.scheme.HPT().PowerOutput().GetState().Value().(float64),
-		s.pScheme.HPT().PowerOutput().GetState().Value().(float64),
-		1e-2,
-	)
-	s.approxEqual(
-		s.scheme.HPT().PiTStag(),
-		s.pScheme.HPT().PiTStag(),
-		1e-4,
-	)
-	s.approxEqual(
-		s.scheme.HPT().TStagOut(),
-		s.pScheme.HPT().TStagOut(),
-		1e-2,
-	)
+	s.InDelta(s.scheme.HPT().Eta(), s.pScheme.HPT().Eta(), 1e-6)
 
+	s.InDelta(s.scheme.LPT().PStagIn(), s.pScheme.LPT().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.LPT().PStagOut(), s.pScheme.LPT().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.LPT().TStagIn(), s.pScheme.LPT().TStagIn(), 1e-1)
+	s.InDelta(s.scheme.LPT().TStagOut(), s.pScheme.LPT().TStagOut(), 1e-1)
 	s.approxEqual(
 		initMassRate*lptIMR,
-		s.pScheme.LPT().MassRateInput().GetState().Value().(float64), 3e-2,
+		s.pScheme.LPT().MassRateInput().GetState().Value().(float64), 5e-5,
 	)
-	s.approxEqual(
-		initMassRate*lptOMR,
-		s.pScheme.LPT().MassRateOutput().GetState().Value().(float64), 3e-2,
-	)
-	s.approxEqual(
-		s.scheme.LPT().PowerOutput().GetState().Value().(float64),
-		s.pScheme.LPT().PowerOutput().GetState().Value().(float64),
-		1e-2,
-	)
-	s.approxEqual(
-		s.scheme.LPT().PiTStag(),
-		s.pScheme.LPT().PiTStag(),
-		1e-4,
-	)
-	s.approxEqual(
-		s.scheme.LPT().TStagOut(),
-		s.pScheme.LPT().TStagOut(),
-		1e-2,
-	)
+	s.InDelta(s.scheme.LPT().Eta(), s.pScheme.LPT().Eta(), 1e-6)
 
+	s.InDelta(s.scheme.FT().PStagIn(), s.pScheme.FT().PStagIn(), 1e-6)
+	s.InDelta(s.scheme.FT().PStagOut(), s.pScheme.FT().PStagOut(), 1e-6)
+	s.InDelta(s.scheme.FT().TStagIn(), s.pScheme.FT().TStagIn(), 1e-1)
+	s.InDelta(s.scheme.FT().TStagOut(), s.pScheme.FT().TStagOut(), 1e-1)
 	s.approxEqual(
 		initMassRate*ftIMR,
-		s.pScheme.FT().MassRateInput().GetState().Value().(float64), 3e-2,
+		s.pScheme.FT().MassRateInput().GetState().Value().(float64), 3e-5,
 	)
-	s.approxEqual(
-		initMassRate*ftOMR,
-		s.pScheme.FT().MassRateOutput().GetState().Value().(float64), 3e-2,
-	)
+	s.InDelta(s.scheme.FT().Eta(), s.pScheme.FT().Eta(), 1e-6)
+
 	s.approxEqual(
 		s.scheme.FT().PowerOutput().GetState().Value().(float64),
 		s.pScheme.FT().PowerOutput().GetState().Value().(float64),
-		1e-2,
+		6e-5,
 	)
+
 	s.approxEqual(
-		s.scheme.FT().PiTStag(),
-		s.pScheme.FT().PiTStag(),
-		1e-4,
-	)
-	s.approxEqual(
-		s.scheme.FT().TStagOut(),
-		s.pScheme.FT().TStagOut(),
-		1e-2,
+		-s.scheme.FT().PowerOutput().GetState().Value().(float64) * initMassRate*ftIMR,
+		s.pScheme.Payload().PowerOutput().GetState().Value().(float64),
+		1e-6,
 	)
 }
 
