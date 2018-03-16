@@ -1,7 +1,6 @@
 package p2nr
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Sovianum/cooling-course-project/core/schemes/s2nr"
 	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
@@ -10,8 +9,6 @@ import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"gonum.org/v1/gonum/mat"
-	"os"
 	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/io"
 )
@@ -49,10 +46,10 @@ const (
 	piStepNum = 30
 )
 
-func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) error {
+func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) (Data2nr, error) {
 	network, pErr := pScheme.GetNetwork()
 	if pErr != nil {
-		return pErr
+		return Data2nr{}, pErr
 	}
 
 	sysCall := variator.SysCallFromNetwork(
@@ -60,92 +57,29 @@ func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) error {
 		relaxCoef, 2, iterNum, schemePrecision,
 	)
 
-	type monitorData struct {
-		CTIn  common.FloatArr `json:"ct_in"`
-		CTOut common.FloatArr `json:"ct_out"`
-		CL    common.FloatArr `json:"cl"`
-		CMR   common.FloatArr `json:"cmr"`
-		CEta common.FloatArr `json:"c_eta"`
-
-		TTIn  common.FloatArr `json:"tt_in"`
-		TTOut common.FloatArr   `json:"tt_out"`
-		TL    common.FloatArr `json:"tl"`
-		TMR   common.FloatArr `json:"tmr"`
-		TEta common.FloatArr `json:"t_eta"`
-	}
-
-	md0 := monitorData{}
-	md1 := monitorData{}
-
-	ggPowerMonitor := func(i int) {
-		if i == -1 {
-			md0.CTIn.Append(pScheme.Compressor().TStagIn())
-			md0.CTOut.Append(pScheme.Compressor().TStagOut())
-			md0.CL.Append(pScheme.Compressor().PowerOutput().GetState().Value().(float64))
-			md0.CMR.Append(pScheme.Compressor().MassRateInput().GetState().Value().(float64))
-			md0.CEta.Append(pScheme.Compressor().Eta())
-
-			md0.TTIn.Append(pScheme.CompressorTurbine().TStagIn())
-			md0.TTOut.Append(pScheme.CompressorTurbine().TStagOut())
-			md0.TL.Append(pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64))
-			md0.TMR.Append(pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64))
-			md0.TEta.Append(pScheme.CompressorTurbine().Eta())
-		}
-		if i == 0 {
-			md1.CTIn.Append(pScheme.Compressor().TStagIn())
-			md1.CTOut.Append(pScheme.Compressor().TStagOut())
-			md1.CL.Append(pScheme.Compressor().PowerOutput().GetState().Value().(float64))
-			md1.CMR.Append(pScheme.Compressor().MassRateInput().GetState().Value().(float64))
-			md1.CEta.Append(pScheme.Compressor().Eta())
-
-			md1.TTIn.Append(pScheme.CompressorTurbine().TStagIn())
-			md1.TTOut.Append(pScheme.CompressorTurbine().TStagOut())
-			md1.TL.Append(pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64))
-			md1.TMR.Append(pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64))
-			md1.TEta.Append(pScheme.CompressorTurbine().Eta())
-		}
-	}
-
 	vSolver := variator.NewVariatorSolver(
 		sysCall, pScheme.Variators(),
-		newton.NewUniformNewtonSolverGen(1e-5, func(iterNum int, precision float64, residual *mat.VecDense) {
-			common.DetailedLog2Shaft(iterNum, precision, residual)
-			ggPowerMonitor(iterNum)
-		}),
+		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog2Shaft),
 	)
 
 	_, sErr := vSolver.Solve(vSolver.GetInit(), precision, relaxCoef, 10000)
 	if sErr != nil {
-		return sErr
+		return Data2nr{}, sErr
 	}
-	//pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() + 50)
-	//vSolver.Solve(vSolver.GetInit(), precision, relaxCoef, 10000)
 
 	data := NewData2nr()
-	for i := 0; i != 30; i++ {
+	for i := 0; i != 15; i++ {
 		data.Load(pScheme)
 		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
 
 		r := 1.
 		_, sErr = vSolver.Solve(vSolver.GetInit(), precision, r, 1000)
 		if sErr != nil {
-			break
+			return Data2nr{}, sErr
 		}
 		fmt.Println(i)
 	}
-
-	monitorB0, _ := json.Marshal(md0)
-	monitorF0, _ := os.Create("/tmp/monitor0.json")
-	monitorF0.WriteString(string(monitorB0))
-
-	monitorB1, _ := json.Marshal(md1)
-	monitorF1, _ := os.Create("/tmp/monitor1.json")
-	monitorF1.WriteString(string(monitorB1))
-
-	b, _ := json.Marshal(data)
-	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/2nr.json")
-	f.WriteString(string(b))
-	return nil
+	return data, nil
 }
 
 func GetParametric(scheme schemes.TwoShaftsRegeneratorScheme) (free2n.DoubleShaftRegFreeScheme, error) {
@@ -176,6 +110,26 @@ func getParametricScheme(scheme schemes.TwoShaftsRegeneratorScheme) free2n.Doubl
 		schemePrecision, schemeRelaxCoef, iterNum,
 	)
 	return builder.Build()
+}
+
+func OptimizeScheme(scheme schemes.TwoShaftsRegeneratorScheme, data core.SingleCompressorData) {
+	optPi := 0.
+	maxEta := -1.
+	for i := range data.Efficiency {
+		if data.Efficiency[i] > maxEta {
+			optPi = data.Pi[i]
+			maxEta = data.Efficiency[i]
+		}
+	}
+	scheme.Compressor().SetPiStag(optPi)
+}
+
+func GetSchemeData(scheme schemes.TwoShaftsRegeneratorScheme) (core.SingleCompressorData, error) {
+	points, err := io.GetTwoShaftSchemeData(scheme, power, startPi, piStep, piStepNum)
+	if err != nil {
+		return core.SingleCompressorData{}, err
+	}
+	return core.ConvertSingleCompressorDataPoint(points), nil
 }
 
 func GetScheme(piStag float64) schemes.TwoShaftsRegeneratorScheme {

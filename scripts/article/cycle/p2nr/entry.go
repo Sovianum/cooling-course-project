@@ -1,7 +1,7 @@
 package p2nr
 
 import (
-	"fmt"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 )
 
 const (
@@ -10,37 +10,28 @@ const (
 
 func Entry() {
 	scheme := GetScheme(piStag)
-	pScheme, pErr := GetParametric(scheme)
-	if pErr != nil {
-		panic(pErr)
-	}
-	err := SolveParametric(pScheme)
+	schemeData, err := GetSchemeData(scheme)
 	if err != nil {
 		panic(err)
 	}
 
-	pc := pScheme.Compressor()
-	pb := pScheme.Burner()
-	pct := pScheme.CompressorTurbine()
-	pft := pScheme.FreeTurbine()
+	if err := common.SaveData(schemeData, common.DataRoot + "2nr_simple.json"); err != nil {
+		panic(err)
+	}
 
-	fmt.Println(pc.PiStag())
-	fmt.Println(pct.PiTStag())
-	fmt.Println(pft.PiTStag())
+	OptimizeScheme(scheme, schemeData)
 
-	fmt.Println(
-		pc.PStagIn(), pc.PStagOut(),
-		pb.PStagIn(), pb.PStagOut(),
-		pct.PStagIn(), pct.PStagOut(),
-		pft.PStagIn(), pft.PStagOut(),
-	)
+	pScheme, pErr := GetParametric(scheme)
+	if pErr != nil {
+		panic(pErr)
+	}
 
-	fmt.Println(
-		pc.TStagIn(), pc.TStagOut(),
-		pb.TStagIn(), pb.TStagOut(),
-		pct.TStagIn(), pct.TStagOut(),
-		pft.TStagIn(), pft.TStagOut(),
-	)
+	pData, err := SolveParametric(pScheme)
+	if err != nil {
+		panic(err)
+	}
 
-	fmt.Println(pScheme.Payload().Power())
+	if err := common.SaveData(pData, common.DataRoot + "2nr.json"); err != nil {
+		panic(err)
+	}
 }
