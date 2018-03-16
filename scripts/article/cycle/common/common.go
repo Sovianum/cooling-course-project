@@ -5,6 +5,10 @@ import (
 	"encoding/json"
 )
 
+const (
+	DataRoot = "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/"
+)
+
 func SaveData(data interface{}, path string) error {
 	b, _ := json.Marshal(data)
 	f, e := os.Create(path)
