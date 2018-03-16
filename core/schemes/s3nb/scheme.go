@@ -43,7 +43,7 @@ const (
 	dgFreeTurbine                = -0.01
 	freeTurbinePressureLossSigma = 0.93
 
-	midBurnTGas  = 1450
+	midBurnTGas  = 1400
 	midBurnEta = 0.98
 	midBurnSigma = 0.93
 

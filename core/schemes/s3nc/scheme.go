@@ -25,7 +25,7 @@ const (
 
 	etaHighPressureComp = 0.83
 
-	tGas                  = 1223
+	tGas                  = 1450
 	tFuel                 = 300
 	sigmaBurn             = 0.99
 	etaBurn               = 0.98

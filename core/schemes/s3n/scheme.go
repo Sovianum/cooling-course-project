@@ -64,7 +64,7 @@ func GetInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 			return -lptCoolMassRate
 		},
 		func(node constructive.TurbineNode) float64 {
-			return hptCoolMassRate
+			return 0
 		},
 		etaMMiddleCascade, precision,
 	)
@@ -76,7 +76,7 @@ func GetInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 			return -hptLeakMassRate
 		},
 		func(node constructive.TurbineNode) float64 {
-			return -(lptCoolMassRate + hptCoolMassRate)
+			return -hptCoolMassRate
 		},
 		func(node constructive.TurbineNode) float64 {
 			return 0
