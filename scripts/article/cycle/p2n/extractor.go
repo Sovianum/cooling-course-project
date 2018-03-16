@@ -34,6 +34,7 @@ func (data *Data2n) Load(scheme free2n.DoubleShaftFreeScheme) {
 
 	data.Power.Append(labour * freeTurbineMassRate / 1e6)
 	data.MassRate.Append(scheme.Compressor().MassRate())
+	data.Eta.Append(scheme.Efficiency())
 
 	data.T.Append(t)
 	data.PiC.Append(scheme.Compressor().PiStag())

@@ -1,15 +1,15 @@
 package p2n
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/Sovianum/cooling-course-project/core/schemes/s2n"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"os"
 	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
+	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/io"
+	"fmt"
 )
 
 const (
@@ -28,17 +28,21 @@ const (
 	payloadRpm0 = 3000
 
 	power     = 16e6
-	relaxCoef = 1
+	relaxCoef = 0.5
 	iterNum   = 10000
 	precision = 1e-4
 
 	piStag = 10
+
+	startPi   = 8
+	piStep    = 0.5
+	piStepNum = 30
 )
 
-func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
+func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) (Data2n, error) {
 	network, pErr := pScheme.GetNetwork()
 	if pErr != nil {
-		return pErr
+		return Data2n{}, pErr
 	}
 
 	sysCall := variator.SysCallFromNetwork(
@@ -52,30 +56,26 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) error {
 
 	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 1, 10000)
 	if sErr != nil {
-		return sErr
+		return Data2n{}, sErr
 	}
 
 	data := NewData2n()
-	for i := 0; i != 17; i++ {
+	for i := 0; i != 15; i++ {
 		data.Load(pScheme)
 		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
 
 		r := 1.
-		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 1000)
-		if sErr != nil {
-			break
+		if i >= 15 {
+			r = 0.01
 		}
+
 		fmt.Println(i)
+		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 10000)
+		if sErr != nil {
+			return Data2n{}, sErr
+		}
 	}
-
-	b, _ := json.Marshal(data)
-	f, e := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/2n.json")
-	if e != nil {
-		return e
-	}
-
-	_, e = f.WriteString(string(b))
-	return e
+	return data, nil
 }
 
 func GetParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme, error) {
@@ -88,10 +88,10 @@ func GetParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme
 		return nil, solveErr
 	}
 
-	return get2nParametricScheme(scheme), nil
+	return getParametricScheme(scheme), nil
 }
 
-func get2nParametricScheme(scheme schemes.TwoShaftsScheme) free2n.DoubleShaftFreeScheme {
+func getParametricScheme(scheme schemes.TwoShaftsScheme) free2n.DoubleShaftFreeScheme {
 	builder := NewBuilder(
 		scheme, power, cRpm0, cLambdaIn0,
 		ctID, ctLambdaU0, ctStageNum,
@@ -99,6 +99,26 @@ func get2nParametricScheme(scheme schemes.TwoShaftsScheme) free2n.DoubleShaftFre
 		payloadRpm0, etaM, precision, relaxCoef, iterNum,
 	)
 	return builder.Build()
+}
+
+func OptimizeScheme(scheme schemes.TwoShaftsScheme, data core.SingleCompressorData) {
+	optPi := 0.
+	maxEta := -1.
+	for i := range data.Efficiency {
+		if data.Efficiency[i] > maxEta {
+			optPi = data.Pi[i]
+			maxEta = data.Efficiency[i]
+		}
+	}
+	scheme.Compressor().SetPiStag(optPi)
+}
+
+func GetSchemeData(scheme schemes.TwoShaftsScheme) (core.SingleCompressorData, error) {
+	points, err := io.GetTwoShaftSchemeData(scheme, power, startPi, piStep, piStepNum)
+	if err != nil {
+		return core.SingleCompressorData{}, err
+	}
+	return core.ConvertSingleCompressorDataPoint(points), nil
 }
 
 func GetScheme(piStag float64) schemes.TwoShaftsScheme {
