@@ -11,6 +11,8 @@ import (
 	"github.com/stretchr/testify/suite"
 	math2 "math"
 	"testing"
+	common2 "github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
+	"fmt"
 )
 
 type BuilderTestSuite struct {
@@ -121,6 +123,27 @@ func (s *BuilderTestSuite) TestConsistency() {
 		s.pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64), 1e-3,
 	)
 	s.InDelta(s.scheme.TurboCascade().Turbine().Eta(), s.pScheme.CompressorTurbine().Eta(), 1e-6)
+
+	s.InDelta(
+		0,
+		s.pScheme.Compressor().MassRateInput().GetState().Value().(float64) *
+		s.pScheme.Compressor().PowerOutput().GetState().Value().(float64) +
+		s.pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64) *
+		s.pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64) * 0.99,
+		1e2,
+	)
+
+	common2.DetailedLog2Shaft(0, 0, s.pScheme.Assembler().GetVectorPort().GetState().(graph.VectorPortState).Vec)
+
+	loss := s.scheme.FreeTurbineBlock().OutletPressureLoss()
+	pLoss := s.pScheme.FreeTurbinePipe()
+	s.InDelta(loss.PressureOutput().GetState().Value().(float64), pLoss.PressureOutput().GetState().Value().(float64), 1e-6)
+	fmt.Println(s.pScheme.Regenerator().HotOutput().PressureOutput().GetState().Value().(float64))
+
+	fmt.Println(
+		s.pScheme.FreeTurbinePipe().PressureInput().GetState().Value().(float64),
+		s.pScheme.FreeTurbinePipe().PressureOutput().GetState().Value().(float64),
+	)
 
 	s.InDelta(s.scheme.CompressorTurbinePipe().PStagIn(), s.pScheme.CompressorTurbinePipe().PStagIn(), 1e-6)
 	s.InDelta(s.scheme.CompressorTurbinePipe().PStagOut(), s.pScheme.CompressorTurbinePipe().PStagOut(), 1e-6)

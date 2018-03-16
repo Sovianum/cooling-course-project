@@ -11,6 +11,9 @@ import (
 	math2 "math"
 	"testing"
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
+	"fmt"
+	common2 "github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
+	"gonum.org/v1/gonum/mat"
 )
 
 type BuilderTestSuite struct {
@@ -137,6 +140,75 @@ func (s *BuilderTestSuite) TestConsistency() {
 		s.pScheme.Payload().PowerOutput().GetState().Value().(float64),
 		1e-6,
 	)
+
+	fmt.Println(
+		"diff",
+		s.pScheme.HPShaft().PowerOutput().GetState().Value().(float64) *
+		s.pScheme.HPC().MassRateInput().GetState().Value().(float64) +
+		s.pScheme.HPT().PowerOutput().GetState().Value().(float64) *
+		s.pScheme.HPT().MassRateInput().GetState().Value().(float64),
+	)
+
+	fmt.Println(common2.GetPower(s.pScheme.HPC()) / 0.99 + common2.GetPower(s.pScheme.HPT()))
+	fmt.Println(common2.GetPower(s.pScheme.LPC()) / 0.99 + common2.GetPower(s.pScheme.LPT()))
+	fmt.Println(s.pScheme.Assembler().GetVectorPort().GetState().Value().(*mat.VecDense))
+
+	fmt.Println(common2.Trace())
+
+	fmt.Println(common2.Trace(
+		s.pScheme.LPC().MassRateInput(),
+		s.pScheme.HPC().MassRateInput(),
+		s.pScheme.Burner().MassRateInput(),
+		s.pScheme.HPT().MassRateInput(),
+		s.pScheme.LPT().MassRateInput(),
+		s.pScheme.FT().MassRateInput(),
+	))
+
+	fmt.Println(common2.Trace(
+		s.scheme.LPC().MassRateInput(),
+		s.scheme.HPC().MassRateInput(),
+		s.scheme.MainBurner().MassRateInput(),
+		s.scheme.HPT().MassRateInput(),
+		s.scheme.LPT().MassRateInput(),
+		s.pScheme.FT().MassRateInput(),
+	))
+
+	fmt.Println(common2.TraceWithTags(
+		[]graph.Port{
+			s.pScheme.LPC().MassRateInput(), s.pScheme.LPC().MassRateOutput(),
+			s.pScheme.HPC().MassRateInput(), s.pScheme.HPC().MassRateOutput(),
+			s.pScheme.Burner().MassRateInput(), s.pScheme.Burner().MassRateOutput(),
+			s.pScheme.HPT().MassRateInput(), s.pScheme.HPT().MassRateOutput(),
+			s.pScheme.LPT().MassRateInput(), s.pScheme.LPT().MassRateOutput(),
+			s.pScheme.FT().MassRateInput(), s.pScheme.FT().MassRateOutput(),
+		},
+		[]string{
+			"i lpc", "o lpc",
+			"i hpc", "o hpc",
+			"i b", "o b",
+			"i hpt", "o hpt",
+			"i lpt", "o lpt",
+			"i ft", "o ft",
+		},
+	))
+	fmt.Println(common2.TraceWithTags(
+		[]graph.Port{
+			s.scheme.LPC().MassRateInput(), s.scheme.LPC().MassRateOutput(),
+			s.scheme.HPC().MassRateInput(), s.scheme.HPC().MassRateOutput(),
+			s.scheme.MainBurner().MassRateInput(), s.scheme.MainBurner().MassRateOutput(),
+			s.scheme.HPT().MassRateInput(), s.scheme.HPT().MassRateOutput(),
+			s.scheme.LPT().MassRateInput(), s.scheme.LPT().MassRateOutput(),
+			s.scheme.FT().MassRateInput(), s.scheme.FT().MassRateOutput(),
+		},
+		[]string{
+			"i lpc", "o lpc",
+			"i hpc", "o hpc",
+			"i b", "o b",
+			"i hpt", "o hpt",
+			"i lpt", "o lpt",
+			"i ft", "o ft",
+		},
+	))
 }
 
 func (s *BuilderTestSuite) approxEqual(x1, x2, precision float64) {

@@ -67,6 +67,7 @@ func (b *Builder) Build() free2n.DoubleShaftRegFreeScheme {
 		b.Source.GasSource().GasOutput().GetState().Value().(gases.Gas),
 		b.Source.Compressor().TStagIn(),
 		b.Source.Compressor().PStagIn(),
+		b.Source.InletPressureDrop().PStagIn(),
 		b.Source.Burner().TStagOut(),
 		b.EtaM, b.BuildCompressor(), b.BuildCompressorPipe(),
 		b.buildRegenerator(), b.buildCycleBreaker(),
@@ -104,10 +105,14 @@ func (b *Builder) buildRegenerator() constructive.RegeneratorNode {
 
 func (b *Builder) buildCycleBreaker() helper.ComplexCycleBreakNode {
 	reg := b.Source.(schemes.TwoShaftsRegeneratorScheme).Regenerator()
+	pOut := reg.HotOutput().PressureOutput().GetState().Value().(float64)
+	// here regenerator outlet pressure is used because of node permutation
+	// in non parametric one the order is follows: ft -> regenerator -> pressureDrop
+	// in parametric one the order is follows: ft -> pressureDrop -> regenerator
 	return helper.NewComplexCycleBreakNode(
 		reg.HotInput().GasInput().GetState().Value().(gases.Gas),
 		reg.HotInput().TemperatureInput().GetState().Value().(float64),
-		reg.HotInput().PressureInput().GetState().Value().(float64),
+		pOut,
 		schemes.GetMassRate(b.Power, b.Source),
 	)
 }

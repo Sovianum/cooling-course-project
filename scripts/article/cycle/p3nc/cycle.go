@@ -39,7 +39,7 @@ const (
 	lpEtaM = 0.99
 	hpEtaM = 0.99
 
-	relaxCoef = 0.1
+	relaxCoef = 1
 	iterNum   = 10000
 	precision = 1e-5
 
