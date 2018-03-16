@@ -12,6 +12,8 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"gonum.org/v1/gonum/mat"
 	"os"
+	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/io"
 )
 
 const (
@@ -41,6 +43,10 @@ const (
 	iterNum         = 10000
 	precision       = 1e-7
 	schemePrecision = 1e-5
+
+	startPi   = 8
+	piStep    = 0.5
+	piStepNum = 30
 )
 
 func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) error {

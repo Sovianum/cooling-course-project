@@ -40,6 +40,7 @@ func (data *Data3n) Load(scheme free3n.ThreeShaftFreeScheme) {
 
 	data.Power.Append(labour*massRate/1e6)
 	data.MassRate.Append(massRate)
+	data.Eta.Append(scheme.Efficiency())
 
 	data.PiLPC.Append(scheme.LPC().PiStag())
 	data.PiHPC.Append(scheme.HPC().PiStag())
