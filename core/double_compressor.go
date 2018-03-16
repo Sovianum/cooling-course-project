@@ -42,6 +42,63 @@ func LabourOptimalPoint(points []DoubleCompressorDataPoint) DoubleCompressorData
 	return points[ind]
 }
 
+type DoubleCompressorData struct {
+	Pi            []float64
+	PiFactor      []float64
+	MassRate      []float64
+	SpecificPower []float64
+	Efficiency    []float64
+	PiLow         []float64
+	PiHigh        []float64
+	PiTLow        []float64
+	PiTHigh       []float64
+	LabourHPC     []float64
+	LabourLPC     []float64
+	LabourLPT     []float64
+	LabourHPT     []float64
+	LabourFT      []float64
+	Heat          []float64
+}
+
+func ConvertDoubleCompressorDataPoints(points []DoubleCompressorDataPoint) DoubleCompressorData {
+	result := DoubleCompressorData{
+		Pi:            make([]float64, len(points)),
+		PiFactor:      make([]float64, len(points)),
+		MassRate:      make([]float64, len(points)),
+		SpecificPower: make([]float64, len(points)),
+		Efficiency:    make([]float64, len(points)),
+		PiLow:         make([]float64, len(points)),
+		PiHigh:        make([]float64, len(points)),
+		PiTLow:        make([]float64, len(points)),
+		PiTHigh:       make([]float64, len(points)),
+		LabourHPC:     make([]float64, len(points)),
+		LabourLPC:     make([]float64, len(points)),
+		LabourLPT:     make([]float64, len(points)),
+		LabourHPT:     make([]float64, len(points)),
+		LabourFT:      make([]float64, len(points)),
+		Heat:          make([]float64, len(points)),
+	}
+	for i, point := range points {
+		result.Pi[i] = point.Pi
+		result.PiFactor[i] = point.PiFactor
+		result.MassRate[i] = point.MassRate
+		result.SpecificPower[i] = point.SpecificPower
+		result.Efficiency[i] = point.Efficiency
+		result.PiLow[i] = point.PiLow
+		result.PiHigh[i] = point.PiHigh
+		result.PiTLow[i] = point.PiTLow
+		result.PiTHigh[i] = point.PiTHigh
+		result.LabourHPC[i] = point.LabourHPC
+		result.LabourLPC[i] = point.LabourLPC
+		result.LabourHPT[i] = point.LabourHPT
+		result.LabourLPT[i] = point.LabourLPT
+		result.LabourFT[i] = point.LabourFT
+		result.Heat[i] = point.Heat
+	}
+	return result
+}
+
+// todo remove (deprecated). use DoubleCompressorData instead
 type DoubleCompressorDataPoint struct {
 	Pi            float64
 	PiFactor      float64

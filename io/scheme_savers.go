@@ -1,10 +1,8 @@
 package io
 
 import (
-	"encoding/csv"
 	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"os"
 )
 
 const (
@@ -42,37 +40,27 @@ func GetThreeShaftsSchemeData(
 	return points, nil
 }
 
-func SaveTwoShaftSchemeData(
+func GetTwoShaftSchemeData(
 	scheme core.SingleCompressorScheme,
 	power float64,
 	startPi, piStep float64,
-	stepNum int, filename string,
-) error {
-	var piArr []float64
-
-	for i := 0; i != stepNum; i++ {
-		piArr = append(piArr, startPi+float64(i)*piStep)
+	stepNum int,
+) ([]core.SingleCompressorDataPoint, error) {
+	piArr := make([]float64, stepNum)
+	for i := range piArr{
+		piArr[i] = startPi+float64(i)*piStep
 	}
 
-	var records [][]string
-	var generator = core.GetSingleCompressorDataGenerator(scheme, power, relaxCoef, iterNum)
-	for _, pi := range piArr {
+	points := make([]core.SingleCompressorDataPoint, stepNum)
+	generator := core.GetSingleCompressorDataGenerator(scheme, power, relaxCoef, iterNum)
+
+	for i, pi := range piArr {
 		var point, err = generator(pi)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		records = append(records, point.ToRecord())
+		points[i] = point
 	}
 
-	file, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	writer.WriteAll(records)
-
-	return nil
+	return points, nil
 }

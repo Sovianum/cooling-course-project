@@ -10,6 +10,30 @@ type SingleCompressorScheme interface {
 	schemes.SingleCompressor
 }
 
+type SingleCompressorData struct {
+	Pi            []float64
+	MassRate      []float64
+	SpecificPower []float64
+	Efficiency    []float64
+}
+
+func ConvertSingleCompressorDataPoint(points []SingleCompressorDataPoint) SingleCompressorData {
+	result := SingleCompressorData{
+		Pi:            make([]float64, len(points)),
+		MassRate:      make([]float64, len(points)),
+		SpecificPower: make([]float64, len(points)),
+		Efficiency:    make([]float64, len(points)),
+	}
+	for i, point := range points {
+		result.Pi[i] = point.Pi
+		result.MassRate[i] = point.MassRate
+		result.SpecificPower[i] = point.SpecificPower
+		result.Efficiency[i] = point.Efficiency
+	}
+	return result
+}
+
+// todo remove this structure and use SingleCompressorData instead
 type SingleCompressorDataPoint struct {
 	Pi            float64
 	MassRate      float64
