@@ -5,8 +5,8 @@ import (
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 )
 
-func NewData3n() *Data3n {
-	return &Data3n{}
+func NewData3n() Data3n {
+	return Data3n{}
 }
 
 type Data3n struct {

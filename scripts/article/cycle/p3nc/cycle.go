@@ -1,15 +1,15 @@
 package p3nc
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"os"
 	"github.com/Sovianum/cooling-course-project/core/schemes/s3nc"
 	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
+	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/io"
 )
 
 const (
@@ -48,12 +48,16 @@ const (
 	lpcPiStag = 4
 	hpcPiStag = 2.5
 
+	startPi   = 8
+	piStep    = 0.5
+	piStepNum = 30
+
 )
 
-func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
+func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) (Data3n, error) {
 	network, pErr := pScheme.GetNetwork()
 	if pErr != nil {
-		return pErr
+		return Data3n{}, pErr
 	}
 
 	sysCall := variator.SysCallFromNetwork(
@@ -67,7 +71,7 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 
 	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.5, 10000)
 	if sErr != nil {
-		return sErr
+		return Data3n{}, sErr
 	}
 
 	data := NewData3n()
@@ -83,11 +87,7 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) error {
 		}
 		fmt.Println(i)
 	}
-
-	b, _ := json.Marshal(data)
-	f, _ := os.Create("/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/3nc.json")
-	f.WriteString(string(b))
-	return nil
+	return data, nil
 }
 
 func GetParametric(scheme schemes.ThreeShaftsCoolerScheme) (free3n.ThreeShaftCoolFreeScheme, error) {
@@ -116,6 +116,29 @@ func get3ncCoolParametricScheme(scheme schemes.ThreeShaftsCoolerScheme) free3n.T
 		precision, relaxCoef, iterNum,
 	)
 	return builder.Build()
+}
+
+func OptimizeScheme(scheme schemes.ThreeShaftsCoolerScheme, data core.DoubleCompressorData) {
+	optPiLow := 0.
+	optPiHigh := 0.
+	maxEta := -1.
+	for i := range data.Efficiency {
+		if data.Efficiency[i] > maxEta {
+			optPiLow = data.PiLow[i]
+			optPiHigh = data.PiHigh[i]
+			maxEta = data.Efficiency[i]
+		}
+	}
+	scheme.HPC().SetPiStag(optPiHigh)
+	scheme.LPC().SetPiStag(optPiLow)
+}
+
+func GetSchemeData(scheme schemes.ThreeShaftsCoolerScheme) (core.DoubleCompressorData, error) {
+	points, err := io.GetThreeShaftsSchemeData(scheme, power, startPi, piStep, piStepNum, 0.1, 0.1, 8)
+	if err != nil {
+		return core.DoubleCompressorData{}, err
+	}
+	return core.ConvertDoubleCompressorDataPoints(points), nil
 }
 
 func GetScheme(piStagLow, piStagHigh float64) schemes.ThreeShaftsCoolerScheme {
