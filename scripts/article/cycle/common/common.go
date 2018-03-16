@@ -1,5 +1,20 @@
 package common
 
+import (
+	"os"
+	"encoding/json"
+)
+
+func SaveData(data interface{}, path string) error {
+	b, _ := json.Marshal(data)
+	f, e := os.Create(path)
+	if e != nil {
+		return e
+	}
+	_, e = f.WriteString(string(b))
+	return e
+}
+
 type FloatArr []float64
 
 func NewFloatArr() *FloatArr {
