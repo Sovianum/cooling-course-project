@@ -3,6 +3,7 @@ package core
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/library/schemes"
+	"math"
 )
 
 type DoubleCompressorScheme interface {
@@ -168,7 +169,7 @@ func GetDoubleCompressorDataGenerator(
 }
 
 func getCompressorPiPair(piTotal, piFactor float64) (float64, float64) {
-	var piLow = (piTotal-1)*piFactor + 1
-	var piHigh = piTotal / piLow
+	piLow := math.Pow(piTotal, piFactor)
+	piHigh := math.Pow(piTotal, 1 - piFactor)
 	return piLow, piHigh
 }
