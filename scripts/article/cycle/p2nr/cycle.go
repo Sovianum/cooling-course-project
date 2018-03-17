@@ -41,7 +41,7 @@ const (
 	precision       = 1e-7
 	schemePrecision = 1e-5
 
-	startPi   = 8
+	startPi   = 4
 	piStep    = 0.5
 	piStepNum = 30
 )
@@ -70,7 +70,7 @@ func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) (Data2nr, error) {
 	data := NewData2nr()
 	for i := 0; i != 15; i++ {
 		data.Load(pScheme)
-		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 20)
 
 		r := 1.
 		_, sErr = vSolver.Solve(vSolver.GetInit(), precision, r, 1000)

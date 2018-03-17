@@ -24,16 +24,16 @@ const (
 	t0             = 300
 	etaCompTurbine = 0.9
 	lambdaOut      = 0.3
-	dgCompTurbine  = -0.01
+	dgCompTurbine  = -0.00
 	etaM           = 0.99
 
 	sigmaCompTurbinePipe = 0.98
 
 	etaFreeTurbine               = 0.92
-	dgFreeTurbine                = -0.01
+	dgFreeTurbine                = -0.00
 	freeTurbinePressureLossSigma = 0.93
 
-	regeneratorSigma = 0.8
+	regeneratorSigma = 0.95
 
 	precision = 0.05
 )
@@ -44,7 +44,7 @@ func GetInitedTwoShaftsRegeneratorScheme() schemes.TwoShaftsRegeneratorScheme {
 	var turboCascade = compose.NewTurboCascadeNode(
 		etaComp, piComp, etaCompTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
-			return dgCompTurbine
+			return 0
 		},
 		func(node constructive.TurbineNode) float64 {
 			return 0
@@ -60,7 +60,7 @@ func GetInitedTwoShaftsRegeneratorScheme() schemes.TwoShaftsRegeneratorScheme {
 		pAtm,
 		etaFreeTurbine, lambdaOut, precision,
 		func(node constructive.TurbineNode) float64 {
-			return dgFreeTurbine
+			return 0
 		},
 		func(node constructive.TurbineNode) float64 {
 			return 0
