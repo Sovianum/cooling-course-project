@@ -44,21 +44,21 @@ func LabourOptimalPoint(points []DoubleCompressorDataPoint) DoubleCompressorData
 }
 
 type DoubleCompressorData struct {
-	Pi            []float64
-	PiFactor      []float64
-	MassRate      []float64
-	SpecificPower []float64
-	Efficiency    []float64
-	PiLow         []float64
-	PiHigh        []float64
-	PiTLow        []float64
-	PiTHigh       []float64
-	LabourHPC     []float64
-	LabourLPC     []float64
-	LabourLPT     []float64
-	LabourHPT     []float64
-	LabourFT      []float64
-	Heat          []float64
+	Pi            []float64 `json:"pi"`
+	PiFactor      []float64 `json:"pi_factor"`
+	MassRate      []float64 `json:"mass_rate"`
+	SpecificPower []float64 `json:"specific_power"`
+	Efficiency    []float64 `json:"efficiency"`
+	PiLow         []float64 `json:"pi_low"`
+	PiHigh        []float64 `json:"pi_high"`
+	PiTLow        []float64 `json:"pi_t_low"`
+	PiTHigh       []float64 `json:"pi_t_high"`
+	LabourHPC     []float64 `json:"labour_hpc"`
+	LabourLPC     []float64 `json:"labour_lpc"`
+	LabourLPT     []float64 `json:"labour_lpt"`
+	LabourHPT     []float64 `json:"labour_hpt"`
+	LabourFT      []float64 `json:"labour_ft"`
+	Heat          []float64 `json:"heat"`
 }
 
 func ConvertDoubleCompressorDataPoints(points []DoubleCompressorDataPoint) DoubleCompressorData {

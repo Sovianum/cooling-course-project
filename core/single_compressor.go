@@ -11,10 +11,10 @@ type SingleCompressorScheme interface {
 }
 
 type SingleCompressorData struct {
-	Pi            []float64
-	MassRate      []float64
-	SpecificPower []float64
-	Efficiency    []float64
+	Pi            []float64 `json:"pi"`
+	MassRate      []float64 `json:"mass_rate"`
+	SpecificPower []float64 `json:"specific_power"`
+	Efficiency    []float64 `json:"efficiency"`
 }
 
 func ConvertSingleCompressorDataPoint(points []SingleCompressorDataPoint) SingleCompressorData {

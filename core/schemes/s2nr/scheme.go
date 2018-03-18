@@ -33,7 +33,7 @@ const (
 	dgFreeTurbine                = -0.00
 	freeTurbinePressureLossSigma = 0.93
 
-	regeneratorSigma = 0.95
+	regeneratorSigma = 0.8
 
 	precision = 0.05
 )

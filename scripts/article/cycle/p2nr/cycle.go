@@ -68,7 +68,7 @@ func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) (Data2nr, error) {
 	}
 
 	data := NewData2nr()
-	for i := 0; i != 15; i++ {
+	for i := 0; i != 20; i++ {
 		data.Load(pScheme)
 		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 20)
 

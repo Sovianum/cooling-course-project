@@ -18,7 +18,7 @@ const (
 	etaMiddlePressureComp    = 0.86
 	piCompTotal              = 30
 	piCompFactor             = 0.18
-	etaMiddlePressureTurbine = 0.9
+	etaMiddlePressureTurbine = 0.88
 	dgMiddlePressureTurbine  = 0.01
 	etaMMiddleCascade        = 0.99
 
@@ -30,9 +30,9 @@ const (
 	etaBurn               = 0.98
 	initAlpha             = 3
 	t0                    = 300
-	etaCompTurbine        = 0.9
+	etaCompTurbine        = 0.88
 	lambdaOut             = 0.3
-	dgHighPressureTurbine = -0.01
+	dgHighPressureTurbine = -0.00
 	etaM                  = 0.99
 
 	middlePressureCompressorPipeSigma = 0.98
@@ -40,10 +40,10 @@ const (
 	middlePressureTurbinePipeSigma    = 0.98
 
 	etaFreeTurbine               = 0.92
-	dgFreeTurbine                = -0.01
+	dgFreeTurbine                = -0.00
 	freeTurbinePressureLossSigma = 0.93
 
-	midBurnTGas  = 1400
+	midBurnTGas  = 1300
 	midBurnEta = 0.98
 	midBurnSigma = 0.93
 

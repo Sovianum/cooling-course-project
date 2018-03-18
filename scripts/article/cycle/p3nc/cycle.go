@@ -39,7 +39,7 @@ const (
 	lpEtaM = 0.99
 	hpEtaM = 0.99
 
-	relaxCoef = 1
+	relaxCoef = 0.1
 	iterNum   = 10000
 	precision = 1e-5
 
@@ -48,7 +48,7 @@ const (
 	lpcPiStag = 4
 	hpcPiStag = 2.5
 
-	startPi   = 8
+	startPi   = 12
 	piStep    = 0.5
 	piStepNum = 30
 
@@ -75,15 +75,15 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) (Data3n, error) {
 	}
 
 	data := NewData3n()
-	for i := 0; i != 17; i++ {
+	for i := 0; i != 15; i++ {
 		data.Load(pScheme)
 
-		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 20)
 
 		r := 1.
 		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 1000)
 		if sErr != nil {
-			break
+			return Data3n{}, sErr
 		}
 		fmt.Println(i)
 	}
@@ -134,7 +134,7 @@ func OptimizeScheme(scheme schemes.ThreeShaftsCoolerScheme, data core.DoubleComp
 }
 
 func GetSchemeData(scheme schemes.ThreeShaftsCoolerScheme) (core.DoubleCompressorData, error) {
-	points, err := io.GetThreeShaftsSchemeData(scheme, power, startPi, piStep, piStepNum, 0.1, 0.1, 8)
+	points, err := io.GetThreeShaftsSchemeData(scheme, power, startPi, piStep, piStepNum, 0.5, 0.0, 1)
 	if err != nil {
 		return core.DoubleCompressorData{}, err
 	}

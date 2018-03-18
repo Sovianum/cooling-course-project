@@ -22,7 +22,7 @@ const (
 	etaMiddlePressureTurbine = 0.88
 	etaMMiddleCascade        = 0.99
 
-	etaHighPressureComp = 0.88
+	etaHighPressureComp = 0.83
 
 	tGas                   = 1450
 	tFuel                  = 300
@@ -39,14 +39,14 @@ const (
 	middlePressureTurbinePipeSigma    = 0.98
 
 	etaFreeTurbine               = 0.92
-	dgFreeTurbine                = -0.01
+	dgFreeTurbine                = -0.00
 	freeTurbinePressureLossSigma = 0.93
 
-	hptCoolMassRate = 0.1
+	hptCoolMassRate = 0.0
 	lptCoolMassRate = 0
 
-	hptLeakMassRate = 0.01
-	lptLeakMassRate = 0.01
+	hptLeakMassRate = 0.00
+	lptLeakMassRate = 0.00
 
 	precision = 0.05
 )

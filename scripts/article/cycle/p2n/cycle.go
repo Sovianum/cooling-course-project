@@ -60,14 +60,18 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) (Data2n, error) {
 	}
 
 	data := NewData2n()
-	for i := 0; i != 15; i++ {
-		data.Load(pScheme)
-		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 10)
-
-		r := 1.
-		if i >= 15 {
-			r = 0.01
+	step := 10.
+	r := 1.
+	for i := 0; i != 20; i++ {
+		if i == 15 {
+			step = 1
 		}
+		if i == 19 {
+			step = 0.5
+		}
+
+		data.Load(pScheme)
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - step)
 
 		fmt.Println(i)
 		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 10000)
