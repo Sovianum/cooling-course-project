@@ -39,19 +39,19 @@ const (
 	middlePressureTurbinePipeSigma    = 0.98
 
 	etaFreeTurbine               = 0.92
-	dgFreeTurbine                = -0.00
+	dgFreeTurbine                = -0.01
 	freeTurbinePressureLossSigma = 0.93
 
-	hptCoolMassRate = 0.0
+	hptCoolMassRate = 0.1
 	lptCoolMassRate = 0
 
-	hptLeakMassRate = 0.00
-	lptLeakMassRate = 0.00
+	hptLeakMassRate = 0.01
+	lptLeakMassRate = 0.01
 
 	precision = 0.05
 )
 
-func GetInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
+func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
@@ -91,6 +91,62 @@ func GetInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 		etaFreeTurbine, lambdaOut, precision,
 		func(node constructive.TurbineNode) float64 {
 			return dgFreeTurbine
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		freeTurbinePressureLossSigma,
+	)
+
+	return schemes.NewThreeShaftsScheme(
+		gasSource, inletPressureDrop, middlePressureCascade, gasGenerator, middlePressureCompressorPipe,
+		highPressureTurbinePipe, middlePressureTurbinePipe, freeTurbineBlock,
+	)
+}
+
+func GetInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
+	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
+	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
+	var middlePressureCascade = compose.NewTurboCascadeNode(
+		etaMiddlePressureComp, piCompTotal*piCompFactor,
+		etaMiddlePressureTurbine, lambdaOut,
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		etaMMiddleCascade, precision,
+	)
+	var gasGenerator = compose.NewGasGeneratorNode(
+		etaHighPressureComp, 1/piCompFactor, fuel.GetCH4(),
+		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
+		etaHighPressureTurbine, lambdaOut,
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		func(node constructive.TurbineNode) float64 {
+			return 0
+		},
+		etaMHighCascade, precision, 1, nodes.DefaultN,
+	)
+	var middlePressureCompressorPipe = constructive.NewPressureLossNode(middlePressureCompressorPipeSigma)
+	var highPressureTurbinePipe = constructive.NewPressureLossNode(highPressureTurbinePipeSigma)
+	var middlePressureTurbinePipe = constructive.NewPressureLossNode(middlePressureTurbinePipeSigma)
+	var freeTurbineBlock = compose.NewFreeTurbineBlock(
+		pAtm,
+		etaFreeTurbine, lambdaOut, precision,
+		func(node constructive.TurbineNode) float64 {
+			return 0
 		},
 		func(node constructive.TurbineNode) float64 {
 			return 0

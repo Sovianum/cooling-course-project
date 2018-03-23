@@ -99,7 +99,7 @@ func getSchemeData(scheme schemes.ThreeShaftsScheme) []core.DoubleCompressorData
 }
 
 func getScheme(lowPiStag, highPiStag float64) schemes.ThreeShaftsScheme {
-	var scheme = s3n.GetInitedThreeShaftsScheme()
+	var scheme = s3n.GetDiplomaInitedThreeShaftsScheme()
 	scheme.LPC().SetPiStag(lowPiStag)
 	scheme.HPC().SetPiStag(highPiStag)
 	return scheme
