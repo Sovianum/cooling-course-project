@@ -43,6 +43,26 @@ func LabourOptimalPoint(points []DoubleCompressorDataPoint) DoubleCompressorData
 	return points[ind]
 }
 
+func NewDoubleCompressorSchemeData(length int) DoubleCompressorData {
+	return DoubleCompressorData{
+		Pi:            make([]float64, length),
+		PiFactor:      make([]float64, length),
+		MassRate:      make([]float64, length),
+		SpecificPower: make([]float64, length),
+		Efficiency:    make([]float64, length),
+		PiLow:         make([]float64, length),
+		PiHigh:        make([]float64, length),
+		PiTLow:        make([]float64, length),
+		PiTHigh:       make([]float64, length),
+		LabourHPC:     make([]float64, length),
+		LabourLPC:     make([]float64, length),
+		LabourLPT:     make([]float64, length),
+		LabourHPT:     make([]float64, length),
+		LabourFT:      make([]float64, length),
+		Heat:          make([]float64, length),
+	}
+}
+
 type DoubleCompressorData struct {
 	Pi            []float64 `json:"pi"`
 	PiFactor      []float64 `json:"pi_factor"`
@@ -134,7 +154,7 @@ func GetDoubleCompressorDataGenerator(
 	scheme DoubleCompressorScheme, power float64, relaxCoef float64, iterNum int,
 ) func(pi, piFactor float64) (DoubleCompressorDataPoint, error) {
 	return func(pi, piFactor float64) (DoubleCompressorDataPoint, error) {
-		var piLow, piHigh = getCompressorPiPair(pi, piFactor)
+		var piLow, piHigh = GetCompressorPiPair(pi, piFactor)
 
 		scheme.LPC().SetPiStag(piLow)
 		scheme.HPC().SetPiStag(piHigh)
@@ -168,8 +188,8 @@ func GetDoubleCompressorDataGenerator(
 	}
 }
 
-func getCompressorPiPair(piTotal, piFactor float64) (float64, float64) {
+func GetCompressorPiPair(piTotal, piFactor float64) (float64, float64) {
 	piLow := math.Pow(piTotal, piFactor)
-	piHigh := math.Pow(piTotal, 1 - piFactor)
+	piHigh := math.Pow(piTotal, 1-piFactor)
 	return piLow, piHigh
 }
