@@ -3,3 +3,5 @@ references/
 *.swp
 /build/
 postprocessing/python/__pycache__/
+notebooks/article/__pycache__/
+*.ipynb_checkpoints
