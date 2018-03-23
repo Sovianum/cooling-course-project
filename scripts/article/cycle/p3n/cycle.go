@@ -2,14 +2,14 @@ package p3n
 
 import (
 	"fmt"
+	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/core/schemes/s3n"
+	"github.com/Sovianum/cooling-course-project/io"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
-	"github.com/Sovianum/cooling-course-project/io"
-	"github.com/Sovianum/cooling-course-project/core"
 )
 
 const (

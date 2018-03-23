@@ -2,14 +2,14 @@ package p3nc
 
 import (
 	"fmt"
+	"github.com/Sovianum/cooling-course-project/core"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s3nc"
+	"github.com/Sovianum/cooling-course-project/io"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"github.com/Sovianum/cooling-course-project/core/schemes/s3nc"
-	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
-	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/Sovianum/cooling-course-project/io"
 )
 
 const (
@@ -39,7 +39,7 @@ const (
 	lpEtaM = 0.99
 	hpEtaM = 0.99
 
-	relaxCoef = 0.1
+	relaxCoef = 0.2
 	iterNum   = 10000
 	precision = 1e-5
 
@@ -48,10 +48,9 @@ const (
 	lpcPiStag = 4
 	hpcPiStag = 2.5
 
-	startPi   = 12
+	startPi   = 18
 	piStep    = 0.5
 	piStepNum = 30
-
 )
 
 func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) (Data3n, error) {
@@ -69,7 +68,7 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) (Data3n, error) {
 		newton.NewUniformNewtonSolverGen(1e-5, common.DetailedLog3Shaft),
 	)
 
-	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-6, 0.5, 10000)
+	_, sErr := vSolver.Solve(vSolver.GetInit(), 1e-5, 0.5, 10000)
 	if sErr != nil {
 		return Data3n{}, sErr
 	}

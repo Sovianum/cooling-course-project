@@ -2,14 +2,14 @@ package p3nb
 
 import (
 	"fmt"
+	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/core/schemes/s3nb"
+	"github.com/Sovianum/cooling-course-project/io"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free3n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
-	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/Sovianum/cooling-course-project/io"
 )
 
 const (
@@ -48,7 +48,7 @@ const (
 	lpcPiStag = 4
 	hpcPiStag = 2.5
 
-	startPi   = 18
+	startPi   = 14
 	piStep    = 0.5
 	piStepNum = 30
 )

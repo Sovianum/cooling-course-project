@@ -1,13 +1,13 @@
 package s3nc
 
 import (
+	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/compose"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/source"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
-	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 )
 
 const (
@@ -16,14 +16,14 @@ const (
 
 	sigmaInlet = 0.98
 
-	etaMiddlePressureComp    = 0.86
+	etaMiddlePressureComp    = 0.84
 	piCompTotal              = 30
 	piCompFactor             = 0.18
-	etaMiddlePressureTurbine = 0.88
+	etaMiddlePressureTurbine = 0.90
 	dgMiddlePressureTurbine  = 0.00
 	etaMMiddleCascade        = 0.99
 
-	etaHighPressureComp = 0.83
+	etaHighPressureComp = 0.86
 
 	tGas                  = 1450
 	tFuel                 = 300
@@ -44,7 +44,7 @@ const (
 	dgFreeTurbine                = -0.00
 	freeTurbinePressureLossSigma = 0.93
 
-	coolerTOut  = 320
+	coolerTOut  = 350
 	coolerSigma = 0.98
 
 	precision = 0.05

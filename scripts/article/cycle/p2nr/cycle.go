@@ -2,15 +2,15 @@ package p2nr
 
 import (
 	"fmt"
+	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/core/schemes/s2nr"
+	"github.com/Sovianum/cooling-course-project/io"
 	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/Sovianum/cooling-course-project/io"
 )
 
 const (
@@ -18,11 +18,11 @@ const (
 	cRpm0      = 10000
 	cLambdaIn0 = 0.3
 
-	ctID       = 0.3
+	ctID       = 0.5
 	ctLambdaU0 = 0.3
 	ctStageNum = 1
 
-	ftID       = 0.5
+	ftID       = 0.7
 	ftLambdaU0 = 0.3
 	ftStageNum = 1
 
@@ -41,9 +41,9 @@ const (
 	precision       = 1e-7
 	schemePrecision = 1e-5
 
-	startPi   = 4
+	startPi   = 5
 	piStep    = 0.5
-	piStepNum = 30
+	piStepNum = 12
 )
 
 func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) (Data2nr, error) {

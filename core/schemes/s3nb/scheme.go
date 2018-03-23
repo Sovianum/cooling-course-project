@@ -15,19 +15,19 @@ const (
 
 	sigmaInlet = 0.98
 
-	etaMiddlePressureComp    = 0.86
+	etaMiddlePressureComp    = 0.84
 	piCompTotal              = 30
 	piCompFactor             = 0.18
-	etaMiddlePressureTurbine = 0.88
+	etaMiddlePressureTurbine = 0.90
 	dgMiddlePressureTurbine  = 0.01
 	etaMMiddleCascade        = 0.99
 
-	etaHighPressureComp = 0.83
+	etaHighPressureComp = 0.84
 
 	tGas                  = 1450
 	tFuel                 = 300
-	sigmaBurn             = 0.99
-	etaBurn               = 0.98
+	sigmaBurn             = 0.98
+	etaBurn               = 0.99
 	initAlpha             = 3
 	t0                    = 300
 	etaCompTurbine        = 0.88
@@ -43,8 +43,8 @@ const (
 	dgFreeTurbine                = -0.00
 	freeTurbinePressureLossSigma = 0.93
 
-	midBurnTGas  = 1300
-	midBurnEta = 0.98
+	midBurnTGas  = 1350
+	midBurnEta   = 0.98
 	midBurnSigma = 0.93
 
 	precision = 0.05

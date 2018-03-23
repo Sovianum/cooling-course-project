@@ -1,15 +1,15 @@
 package p2n
 
 import (
+	"fmt"
+	"github.com/Sovianum/cooling-course-project/core"
 	"github.com/Sovianum/cooling-course-project/core/schemes/s2n"
+	"github.com/Sovianum/cooling-course-project/io"
+	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	"github.com/Sovianum/turbocycle/core/math/variator"
 	"github.com/Sovianum/turbocycle/library/parametric/free2n"
 	"github.com/Sovianum/turbocycle/library/schemes"
-	"github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
-	"github.com/Sovianum/cooling-course-project/core"
-	"github.com/Sovianum/cooling-course-project/io"
-	"fmt"
 )
 
 const (
@@ -17,11 +17,11 @@ const (
 	cRpm0      = 10000
 	cLambdaIn0 = 0.3
 
-	ctID       = 0.3
+	ctID       = 0.5
 	ctLambdaU0 = 0.3
 	ctStageNum = 1
 
-	ftID       = 0.5
+	ftID       = 0.7
 	ftLambdaU0 = 0.3
 	ftStageNum = 1
 
@@ -36,7 +36,7 @@ const (
 
 	startPi   = 8
 	piStep    = 0.5
-	piStepNum = 30
+	piStepNum = 20
 )
 
 func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) (Data2n, error) {
@@ -62,13 +62,13 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) (Data2n, error) {
 	data := NewData2n()
 	step := 10.
 	r := 1.
-	for i := 0; i != 20; i++ {
-		if i == 15 {
-			step = 1
-		}
-		if i == 19 {
-			step = 0.5
-		}
+	for i := 0; i != 30; i++ {
+		//if i == 15 {
+		//	step = 1
+		//}
+		//if i == 19 {
+		//	step = 0.5
+		//}
 
 		data.Load(pScheme)
 		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - step)
@@ -87,7 +87,7 @@ func GetParametric(scheme schemes.TwoShaftsScheme) (free2n.DoubleShaftFreeScheme
 	if err != nil {
 		return nil, err
 	}
-	solveErr := network.Solve(relaxCoef, 2, iterNum, precision / 10)
+	solveErr := network.Solve(relaxCoef, 2, iterNum, precision/10)
 	if solveErr != nil {
 		return nil, solveErr
 	}

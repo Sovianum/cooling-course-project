@@ -1,20 +1,20 @@
 package s2nr
 
 import (
+	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/compose"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/source"
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
-	"github.com/Sovianum/turbocycle/impl/engine/nodes"
 )
 
 const (
 	tAtm           = 288
 	pAtm           = 1e5
 	sigmaInlet     = 0.98
-	etaComp        = 0.86
+	etaComp        = 0.82
 	piComp         = 11
 	tGas           = 1450
 	tFuel          = 300

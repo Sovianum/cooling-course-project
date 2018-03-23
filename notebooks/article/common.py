@@ -10,7 +10,7 @@ def get_2_shaft_nominal_parameters_note(df):
     power = m.get('specific_power') / 1e6
     return Math(r'''
     \begin{align}
-        \pi = %.1f && \eta = %.3f && L_e = %.3f \ МДж/кг && G = %.1f \ кг/с
+        \pi = %.1f && \eta_e = %.3f && L_e = %.3f \ МДж/кг && G = %.1f \ кг/с
     \end{align}
     ''' % (pi, eta, power, mass_rate))
 
@@ -24,10 +24,10 @@ def get_3_shaft_nominal_parameters_note(df):
 def plot_nom_characteristic(df):
     norm_df = df / df.max()
     norm_df.pi = df.pi
-    plt.title(
-        '$Приведенная \ характеристика \ установки \ на \ номинальном \ режиме\ (\overline{f} = f / f_{max})$',
-        fontsize=24
-    )
+    # plt.title(
+    #     '$Приведенная \ характеристика \ установки \ на \ номинальном \ режиме\ (\overline{f} = f / f_{max})$',
+    #     fontsize=24
+    # )
     plt.plot(norm_df.pi, norm_df.mass_rate)
     plt.plot(norm_df.pi, norm_df.efficiency)
     plt.plot(norm_df.pi, norm_df.specific_power)
@@ -37,7 +37,7 @@ def plot_nom_characteristic(df):
     plt.grid()
     plt.ylim([0.83, 1.005])
     plt.legend(
-        ['$\overline{G}$', '$\overline{\eta}$', '$\overline{L_e}$'], fontsize=20, loc='lower right',
+        ['$\overline{G}$', '$\overline{\eta_e}$', '$\overline{L_e}$'], fontsize=20, loc='lower right',
     )
 
 
@@ -45,7 +45,7 @@ def plot_nom_characteristic(df):
 # мощности установки
 def plot_common_characteristics(df):
     norm_df = df / df.max()
-    plt.title('$Приведенные \ характеристики \ установки \ (\overline{f} = f / f_{max})$', fontsize=24)
+    # plt.title('$Приведенные \ характеристики \ установки \ (\overline{f} = f / f_{max})$', fontsize=24)
     plt.plot(norm_df.power, norm_df.mass_rate)
     plt.plot(norm_df.power, norm_df.eta)
     plt.xlabel('$\overline{N_e}$', fontsize=20)
@@ -54,8 +54,23 @@ def plot_common_characteristics(df):
     plt.xlim(0.3, 1.05)
     plt.ylim(0.5, 1.01)
     plt.grid()
-    plt.legend(['$\overline{G}$', '$\overline{\eta}$'], loc='lower right', fontsize=20)
+    plt.legend(['$\overline{G}$', '$\overline{\eta_e}$'], loc='lower right', fontsize=20)
 
+# функция строит сравнение некоторого параметра по относительной мощности
+def plot_rel_comparison(dfs, y_selector):
+    max_y = -1e10
+    for df in dfs:
+        m = df[y_selector].max()
+        if m > max_y:
+            max_y = m
+
+    for df in dfs:
+        plt.plot(df.power / df.power.max(), df[y_selector] / max_y)
+    plt.xlabel('$\overline{N_e}$', fontsize=20)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.xlim(0.3, 1.05)
+    plt.grid()
 
 # функция строит сравнение некоторого параметра по относительной мощности
 def plot_comparison(dfs, y_selector):
