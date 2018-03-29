@@ -6,9 +6,9 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/impl/stage/geometry"
+	"github.com/Sovianum/turbocycle/impl/stage/states"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
@@ -28,7 +28,7 @@ func saveProfilingTemplate() {
 
 func saveProfiles(
 	profiler profilers.Profiler,
-	geomGen geometry.BladingGeometryGenerator,
+	geomGen geometry.TurbineBladingGeometryGenerator,
 	hRelArr []float64,
 	dataNames [][]string,
 	isRotor bool,
@@ -105,7 +105,7 @@ func saveAngleData(
 	}
 }
 
-func getGasProfilers(stage nodes.TurbineStageNode, rotorProfiler profilers.Profiler) (inletProfiler, outletProfiler profilers.GasProfiler) {
+func getGasProfilers(stage turbine.StageNode, rotorProfiler profilers.Profiler) (inletProfiler, outletProfiler profilers.GasProfiler) {
 	var pack = stage.GetDataPack()
 	var triangleIn = states.NewInletTriangle(pack.U1, pack.C1, pack.Alpha1)
 	var triangleOut = stage.VelocityOutput().GetState().(states.VelocityPortState).Triangle
@@ -124,7 +124,7 @@ func getGasProfilers(stage nodes.TurbineStageNode, rotorProfiler profilers.Profi
 	return
 }
 
-func getRotorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {
+func getRotorProfiler(stage turbine.StageNode) profilers.Profiler {
 	var pack = stage.GetDataPack()
 	var profiler = profiling.GetInitedRotorProfiler(
 		stage.StageGeomGen().RotorGenerator(),
@@ -134,7 +134,7 @@ func getRotorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {
 	return profiler
 }
 
-func getStatorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {
+func getStatorProfiler(stage turbine.StageNode) profilers.Profiler {
 	var pack = stage.GetDataPack()
 	var profiler = profiling.GetInitedStatorProfiler(
 		stage.StageGeomGen().StatorGenerator(),
@@ -144,7 +144,7 @@ func getStatorProfiler(stage nodes.TurbineStageNode) profilers.Profiler {
 	return profiler
 }
 
-func saveStageTemplate(stage nodes.TurbineStageNode) {
+func saveStageTemplate(stage turbine.StageNode) {
 	var inserter = templ.NewDataInserter(
 		templatesDir+"/"+stageTemplate,
 		buildDir+"/"+stageOut,
@@ -158,7 +158,7 @@ func saveStageTemplate(stage nodes.TurbineStageNode) {
 	}
 }
 
-func solveParticularStage(stage nodes.TurbineStageNode) {
+func solveParticularStage(stage turbine.StageNode) {
 	if err := stage.Process(); err != nil {
 		panic(err)
 	}

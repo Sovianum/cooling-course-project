@@ -2,12 +2,12 @@ package dataframes
 
 import (
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/impl/stage/geometry"
+	"github.com/Sovianum/turbocycle/impl/stage/states"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 )
 
-func NewBladingGeometryDF(relGen geometry.BladingGeometryGenerator, geom geometry.BladingGeometry) BladingGeometryDF {
+func NewBladingGeometryDF(relGen geometry.TurbineBladingGeometryGenerator, geom geometry.BladingGeometry) BladingGeometryDF {
 	return BladingGeometryDF{
 		LRelOut:    relGen.LRelOut(),
 		Elongation: relGen.Elongation(),
@@ -33,7 +33,7 @@ type BladingGeometryDF struct {
 	LOut       float64 `json:"l_out"`
 }
 
-func NewStageDF(node nodes.TurbineStageNode) (StageDF, error) {
+func NewStageDF(node turbine.StageNode) (StageDF, error) {
 	var pack = node.GetDataPack()
 	if pack.Err != nil {
 		return StageDF{}, nil

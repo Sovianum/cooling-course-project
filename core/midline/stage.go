@@ -3,8 +3,8 @@ package midline
 import (
 	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/turbocycle/impl/stage/geometry"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/library/schemes"
 )
 
@@ -34,8 +34,8 @@ const (
 	power  = 16e6 / 0.98
 )
 
-func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) nodes.TurbineStageNode {
-	var geomGen = geometry.NewStageGeometryGenerator(
+func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) turbine.StageNode {
+	var geomGen = geometry.NewTurbineStageGeometryGenerator(
 		lRelOut,
 		geometry.NewIncompleteGeneratorFromProfileAngles(
 			baRelStator,
@@ -52,13 +52,13 @@ func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) nodes.TurbineStageNode
 			approxTRelRotor,
 		),
 	)
-	var stage = nodes.NewTurbineStageNode(
+	var stage = turbine.NewTurbineStageNode(
 		n,
 		constructive.Ht(scheme.GasGenerator().TurboCascade().Turbine()),
 		reactivity, phi, psi, airGapRel, precision, geomGen,
 	)
 	var massRate = schemes.GetMassRate(power, scheme)
-	nodes.InitFromTurbineNode(
+	turbine.InitFromTurbineNode(
 		stage, scheme.GasGenerator().TurboCascade().Turbine(),
 		massRate,
 		common.ToRadians(alpha1),

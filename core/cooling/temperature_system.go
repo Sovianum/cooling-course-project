@@ -2,7 +2,7 @@ package cooling
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/ode"
@@ -13,7 +13,7 @@ import (
 
 func GetInitedStatorConvTemperatureSystem(
 	airMassRate float64,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	segment geom.Segment,
 	alphaAirFunc cooling.AlphaLaw,
 	alphaGasFunc cooling.AlphaLaw,
@@ -45,7 +45,7 @@ func GetInitedStatorConvTemperatureSystem(
 
 func GetInitedStatorConvFilmTemperatureSystem(
 	coolerMassRate0 float64,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	segment geom.Segment,
 	alphaAirFunc cooling.AlphaLaw,
 	alphaGasFunc cooling.AlphaLaw,

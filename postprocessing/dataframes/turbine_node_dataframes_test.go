@@ -5,9 +5,9 @@ import (
 	templ2 "github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	states2 "github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/impl/stage/geometry"
+	states2 "github.com/Sovianum/turbocycle/impl/stage/states"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -46,19 +46,19 @@ const (
 
 type StageDFTestSuite struct {
 	suite.Suite
-	node nodes.TurbineStageNode
-	gen  geometry.StageGeometryGenerator
+	node turbine.StageNode
+	gen  geometry.TurbineStageGeometryGenerator
 	df   StageDF
 }
 
 func (suite *StageDFTestSuite) SetupTest() {
-	suite.gen = geometry.NewStageGeometryGenerator(
+	suite.gen = geometry.NewTurbineStageGeometryGenerator(
 		lRelOut,
 		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, statorApproxTRel),
 		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, rotorApproxTRel),
 	)
 
-	suite.node = nodes.NewTurbineStageNode(
+	suite.node = turbine.NewTurbineStageNode(
 		n, stageHeatDrop, reactivity, phi, psi, airGapRel, precision, suite.gen,
 	)
 

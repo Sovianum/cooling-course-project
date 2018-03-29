@@ -2,8 +2,8 @@ package cooling
 
 import (
 	"github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	states2 "github.com/Sovianum/turbocycle/impl/turbine/states"
+	states2 "github.com/Sovianum/turbocycle/impl/stage/states"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
@@ -18,7 +18,7 @@ const (
 )
 
 func GetInitedStatorGapCalculator(
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 ) (gap.GapCalculator, error) {
 	var dataPack = stage.GetDataPack()

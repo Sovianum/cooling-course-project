@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/artem/anaconda3/bin/python
 
 import postprocessing.python.loaders as loaders
 import postprocessing.python.plots as plots

@@ -8,6 +8,7 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"math"
 )
 
 const (
@@ -55,7 +56,7 @@ func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
-		etaMiddlePressureComp, piCompTotal*piCompFactor,
+		etaMiddlePressureComp, math.Sqrt(piCompTotal),
 		etaMiddlePressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
 			return -lptLeakMassRate
@@ -69,7 +70,7 @@ func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 		etaMMiddleCascade, precision,
 	)
 	var gasGenerator = compose.NewGasGeneratorNode(
-		etaHighPressureComp, 1/piCompFactor, fuel.GetCH4(),
+		etaHighPressureComp, math.Sqrt(piCompTotal), fuel.GetCH4(),
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
 		etaHighPressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
@@ -81,7 +82,7 @@ func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 		func(node constructive.TurbineNode) float64 {
 			return 0
 		},
-		etaMHighCascade, precision, 1, nodes.DefaultN,
+		etaMHighCascade, precision, 0.1, nodes.DefaultN,
 	)
 	var middlePressureCompressorPipe = constructive.NewPressureLossNode(middlePressureCompressorPipeSigma)
 	var highPressureTurbinePipe = constructive.NewPressureLossNode(highPressureTurbinePipeSigma)

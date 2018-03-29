@@ -7,8 +7,8 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/builder"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/impl/stage/geometry"
+	"github.com/Sovianum/turbocycle/impl/stage/states"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
@@ -26,10 +26,6 @@ const (
 	startPi   = 10
 	piStep    = 0.5
 	piStepNum = 100
-
-	startPiFactor   = 0.05
-	piFactorStep    = 0.05
-	piFactorStepNum = 19
 
 	totalPiStag = 20
 	lowPiStag   = 5.7

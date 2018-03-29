@@ -8,9 +8,9 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common/gdf"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/turbine/geometry"
-	"github.com/Sovianum/turbocycle/impl/turbine/nodes"
-	"github.com/Sovianum/turbocycle/impl/turbine/states"
+	"github.com/Sovianum/turbocycle/impl/stage/geometry"
+	"github.com/Sovianum/turbocycle/impl/stage/states"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
@@ -43,7 +43,7 @@ func saveCoolingSolution(solution profile.TemperatureSolution, fileName string) 
 
 func getTempProfileDF(
 	gapDF dataframes.GapCalcDF,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 	psSolution profile.TemperatureSolution,
 	ssSolution profile.TemperatureSolution,
@@ -94,7 +94,7 @@ func getTempProfileDF(
 
 func getSSConvTemperatureSystem(
 	meanAlphaGas float64,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.SSSegment(profile, 0.5, 0.5)
@@ -110,7 +110,7 @@ func getSSConvTemperatureSystem(
 
 func getPSConvTemperatureSystem(
 	meanAlphaGas float64,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.PSSegment(profile, 0.5, 0.5)
@@ -126,7 +126,7 @@ func getPSConvTemperatureSystem(
 
 func getSSConvFilmTemperatureSystem(
 	meanAlphaGas float64,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	bladeProfile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.SSSegment(bladeProfile, 0.5, 0.5)
@@ -167,7 +167,7 @@ func getSSConvFilmTemperatureSystem(
 
 func getPSConvFilmTemperatureSystem(
 	meanAlphaGas float64,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	bladeProfile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.PSSegment(bladeProfile, 0.5, 0.5)
@@ -214,7 +214,7 @@ func getSlitArea(diameter float64) float64 {
 	return math.Pi * diameter * diameter / 4 * coolingHoleNum
 }
 
-func getLambdaLaw(stage nodes.TurbineStageNode, lambdaGenerator func(float64, float64) cooling.LambdaLaw) cooling.LambdaLaw {
+func getLambdaLaw(stage turbine.StageNode, lambdaGenerator func(float64, float64) cooling.LambdaLaw) cooling.LambdaLaw {
 	var gas = stage.GasInput().GetState().(states2.GasPortState).Gas
 	var tStagOut = stage.TemperatureOutput().GetState().(states2.TemperaturePortState).TStag
 	var velocityOut = stage.VelocityOutput().GetState().(states.VelocityPortState).Triangle.C()
@@ -227,7 +227,7 @@ func getLambdaLaw(stage nodes.TurbineStageNode, lambdaGenerator func(float64, fl
 
 func getAlphaLaws(
 	meanAlphaGas float64,
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 	gasAlphaGenerator func(profiles.BladeProfile, float64, float64) cooling.AlphaLaw,
 ) (alphaGas cooling.AlphaLaw, alphaAir cooling.AlphaLaw) {
@@ -291,7 +291,7 @@ func getGapDF(
 }
 
 func getGapCalculator(
-	stage nodes.TurbineStageNode,
+	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 ) gap.GapCalculator {
 	if result, err := cooling2.GetInitedStatorGapCalculator(stage, profile); err != nil {
