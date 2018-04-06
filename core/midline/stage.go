@@ -3,7 +3,6 @@ package midline
 import (
 	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/impl/engine/nodes/constructive"
-	"github.com/Sovianum/turbocycle/impl/stage/geometry"
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/library/schemes"
 )
@@ -35,16 +34,16 @@ const (
 )
 
 func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) turbine.StageNode {
-	var geomGen = geometry.NewTurbineStageGeometryGenerator(
+	var geomGen = turbine.NewStageGeometryGenerator(
 		lRelOut,
-		geometry.NewIncompleteGeneratorFromProfileAngles(
+		turbine.NewIncompleteGenerator(
 			baRelStator,
 			deltaRelStator,
 			common.ToRadians(gammaIn),
 			common.ToRadians(gammaOut),
 			approxTRelStator,
 		),
-		geometry.NewIncompleteGeneratorFromProfileAngles(
+		turbine.NewIncompleteGenerator(
 			baRelRotor,
 			deltaRelRotor,
 			common.ToRadians(gammaIn),
@@ -52,7 +51,7 @@ func GetInitedStageNode(scheme schemes.ThreeShaftsScheme) turbine.StageNode {
 			approxTRelRotor,
 		),
 	)
-	var stage = turbine.NewTurbineStageNode(
+	var stage = turbine.NewTurbineSingleStageNode(
 		n,
 		constructive.Ht(scheme.GasGenerator().TurboCascade().Turbine()),
 		reactivity, phi, psi, airGapRel, precision, geomGen,

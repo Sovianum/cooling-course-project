@@ -6,7 +6,6 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
 	"github.com/Sovianum/turbocycle/common"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/stage/geometry"
 	"github.com/Sovianum/turbocycle/impl/stage/states"
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
@@ -28,7 +27,7 @@ func saveProfilingTemplate() {
 
 func saveProfiles(
 	profiler profilers.Profiler,
-	geomGen geometry.TurbineBladingGeometryGenerator,
+	geomGen turbine.BladingGeometryGenerator,
 	hRelArr []float64,
 	dataNames [][]string,
 	isRotor bool,
@@ -49,7 +48,7 @@ func saveProfiles(
 
 	for i, hRel := range hRelArr {
 		installationAngleArr[i] = profiler.InstallationAngle(hRel)
-		tRelArr[i] = geometry.TRel(hRel, geomGen)
+		tRelArr[i] = turbine.TRel(hRel, geomGen)
 	}
 
 	var coordinatesArr = make([][][][]float64, len(hRelArr))

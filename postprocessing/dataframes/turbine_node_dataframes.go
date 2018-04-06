@@ -7,7 +7,7 @@ import (
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 )
 
-func NewBladingGeometryDF(relGen geometry.TurbineBladingGeometryGenerator, geom geometry.BladingGeometry) BladingGeometryDF {
+func NewBladingGeometryDF(relGen turbine.BladingGeometryGenerator, geom geometry.BladingGeometry) BladingGeometryDF {
 	return BladingGeometryDF{
 		LRelOut:    relGen.LRelOut(),
 		Elongation: relGen.Elongation(),

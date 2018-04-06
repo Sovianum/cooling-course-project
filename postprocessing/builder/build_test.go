@@ -6,7 +6,6 @@ import (
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/impl/engine/states"
-	"github.com/Sovianum/turbocycle/impl/stage/geometry"
 	states2 "github.com/Sovianum/turbocycle/impl/stage/states"
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/material/gases"
@@ -105,13 +104,13 @@ func getCycleDf() dataframes.ThreeShaftsDF {
 }
 
 func getStageDf() dataframes.StageDF {
-	var gen = geometry.NewTurbineStageGeometryGenerator(
+	var gen = turbine.NewStageGeometryGenerator(
 		lRelOut,
-		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, statorApproxTRel),
-		geometry.NewIncompleteGeneratorFromProfileAngles(baRel, deltaRel, gammaIn, gammaOut, rotorApproxTRel),
+		turbine.NewIncompleteGenerator(baRel, deltaRel, gammaIn, gammaOut, statorApproxTRel),
+		turbine.NewIncompleteGenerator(baRel, deltaRel, gammaIn, gammaOut, rotorApproxTRel),
 	)
 
-	var stage = turbine.NewTurbineStageNode(
+	var stage = turbine.NewTurbineSingleStageNode(
 		n, stageHeatDrop, reactivity, phi, psi, airGapRel, precision, gen,
 	)
 

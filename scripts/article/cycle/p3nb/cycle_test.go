@@ -17,7 +17,9 @@ type ParametricTestSuite struct {
 
 func (s *ParametricTestSuite) SetupTest() {
 	s.scheme = GetScheme(lpcPiStag, hpcPiStag)
-	s.pScheme, _ = GetParametric(s.scheme)
+	var err error
+	s.pScheme, err = GetParametric(s.scheme)
+	s.Require().NoError(err)
 }
 
 func (s *ParametricTestSuite) TestSamePoint() {

@@ -2,14 +2,14 @@ package profiling
 
 import (
 	"github.com/Sovianum/turbocycle/common"
-	"github.com/Sovianum/turbocycle/impl/stage/geometry"
 	"github.com/Sovianum/turbocycle/impl/stage/states"
+	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/laws"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
 )
 
 func GetInitedStatorProfiler(
-	geomGen geometry.TurbineBladingGeometryGenerator,
+	geomGen turbine.BladingGeometryGenerator,
 	meanInletTriangle, meanOutletTriangle states.VelocityTriangle,
 ) profilers.Profiler {
 	return profilers.NewProfiler(
@@ -59,7 +59,7 @@ func GetInitedStatorProfiler(
 }
 
 func GetInitedRotorProfiler(
-	geomGen geometry.TurbineBladingGeometryGenerator,
+	geomGen turbine.BladingGeometryGenerator,
 	meanInletTriangle, meanOutletTriangle states.VelocityTriangle,
 ) profilers.Profiler {
 	var inletLaw = laws.NewConstantAbsoluteAngleLaw()

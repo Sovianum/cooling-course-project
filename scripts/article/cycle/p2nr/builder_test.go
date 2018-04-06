@@ -1,6 +1,8 @@
 package p2nr
 
 import (
+	"fmt"
+	common2 "github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/core/graph"
 	"github.com/Sovianum/turbocycle/core/math"
@@ -11,8 +13,6 @@ import (
 	"github.com/stretchr/testify/suite"
 	math2 "math"
 	"testing"
-	common2 "github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
-	"fmt"
 )
 
 type BuilderTestSuite struct {
@@ -80,7 +80,7 @@ func (s *BuilderTestSuite) TestConsistency() {
 	s.InDelta(
 		s.scheme.Regenerator().ColdInput().TemperatureInput().GetState().Value().(float64),
 		s.pScheme.Regenerator().ColdInput().TemperatureInput().GetState().Value().(float64),
-		1e-3,
+		0.1,
 	)
 	s.InDelta(
 		s.scheme.Regenerator().HotInput().PressureInput().GetState().Value().(float64),
@@ -126,10 +126,10 @@ func (s *BuilderTestSuite) TestConsistency() {
 
 	s.InDelta(
 		0,
-		s.pScheme.Compressor().MassRateInput().GetState().Value().(float64) *
-		s.pScheme.Compressor().PowerOutput().GetState().Value().(float64) +
-		s.pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64) *
-		s.pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64) * 0.99,
+		s.pScheme.Compressor().MassRateInput().GetState().Value().(float64)*
+			s.pScheme.Compressor().PowerOutput().GetState().Value().(float64)+
+			s.pScheme.CompressorTurbine().MassRateInput().GetState().Value().(float64)*
+				s.pScheme.CompressorTurbine().PowerOutput().GetState().Value().(float64)*0.99,
 		1e2,
 	)
 
@@ -167,7 +167,7 @@ func (s *BuilderTestSuite) TestConsistency() {
 	)
 
 	s.approxEqual(
-		-s.scheme.FreeTurbineBlock().FreeTurbine().PowerOutput().GetState().Value().(float64) * initMassRate*ftIMR,
+		-s.scheme.FreeTurbineBlock().FreeTurbine().PowerOutput().GetState().Value().(float64)*initMassRate*ftIMR,
 		s.pScheme.Payload().PowerOutput().GetState().Value().(float64),
 		1e-6,
 	)
