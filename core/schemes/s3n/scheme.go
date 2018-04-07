@@ -8,7 +8,6 @@ import (
 	"github.com/Sovianum/turbocycle/library/schemes"
 	"github.com/Sovianum/turbocycle/material/fuel"
 	"github.com/Sovianum/turbocycle/material/gases"
-	"math"
 )
 
 const (
@@ -17,13 +16,18 @@ const (
 
 	sigmaInlet = 0.98
 
-	etaMiddlePressureComp    = 0.84
-	piCompTotal              = 30
-	piCompFactor             = 0.18
+	etaMiddlePressureComp = 0.84
+	piCompTotal           = 30
+	piCompFactor          = 0.18
+
+	piDiplomaTotal = 20.
+	piDiplomaHigh  = 6.
+	piDiplomaLow   = piDiplomaTotal / piDiplomaHigh
+
 	etaMiddlePressureTurbine = 0.90
 	etaMMiddleCascade        = 0.99
 
-	etaHighPressureComp = 0.86
+	etaHighPressureComp = 0.82
 
 	tGas                   = 1450
 	tFuel                  = 300
@@ -56,7 +60,7 @@ func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
-		etaMiddlePressureComp, math.Sqrt(piCompTotal),
+		etaMiddlePressureComp, piDiplomaLow,
 		etaMiddlePressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
 			return -lptLeakMassRate
@@ -70,7 +74,7 @@ func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 		etaMMiddleCascade, precision,
 	)
 	var gasGenerator = compose.NewGasGeneratorNode(
-		etaHighPressureComp, math.Sqrt(piCompTotal), fuel.GetCH4(),
+		etaHighPressureComp, piDiplomaHigh, fuel.GetCH4(),
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
 		etaHighPressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
