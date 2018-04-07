@@ -28,21 +28,21 @@ func NewStagedScheme3n(
 		msg += fmt.Sprintf("hpcErr: %s;\n", err.Error())
 		err = nil
 	}
-	//result.HPT, err = hptConfig.GetFittedStagedTurbine(source.HPT(), solverGen)
-	//if err != nil {
-	//	msg += fmt.Sprintf("hptErr: %s;\n", err.Error())
-	//	err = nil
-	//}
-	//result.LPT, err = lptConfig.GetFittedStagedTurbine(source.LPT(), solverGen)
-	//if err != nil {
-	//	msg += fmt.Sprintf("lptErr: %s;\n", err.Error())
-	//	err = nil
-	//}
-	//result.FT, err = ftConfig.GetFittedStagedTurbine(source.FT(), solverGen)
-	//if err != nil {
-	//	msg += fmt.Sprintf("ftErr: %s;\n", err.Error())
-	//	err = nil
-	//}
+	result.HPT, err = hptConfig.GetFittedStagedTurbine(source.HPT(), solverGen)
+	if err != nil {
+		msg += fmt.Sprintf("hptErr: %s;\n", err.Error())
+		err = nil
+	}
+	result.LPT, err = lptConfig.GetFittedStagedTurbine(source.LPT(), solverGen)
+	if err != nil {
+		msg += fmt.Sprintf("lptErr: %s;\n", err.Error())
+		err = nil
+	}
+	result.FT, err = ftConfig.GetFittedStagedTurbine(source.FT(), solverGen)
+	if err != nil {
+		msg += fmt.Sprintf("ftErr: %s;\n", err.Error())
+		err = nil
+	}
 	if msg != "" {
 		return nil, fmt.Errorf(msg)
 	}

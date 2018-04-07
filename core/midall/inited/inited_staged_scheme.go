@@ -128,13 +128,13 @@ func getHPCConfig() midall.CompressorConfig {
 		DeltaStatorRelArr:   []float64{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
 
 		GammaInArr: []float64{
-			common.ToRadians(22),
-			common.ToRadians(20),
+			common.ToRadians(18),
 			common.ToRadians(18),
 			common.ToRadians(16),
+			common.ToRadians(16),
+			common.ToRadians(14),
 			common.ToRadians(14),
 			common.ToRadians(12),
-			common.ToRadians(10),
 			common.ToRadians(3),
 		},
 		GammaOutArr: []float64{0, 0, 0, 0, 0, 0, 0, 0},
@@ -168,31 +168,37 @@ func getHPCConfig() midall.CompressorConfig {
 
 func getHPTConfig() midall.TurbineConfig {
 	return midall.TurbineConfig{
-		StageNum: 1,
+		StageNum: 2,
 		RPM:      RPMHigh,
-		Alpha1:   common.ToRadians(14),
+		Alpha1:   common.ToRadians(20),
 
 		TotalHeatDrop: math.NaN(), // heat drop will be set wile fitting
 
-		LRelIn: 0.08,
+		LRelIn: 0.10,
 
-		StatorElongationArr: []float64{1.3},
-		DeltaStatorRelArr:   []float64{0.1},
-		ApproxTRotorRel:     []float64{0.7},
+		StatorElongationArr: []float64{1.3, 1.3},
+		DeltaStatorRelArr:   []float64{0.1, 0.1},
+		ApproxTRotorRel:     []float64{0.7, 0.7},
 
-		RotorElongationArr: []float64{1.75},
-		DeltaRotorRelArr:   []float64{0.1},
-		ApproxTStatorRel:   []float64{0.7},
+		RotorElongationArr: []float64{1.75, 1.75},
+		DeltaRotorRelArr:   []float64{0.1, 0.1},
+		ApproxTStatorRel:   []float64{0.7, 0.7},
 
-		GammaInArr:  []float64{common.ToRadians(-2)},
-		GammaOutArr: []float64{common.ToRadians(2)},
+		GammaInArr: []float64{
+			common.ToRadians(-10),
+			common.ToRadians(-3),
+		},
+		GammaOutArr: []float64{
+			common.ToRadians(10),
+			common.ToRadians(3),
+		},
 
 		PhiStartLoss: 0, PhiEndLoss: 0, PhiMax: 0.97, PhiMaxCoord: 0,
 		PsiStartLoss: 0, PsiEndLoss: 0, PsiMax: 0.97, PsiMaxCoord: 0,
 
-		HtStartLoss: 0, HtEndLoss: 0, HtMaxCoord: 0,
+		HtStartLoss: 0, HtEndLoss: 0.5, HtMaxCoord: 0,
 
-		ReactivityStart: 0.3, ReactivityEnd: 0.3,
+		ReactivityStart: 0.5, ReactivityEnd: 0.3,
 		AirGapRelStart: 0.001, AirGapRelEnd: 0.001,
 
 		Precision: precision,
@@ -203,11 +209,11 @@ func getLPTConfig() midall.TurbineConfig {
 	return midall.TurbineConfig{
 		StageNum: 2,
 		RPM:      RPMLow,
-		Alpha1:   common.ToRadians(14),
+		Alpha1:   common.ToRadians(23),
 
 		TotalHeatDrop: math.NaN(), // heat drop will be set wile fitting
 
-		LRelIn: 0.1,
+		LRelIn: 0.18,
 
 		StatorElongationArr: []float64{1.7, 1.7},
 		DeltaStatorRelArr:   []float64{0.1, 0.1},
@@ -217,8 +223,14 @@ func getLPTConfig() midall.TurbineConfig {
 		DeltaRotorRelArr:   []float64{0.1, 0.1},
 		ApproxTStatorRel:   []float64{0.7, 0.7},
 
-		GammaInArr:  []float64{common.ToRadians(-5), common.ToRadians(-5)},
-		GammaOutArr: []float64{common.ToRadians(5), common.ToRadians(5)},
+		GammaInArr: []float64{
+			common.ToRadians(-5),
+			common.ToRadians(-5),
+		},
+		GammaOutArr: []float64{
+			common.ToRadians(5),
+			common.ToRadians(5),
+		},
 
 		PhiStartLoss: 0, PhiEndLoss: 0, PhiMax: 0.97, PhiMaxCoord: 0,
 		PsiStartLoss: 0, PsiEndLoss: 0, PsiMax: 0.97, PsiMaxCoord: 0,
