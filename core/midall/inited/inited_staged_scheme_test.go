@@ -47,7 +47,7 @@ func getCompressorMessage(compressor compressor.StagedCompressorNode) string {
 		outletTriangle := pack.OutletTriangle
 
 		result += fmt.Sprintf(
-			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, alpha3: %.3f, pi: %.3f, u: %.1f, ca1: %.3f, ca3: %.3f, ht: %.3f, dOut1: %.3f, dIn1: %.3f, dx: %.3f, dRelIn: %.3f\n",
+			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, alpha3: %.3f, pi: %.3f, u: %.1f, ca1: %.3f, ca3: %.3f, ht: %.3f, t1: %.1f, dOut1: %.3f, dIn1: %.3f, dx: %.3f, dxr: %.3f, dxs: %.3f, dRelIn: %.3f\n",
 			common.ToDegrees(inletTriangle.Alpha()),
 			common.ToDegrees(inletTriangle.Beta()),
 			common.ToDegrees(midTriangle.Alpha()),
@@ -58,9 +58,12 @@ func getCompressorMessage(compressor compressor.StagedCompressorNode) string {
 			pack.InletTriangle.CA(),
 			pack.OutletTriangle.CA(),
 			pack.HTCoef,
+			pack.T1Stag,
 			pack.StageGeometry.RotorGeometry().OuterProfile().Diameter(0),
 			pack.StageGeometry.RotorGeometry().InnerProfile().Diameter(0),
 			pack.StageGeometry.RotorGeometry().XGapOut()+pack.StageGeometry.StatorGeometry().XGapOut(),
+			pack.StageGeometry.RotorGeometry().XGapOut(),
+			pack.StageGeometry.StatorGeometry().XGapOut(),
 			geometry.DRel(0, pack.StageGeometry.RotorGeometry()),
 		)
 	}

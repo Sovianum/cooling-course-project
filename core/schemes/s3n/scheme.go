@@ -21,7 +21,7 @@ const (
 	piCompFactor          = 0.18
 
 	piDiplomaTotal = 20.
-	piDiplomaHigh  = 5.
+	piDiplomaHigh  = 3.5
 	piDiplomaLow   = piDiplomaTotal / piDiplomaHigh
 
 	etaMiddlePressureTurbine = 0.90
