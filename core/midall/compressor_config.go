@@ -44,6 +44,7 @@ type CompressorConfig struct {
 	// принимается линейная форма изменения степени реактивности ступеней
 	ReactivityStart float64
 	ReactivityEnd   float64
+	HasPreTwist     bool // имеет ли компрессор входной направляющий аппарат
 
 	// принимается линейная форма изменения коэффициента расхода по ступеням
 	CaStart float64
@@ -112,19 +113,15 @@ func (conf *CompressorConfig) GetStagedCompressor() (compressor.StagedCompressor
 		)
 	}
 	xEnd := float64(conf.StageNum - 1)
-	htLaw := conf.getHtNormFunc()
-	reactivityLaw := ditributions.GetLinear(0, conf.ReactivityStart, xEnd, conf.ReactivityEnd)
-	labourCoefLaw := ditributions.GetConstant(conf.LabourCoef)
-	etaAdLaw := conf.getEtaFunc()
-	caCoefLaw := ditributions.GetLinear(0, conf.CaStart, xEnd, conf.CaEnd)
+	htLaw := common.FromDistribution(conf.getHtNormFunc())
+	reactivityLaw := common.FromDistribution(ditributions.GetLinear(0, conf.ReactivityStart, xEnd, conf.ReactivityEnd))
+	labourCoefLaw := common.FromDistribution(ditributions.GetConstant(conf.LabourCoef))
+	etaAdLaw := common.FromDistribution(conf.getEtaFunc())
+	caCoefLaw := common.FromDistribution(ditributions.GetLinear(0, conf.CaStart, xEnd, conf.CaEnd))
 
 	return compressor.NewStagedCompressorNode(
-		conf.RPM, conf.DRelIn, geomList,
-		common.FromDistribution(htLaw),
-		common.FromDistribution(reactivityLaw),
-		common.FromDistribution(labourCoefLaw),
-		common.FromDistribution(etaAdLaw),
-		common.FromDistribution(caCoefLaw),
+		conf.RPM, conf.DRelIn, conf.HasPreTwist, geomList,
+		htLaw, reactivityLaw, labourCoefLaw, etaAdLaw, caCoefLaw,
 		conf.Precision, conf.RelaxCoef, conf.InitLambda, conf.IterLimit,
 	), nil
 }

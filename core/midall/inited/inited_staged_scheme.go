@@ -101,6 +101,7 @@ func getLPCConfig() midall.CompressorConfig {
 
 		ReactivityStart: 0.5,
 		ReactivityEnd:   0.5,
+		HasPreTwist:     true,
 
 		CaStart: 0.5,
 		CaEnd:   0.5,
@@ -153,6 +154,7 @@ func getHPCConfig() midall.CompressorConfig {
 
 		ReactivityStart: 0.5,
 		ReactivityEnd:   0.5,
+		HasPreTwist:     false,
 
 		CaStart: 0.5,
 		CaEnd:   0.5,
