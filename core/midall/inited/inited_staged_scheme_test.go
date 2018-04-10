@@ -2,6 +2,8 @@ package inited
 
 import (
 	"fmt"
+	"github.com/Sovianum/cooling-course-project/core/midall"
+	common2 "github.com/Sovianum/cooling-course-project/scripts/article/cycle/common"
 	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/impl/stage/compressor"
 	"github.com/Sovianum/turbocycle/impl/stage/geometry"
@@ -36,6 +38,13 @@ func TestGetInitedStagedNodes(t *testing.T) {
 	ft := data.FT
 	fmt.Println("FT")
 	fmt.Println(getTurbineMessage(ft))
+
+	jsonData := getJSONStruct(data)
+	err = common2.SaveData(
+		jsonData,
+		"/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/notebooks/data/staged.json",
+	)
+	assert.NoError(t, err)
 }
 
 func getCompressorMessage(compressor compressor.StagedCompressorNode) string {
@@ -103,4 +112,39 @@ func getTurbineMessage(turbine turbine.StagedTurbineNode) string {
 		)
 	}
 	return result
+}
+
+func getJSONStruct(data *midall.StagedScheme3n) jsonStruct {
+	result := jsonStruct{
+		LPC: make([]compressor.DataPack, len(data.LPC.Stages())),
+		HPC: make([]compressor.DataPack, len(data.HPC.Stages())),
+		HPT: make([]turbine.DataPack, len(data.HPT.Stages())),
+		LPT: make([]turbine.DataPack, len(data.LPT.Stages())),
+		FT:  make([]turbine.DataPack, len(data.FT.Stages())),
+	}
+
+	for i, stage := range data.LPC.Stages() {
+		result.LPC[i] = *stage.GetDataPack()
+	}
+	for i, stage := range data.HPC.Stages() {
+		result.HPC[i] = *stage.GetDataPack()
+	}
+	for i, stage := range data.HPT.Stages() {
+		result.HPT[i] = stage.GetDataPack()
+	}
+	for i, stage := range data.LPT.Stages() {
+		result.LPT[i] = stage.GetDataPack()
+	}
+	for i, stage := range data.FT.Stages() {
+		result.FT[i] = stage.GetDataPack()
+	}
+	return result
+}
+
+type jsonStruct struct {
+	LPC []compressor.DataPack `json:"lpc"`
+	HPC []compressor.DataPack `json:"hpc"`
+	HPT []turbine.DataPack    `json:"hpt"`
+	LPT []turbine.DataPack    `json:"lpt"`
+	FT  []turbine.DataPack    `json:"ft"`
 }
