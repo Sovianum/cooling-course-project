@@ -143,15 +143,30 @@ func getStatorProfiler(stage turbine.StageNode) profilers.Profiler {
 	return profiler
 }
 
-func saveStageTemplate(stage turbine.StageNode) {
+func saveTurbineStageTemplate(stage turbine.StageNode) {
 	var inserter = templ.NewDataInserter(
-		templatesDir+"/"+stageTemplate,
-		buildDir+"/"+stageOut,
+		templatesDir+"/"+turbineStageTemplate,
+		buildDir+"/"+turbineStageOut,
 	)
-	var df, err = dataframes.NewStageDF(stage)
+	var df, err = dataframes.NewTurbineStageDF(stage)
 	if err != nil {
 		panic(err)
 	}
+	if err := inserter.Insert(df); err != nil {
+		panic(err)
+	}
+}
+
+func saveCompressorStageTemplate() {
+	var inserter = templ.NewDataInserter(
+		templatesDir+"/"+compressorStageTemplate,
+		buildDir+"/"+compressorStageOut,
+	)
+	df := dataframes.CompressorStageDF{}
+	df.Triangle1 = states.NewCompressorVelocityTriangle(1, 1, 1)
+	df.Triangle2 = states.NewCompressorVelocityTriangle(1, 1, 1)
+	df.Triangle3 = states.NewCompressorVelocityTriangle(1, 1, 1)
+
 	if err := inserter.Insert(df); err != nil {
 		panic(err)
 	}

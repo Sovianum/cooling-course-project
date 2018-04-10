@@ -74,7 +74,7 @@ func (suite *StageDFTestSuite) SetupTest() {
 	suite.node.SetAlpha1FirstStage(common.ToRadians(alpha))
 
 	suite.node.Process()
-	suite.df, _ = NewStageDF(suite.node)
+	suite.df, _ = NewTurbineStageDF(suite.node)
 }
 
 func (suite *StageDFTestSuite) TestSmoke() {

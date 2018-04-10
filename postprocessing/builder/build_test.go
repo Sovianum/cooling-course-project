@@ -130,6 +130,6 @@ func getStageDf() dataframes.StageDF {
 	if err != nil {
 		panic(err)
 	}
-	var df, _ = dataframes.NewStageDF(stage)
+	var df, _ = dataframes.NewTurbineStageDF(stage)
 	return df
 }

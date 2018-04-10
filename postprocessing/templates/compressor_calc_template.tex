@@ -1,0 +1,381 @@
+\section{Расчет компрессора низкого давления по средней линии}
+
+Для в данной работе детально представлен расчет первой ступени КНД по средней линии тока. Параметры остальных ступеней КНД и КВД представлены в табличном виде.
+
+Зададим параметры, необходимы для расчета КНД по средней линии тока:
+
+
+\begin{enumerate}
+	\item Определим теоретический напор ступени:
+		$$
+			H_т = 
+				\overline{H_{тi}} \cdot u_{кi}^2 = 
+				\overline{
+					<-<.HtCoefCurr | Round3>->
+				} \cdot <-<.UOut | Round1>->^2 = <-<.Ht | Round1>-> Дж/кг.
+		$$ 
+	\item Определим действительную работу сжатия:
+		$$
+			L_z = 
+				k_H \cdot H_т = 
+				<-<.Kh | Round2>-> \cdot <-<.Ht | Round1>-> = <-<.Lz | Round1>-> Дж/кг.
+		$$
+	\item Определим адиабатическую работу сжатия:
+		$$
+			H_{ад} = L_z \cdot \eta_{ад}^* = 
+				<-<.Lz | Round1>-> \cdot <-<.Eta | Round3>-> = <-<.HAd | Round1>-> Дж/кг.
+		$$
+	\item Определим повышение полной температуры в ступени:
+		$$
+			\Delta T^* = L_z / c_{pв} = 
+				<-<.Lz | Round1>-> / <-<.CpAir | Round1>-> = <-<.DT | Round1>-> К.
+		$$
+	\item Определим степень повышения полного давления:
+		$$
+			\pi^* = 
+			\left[ 
+				1 + \frac{H_{ад}}{c_{pв} T_1^*}
+			\right]^\frac{k_в}{k_в - 1} = 
+			\left[ 
+				1 + \frac{<-<.Ht | Round1>->}{<-<.CpAir | Round1>-> \cdot <-<.T1 | Round1>->}
+			\right]^\frac{<-<.KAir | Round2>->}{<-<.KAir | Round2>-> - 1} = <-<.Pi | Round2>->.
+		$$
+	\item Определим полное давление на выходе из ступени:
+		$$
+			p_3^* = p_1^* \cdot \pi^* = 
+				<-<.P1 | DivideE6 | Round3>-> \cdot 10^6 \cdot <-<.P1 | Round2>-> = 
+				<-<.P3 | DivideE6 | Round3>-> \cdot 10^6  Па.
+		$$
+	\item Определим критическую скорость потока на входе в ступень:
+		$$
+			a_{кр1} = \sqrt{
+				\frac{2 k_в}{k_в + 1} R_в T_1^*
+			} = \sqrt{
+				\frac{
+					2 \cdot <-<.KAir | Round2>->
+				}{
+					<-<.KAir | Round2>-> + 1
+				} \cdot <-<.RAir | Round1>-> \cdot <-<.T1 | Round1>->
+			} = <-<.ACrit1 | Round2>-> м/с.
+
+		$$ 	
+	\item Определим критическую скорость потока на выходе из ступени:
+		$$
+			a_{кр3} = \sqrt{
+				\frac{2 k_в}{k_в + 1} R_в T_3^*
+			} = \sqrt{
+				\frac{
+					2 \cdot <-<.KAir | Round2>->
+				}{
+					<-<.KAir | Round2>-> + 1
+				} \cdot <-<.RAir | Round1>-> \cdot <-<.T3 | Round1>->
+			} = <-<.ACrit3 | Round2>-> м/с.
+		$$ 	
+	\item Определим относительный средний радиус на входе в ступень:
+		$$
+			\overline{r_{ср1}} = 
+				\sqrt{\frac{1 + \overline{d_1}}{2}} = 
+				\sqrt{\frac{1 + <-<.RotorDF.DRelIn | Round2>->}{2}} = <-<.RotorDF.RRelIn | Round2>->.
+		$$
+	\item Определим безразмерную окружную составляющую абсолютной скорости на входе в ступень:
+		$$
+			\overline{c_{u1}} = 
+				\overline{r_{ср1}} \left( 
+					1 - R_{ср \ i}
+				\right) - 
+				\frac{
+					\overline{H_т}
+				}{
+					2 \overline{r_{ср1}}
+				} = 
+				<-<.RotorDF.RRelIn | Round2>-> 
+				\left( 
+					1 - <-<.ReactivityCurr | Round2>->
+				\right) - 
+				\frac{
+					<-<.HtCoefCurr | Round2>->
+				}{
+					2 \cdot <-<.RotorDF.RRelIn | Round2>->
+				} = <-<.CURel1>->.
+		$$
+	\item Определим направление абсолютной скорости на входе в ступень:
+		$$
+			\alpha_1 = \arctan{\frac{
+				\overline{c_{a1}}
+			}{
+				\overline{c_{u1}}
+			}} = \arctan{\frac{
+				<-<.CARel1 | Round2>->
+			}{
+				<-<.CURel1 | Round1>->
+			}} = <-<.Triangle1.Alpha | Degree | Round1>-> \degree.
+		$$
+	\item Определим приведенную скорость на входе в ступень:
+		$$
+			\lambda_1 = 
+				\frac{
+					c_{a1}
+				}{
+					\sin{\alpha_1} a_{кр1}
+				} = 
+				\frac{
+					<-<.Triangle1.CA | Round2>->
+				}{
+					\sin{
+						<-<.Triangle1.Alpha | Degree | Round1>-> \degree
+					} \cdot <-<.ACrit1 | Round2>->
+				} = <-<.Lambda1 | Round2>->.
+		$$
+	\item Величина функции $Q\left( 
+		\lambda, k_в, R_в
+	\right) = \frac{
+		m\left( k_в \right) q\left( \lambda \right)
+	}{
+		\sqrt{R_в}
+	}$, соответствующая полученному значению приведенной скорости равна:
+		$$
+			Q\left( \lambda_1, k_в, R_в \right) = <-<.Q1 | Round2>-> \left( \frac{Дж}{кг \cdot К} \right)^{0.5}.
+		$$
+	\item Определим кольцевую площадь на входе в ступень:
+		$$
+			F_1 = 
+			\frac{
+				G \sqrt{T_1^*}
+			}{
+				p_1^* Q\left( \lambda_1, k_в, R_в\right) \sin{\alpha_1}
+			} = 
+			\frac{
+				<-<.MassRate | Round1>-> \sqrt{
+					<-<.T1 | Round1>->
+				}
+			}{
+				<-<.P1 | DivideE6 | Round2>-> \cdot 10^6 \cdot 
+				<-<.Q1 | Round2>-> \sin{<-<.Triangle1.Alpha | Degree | Round1>-> \degree}
+			} = <-<.RotorDF.AreaIn | Round2>-> м^2.
+		$$
+	\item Определим внешний и внутренний диаметры на входе в ступень:
+		$$
+			D_1 = \sqrt{
+				\frac{4}{\pi} \cdot 
+				\frac{1}{1 - \overline{d}^2} \cdot
+				F_1
+			} = 
+			\sqrt{
+				\frac{4}{\pi} \cdot 
+				\frac{1}{1 - <-<.RotorDF.DRelIn | Round2>->} \cdot
+				<-<.RotorDF.AreaIn | Round2>->
+			} = <-<.RotorDF.DOutIn | Round3>-> м,	
+		$$
+		$$
+			d_1 = D_1 \cdot \overline{d_1}^2 = 
+				<-<.RotorDF.DOutIn | Round3>-> \cdot <-<.RotorDF.DRelIn | Round3>-> = 
+				<-<.RotorDF.DInIn | Round3>-> м.
+		$$
+	\item Определим ширину ступени:
+		$$
+			x_{ступ} = 
+				b_{a \ р} \cdot \left( 
+					1 + \overline{\delta_{р}}
+				\right) +
+				b_{a \ с} \cdot \left( 
+					1 + \overline{\delta_{с}}
+				\right) =
+				<-<.RotorDF.BladeWidth | Round3>-> \cdot \left( 
+					1 + <-<.RotorDF.DeltaRel | Round2>->
+				\right) +
+				<-<.StatorDF.BladeWidth | Round3>-> \cdot \left( 
+					1 + <-<.StatorDF.DeltaRel | Round2>->
+				\right) = <-<.BladeWidth | Round3>-> м.
+		$$
+	\item Определим внешний и внутренний диаметры на выходе из ступени:
+		$$
+			D_3 = 
+				D_1 + 2 \cdot x_{ступ} \tan{\gamma_{н}} = 
+				<-<.RotorDF.DOutIn | Round3>-> + 2 \cdot 
+				<-<.BladeWidth>-> \tan{<-<.RotorDF.GammaIn | Degree | Round1>-> \degree} = 
+				<-<.StatorDF.DOutOut | Round3>-> м, 
+		$$
+		$$
+			d_3 =
+				d_1 + 2 \cdot x_{ступ} \tan{\gamma_{н}} = 
+				<-<.RotorDF.DInIn | Round3>-> + 2 \cdot 
+				<-<.BladeWidth>-> \tan{<-<.RotorDF.GammaOut | Degree | Round1>-> \degree} = 
+				<-<.StatorDF.DOutIn | Round3>-> м 
+		$$
+	\item Определим кольцевую площадь на выходе из ступени:
+		$$
+			F_3 = 
+				\frac{\pi}{4} \left( D_3^2 - d_3^2 \right) = 
+				\frac{\pi}{4} \left( 
+					<-<.StatorDF.DOutOut | Round3>->^2 - <-<.StatorDF.DInOut | Round3>->^2
+				\right) = <-<.StatorDF.AreaOut | Round3>-> м^2.
+		$$
+	\item Определим относительный диаметр втулки на выходе из ступени:
+		$$
+			\overline{d_3} = \frac{D_3}{d_3} = 
+			\frac{<-<.StatorDF.DOutOut | Round3>->}{<-<.StatorDF.DInOut | Round3>->} = .
+		$$
+	\item Определим относительный средний радиус на выходе из ступени:
+		$$
+			\overline{r_{ср \ 3}} = \sqrt{
+				\frac{1 + \overline{d_3}^2}{2}
+			} = 
+			\sqrt{
+				\frac{1 + <-<.StatorDF.DInOut | Round3>->^2}{2}
+			} = .
+		$$ 
+	\item Определим безразмерную окружную составлющую абсолютной скорости на выходе из ступени:
+		$$
+			\overline{c_{u3}} = 
+				\overline{r_3} \cdot \left( 
+					1 - R_{ср \ i+1}
+				\right) - 
+				\frac{
+					\overline{H_{т \ i+1}}
+				}{
+					2 \cdot \overline{r_{ср \ 3}}
+				} =
+				<-<.StatorDF.RRelOut | Round2>-> \cdot \left( 
+					1 - <-<.ReactivityNext | Round2>->
+				\right) - 
+				\frac{
+					<-<.HtCoefNext | Round2>->
+				}{
+					2 \cdot <-<.StatorDF.RRelOut | Round2>->
+				} = . 
+		$$
+	\item Для определения приведенной скорости на выходе из ступени, численно решим уравнение:
+		$$
+			\frac{
+				Q \left( 
+				\lambda_3, k_в, R_в
+			\right)
+			}{
+				\lambda
+			} = \frac{
+				a_{кр3}
+			}{
+				c_{a3}
+			} \cdot \frac{
+				G
+			}{
+				F_3
+			} \cdot \frac{
+				\sqrt{T_3^*}
+			}{
+				p_3^*
+			}
+		$$.
+		Получим значение приведенной скорости на выходе:
+		$$
+			\lambda_3 = <-<.Lambda3 | Round2>->.
+		$$
+	\item Определим направление потока в абсолютном движении на выходе из ступени:
+		$$
+			\alpha_3 = \arcsin{
+				\frac{
+					c_{a3}
+				}{
+					\lambda_3 \cdot a_{кр \ 3}
+				}
+			} = \arcsin{
+				\frac{
+					<-<.Triangle3.CA | Round2>->
+				}{
+					<-<.Lambda3 | Round2>-> \cdot <-<.ACrit3 | Round2>->
+				}
+			} = \degree.
+		$$
+	\item Определим безразмерную окружную составляющую абсолютной скорости на выходе из рабочего колеса:
+		$$
+			\overline{c_{u2}} = \frac{1}{\overline{r_{ср \ 2}}} 
+			\left( 
+				\overline{
+					H_т
+				} + \overline{c_{u1}} \overline{r_{ср1}}
+			\right) = 
+			\frac{1}{<-<.RotorDF.RRelOut | Round2>->} 
+			\left( 
+				<-<.HtCoefCurr | Round2>-> + 
+				<-<.CURel1 | Round2>-> \cdot <-<.RotorDF.RRelOut | Round2>->
+			\right) = <-<.CARel2 | Round2>->.
+		$$
+	\item Определим углы потока в относительном движении:
+		$$
+			\beta_1 = \arctan{
+				\frac{
+					\overline{c_{a1}}
+				}{
+					\overline{r_{ср1}} - \overline{c_{u1}}
+				}
+			} = \arctan{
+				\frac{
+					<-<.CARel1 | Round2>->
+				}{
+					<-<.RotorDF.RRelIn | Round2>-> - 
+					<-<.CURel1 | Round2>->
+				}
+			} = <-<.Triangle1.Beta | Degree | Round1>-> \degree,
+		$$
+		$$
+			\beta_2 = \arctan{
+				\frac{
+					\overline{c_{a2}}
+				}{
+					\overline{r_{ср2}} - \overline{c_{u2}}
+				}
+			} = \arctan{
+				\frac{
+					<-<.CARel2 | Round2>->
+				}{
+					<-<.RotorDF.RRelOut | Round2>-> - 
+					<-<.CURel2 | Round2>->
+				}
+			} = <-<.Triangle2.Beta | Degree | Round1>->\degree,
+		$$
+	\item Определим направление потока в абсолютном движении после рабочего колеса:
+		$$
+			\alpha_2 = \arctan{
+				\frac{
+					\overline{c_{a2}}
+				}{
+					\overline{c_{u2}}
+				}
+			} = \arctan{
+				\frac{
+					<-<.CARel2 | Round2>->
+				}{
+					<-<.CURel2 | Round2>->
+				}
+			} = <-<.Triangle2.Alpha | Degree | Round1>->\degree.
+		$$
+	\item Определим относительную скорость на среднем радиусе на входе в рабочее колесо:
+		$$
+			w_1 = \frac{c_{a1}}{\sin{\beta_1}} =
+				\frac{
+					<-<.Triangle1.CA | Round1>->
+				}{\sin{
+					<-<.Triangle1.Beta | Degree | Round1>->
+				}} = <-<.Triangle1.W | Round1>-> м/с. 
+		$$
+	\item Определим относительную скорость на среднем радиусе на входе в НА:
+		$$
+			c_2 = \frac{
+				c_{a2}
+			}{
+				\sin{\alpha_2}
+			} = \frac{
+				<-<.Triangle2.CA | Round1>->
+			}{
+				\sin{
+					<-<.Triangle2.Alpha | Degree | Round1>->
+				}
+			} = <-<.Triangle2.C | Round2>-> м/с.
+		$$
+\end{enumerate}
+
+Сводная таблица параметров КНД:
+
+
+
+% section расчет_компрессора_низкого_давления_по_средней_линии (end)

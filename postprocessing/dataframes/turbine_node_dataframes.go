@@ -7,8 +7,8 @@ import (
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 )
 
-func NewBladingGeometryDF(relGen turbine.BladingGeometryGenerator, geom geometry.BladingGeometry) BladingGeometryDF {
-	return BladingGeometryDF{
+func NewTurbineBladingGeometryDF(relGen turbine.BladingGeometryGenerator, geom geometry.BladingGeometry) TurbineBladingGeometryDF {
+	return TurbineBladingGeometryDF{
 		LRelOut:    relGen.LRelOut(),
 		Elongation: relGen.Elongation(),
 		DeltaRel:   relGen.DeltaRel(),
@@ -21,7 +21,7 @@ func NewBladingGeometryDF(relGen turbine.BladingGeometryGenerator, geom geometry
 	}
 }
 
-type BladingGeometryDF struct {
+type TurbineBladingGeometryDF struct {
 	LRelOut    float64 `json:"l_rel_out"`
 	Elongation float64 `json:"elongation"`
 	DeltaRel   float64 `json:"delta_rel"`
@@ -33,7 +33,7 @@ type BladingGeometryDF struct {
 	LOut       float64 `json:"l_out"`
 }
 
-func NewStageDF(node turbine.StageNode) (StageDF, error) {
+func NewTurbineStageDF(node turbine.StageNode) (StageDF, error) {
 	var pack = node.GetDataPack()
 	if pack.Err != nil {
 		return StageDF{}, nil
@@ -94,11 +94,11 @@ func NewStageDF(node turbine.StageNode) (StageDF, error) {
 		Lt:       pack.StageLabour,
 		EtaTStag: pack.EtaTStag,
 
-		StatorGeom: NewBladingGeometryDF(
+		StatorGeom: NewTurbineBladingGeometryDF(
 			node.StageGeomGen().StatorGenerator(),
 			pack.StageGeometry.StatorGeometry(),
 		),
-		RotorGeom: NewBladingGeometryDF(
+		RotorGeom: NewTurbineBladingGeometryDF(
 			node.StageGeomGen().RotorGenerator(),
 			pack.StageGeometry.RotorGeometry(),
 		),
@@ -180,10 +180,10 @@ type StageDF struct {
 	Lt       float64 `json:"lt"`
 	EtaTStag float64 `json:"eta_t_stag"`
 
-	StatorGeom BladingGeometryDF `json:"stator_geom"`
-	RotorGeom  BladingGeometryDF `json:"rotor_geom"`
-	X          float64           `json:"x"`
-	DeltaR     float64           `json:"delta_r"`
+	StatorGeom TurbineBladingGeometryDF `json:"stator_geom"`
+	RotorGeom  TurbineBladingGeometryDF `json:"rotor_geom"`
+	X          float64                  `json:"x"`
+	DeltaR     float64                  `json:"delta_r"`
 
 	StatorGas GasMeanDF `json:"stator_gas"`
 	RotorGas  GasMeanDF `json:"rotor_gas"`

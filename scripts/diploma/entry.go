@@ -55,8 +55,11 @@ const (
 	titleTemplate = "title.tex"
 	titleOut      = "title.tex"
 
-	stageTemplate = "mean_line_calc_template.tex"
-	stageOut      = "mean_line_calc.tex"
+	turbineStageTemplate = "mean_line_calc_template.tex"
+	turbineStageOut      = "mean_line_calc.tex"
+
+	compressorStageTemplate = "compressor_calc_template.tex"
+	compressorStageOut      = "compressor_calc.tex"
 
 	profilingTemplate = "profiling_template.tex"
 	profilingOut      = "profiling.tex"
@@ -92,6 +95,8 @@ func Entry() {
 		buildDir, dataDir, imgDir,
 	)
 
+	saveCompressorStageTemplate()
+
 	var scheme = getScheme(lowPiStag, highPiStag)
 
 	saveInputTemplates()
@@ -105,7 +110,7 @@ func Entry() {
 
 	var stage = midline.GetInitedStageNode(scheme)
 	solveParticularStage(stage)
-	saveStageTemplate(stage)
+	saveTurbineStageTemplate(stage)
 
 	var statorProfiler = getStatorProfiler(stage)
 	saveProfiles(
