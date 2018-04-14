@@ -1,7 +1,7 @@
 package templ
 
 import (
-	"fmt"
+	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/turbocycle/common"
 	"math"
 	"text/template"
@@ -17,44 +17,18 @@ func GetTemplate(name, content string, funcMap template.FuncMap) (*template.Temp
 
 func GetFuncMap() template.FuncMap {
 	return template.FuncMap{
-		"Round": func(value float64) string {
-			return fmt.Sprintf("%.0f", value)
-		},
-		"Round1": func(value float64) string {
-			return fmt.Sprintf("%.1f", value)
-		},
-		"Round2": func(value float64) string {
-			return fmt.Sprintf("%.2f", value)
-		},
-		"Round3": func(value float64) string {
-			return fmt.Sprintf("%.3f", value)
-		},
-		"DivideE3": func(value float64) float64 {
-			return value / 1e3
-		},
-		"MultiplyE3": func(value float64) float64 {
-			return value * 1e3
-		},
-		"DivideE5": func(value float64) float64 {
-			return value / 1e5
-		},
-		"MultiplyE5": func(value float64) float64 {
-			return value * 1e5
-		},
-		"DivideE6": func(value float64) float64 {
-			return value / 1e6
-		},
-		"MultiplyE6": func(value float64) float64 {
-			return value * 1e6
-		},
-		"Abs": func(value float64) float64 {
-			return math.Abs(value)
-		},
-		"Degree": func(value float64) float64 {
-			return common.ToDegrees(value)
-		},
-		"Radian": func(value float64) float64 {
-			return common.ToRadians(value)
-		},
+		"Round":      dataframes.Round,
+		"Round1":     dataframes.Round1,
+		"Round2":     dataframes.Round2,
+		"Round3":     dataframes.Round3,
+		"DivideE3":   dataframes.DivideE3,
+		"MultiplyE3": dataframes.MultiplyE3,
+		"DivideE5":   dataframes.DivideE5,
+		"MultiplyE5": dataframes.MultiplyE5,
+		"DivideE6":   dataframes.DivideE6,
+		"MultiplyE6": dataframes.MultiplyE6,
+		"Abs":        math.Abs,
+		"Degree":     common.ToDegrees,
+		"Radian":     common.ToRadians,
 	}
 }

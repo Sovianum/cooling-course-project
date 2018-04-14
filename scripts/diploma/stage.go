@@ -1,6 +1,7 @@
 package diploma
 
 import (
+	"github.com/Sovianum/cooling-course-project/core/midall/inited"
 	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
@@ -157,16 +158,41 @@ func saveTurbineStageTemplate(stage turbine.StageNode) {
 	}
 }
 
+func saveCompressorTotalTableTemplates() {
+	initedMachines, err := inited.GetInitedStagedNodes()
+	if err != nil {
+		panic(err)
+	}
+
+	lpcInserter := templ.NewDataInserter(
+		templatesDir+"/"+lpcTotalTableTemplate,
+		buildDir+"/"+lpcTotalTableOut,
+	)
+	lpcDF := dataframes.NewStagedCompressorDF(initedMachines.LPC)
+	if err := lpcInserter.Insert(lpcDF); err != nil {
+		panic(err)
+	}
+
+	hpcInserter := templ.NewDataInserter(
+		templatesDir+"/"+hpcTotalTableTemplate,
+		buildDir+"/"+hpcTotalTableOut,
+	)
+	hpcDF := dataframes.NewStagedCompressorDF(initedMachines.HPC)
+	if err := hpcInserter.Insert(hpcDF); err != nil {
+		panic(err)
+	}
+}
+
 func saveCompressorStageTemplate() {
-	var inserter = templ.NewDataInserter(
+	initedMachines, err := inited.GetInitedStagedNodes()
+	if err != nil {
+		panic(err)
+	}
+	inserter := templ.NewDataInserter(
 		templatesDir+"/"+compressorStageTemplate,
 		buildDir+"/"+compressorStageOut,
 	)
-	df := dataframes.CompressorStageDF{}
-	df.Triangle1 = states.NewCompressorVelocityTriangle(1, 1, 1)
-	df.Triangle2 = states.NewCompressorVelocityTriangle(1, 1, 1)
-	df.Triangle3 = states.NewCompressorVelocityTriangle(1, 1, 1)
-
+	df := dataframes.NewCompressorStageDF(initedMachines.LPC.Stages()[0])
 	if err := inserter.Insert(df); err != nil {
 		panic(err)
 	}

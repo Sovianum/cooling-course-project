@@ -3,32 +3,59 @@
 Для в данной работе детально представлен расчет первой ступени КНД по средней линии тока. Параметры остальных ступеней КНД и КВД представлены в табличном виде.
 
 Зададим параметры, необходимы для расчета КНД по средней линии тока:
+Исходные данные:
+\begin{center}
+	\begin{longtable}{|p{7cm}|c|c|c|}
+		\hline
+		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+		\endhead
+		Начальная температура воздуха & $T_1$ & К & $<-<.T1 | Round1>->$ \\ \hline
+		Начальное давление воздуха & $p_1$ & $10^6 \/\ Па$ & $<-<.P1 | DivideE6 | Round3>->$ \\ \hline
+		Частота вращения вала & $n$ & об/мин & $<-<.RPM | Round>->$ \\ \hline
+		Коэффициент напора текущей ступени & $\overline{H_{тi}}$ & - & $<-<.HtCoefCurr | Round3>->$ \\ \hline
+		Коэффициент напора следующей ступени & $\overline{H_{т \/\ i+1}}$ & - & $<-<.HtCoefNext | Round3>->$ \\ \hline
+		Реактивность текущей ступени & $R_{i}$ & - & $<-<.ReactivityCurr | Round3>->$ \\ \hline
+		Реактивность следующей ступени & $R_{i+1}$ & - & $<-<.ReactivityNext | Round3>->$ \\ \hline
+		Коэффициент работы & $k_H$ & - & $<-<.Kh | Round2>->$ \\ \hline
+		КПД ступени & $\eta_{ад}^*$ & - & $<-<.Eta | Round3>->$ \\ \hline
+		Безразмерная осевая скорость на входе в ступень & $\overline{c_a}$ & - & $<-<.CARel1 | Round2>->$ \\ \hline
+		Относительный диаметр втулки на входе в ступень & $\overline{d_1}$ & - & $<-<.RotorDF.DRelIn | Round3>->$ \\ \hline
+		Угол наклона внутреннего обвода проточной части & $\gamma_{в}$ & $\degree$ & <-<.RotorDF.GammaIn | Degree | Round1>-> \\ \hline
+		Угол наклона наружного обвода проточной части & $\gamma_{н}$ & $\degree$ & <-<.RotorDF.GammaOut | Degree | Round1>-> \\ \hline
+		Удлинение лопатки ротора & $\overline{b_{aр}}$ & - & <-<.RotorDF.Elongation | Round1>-> \\ \hline
+		Удлинение лопатки статора & $\overline{b_{aс}}$ & - & <-<.StatorDF.Elongation | Round1>-> \\ \hline
+		Относительная ширина зазора за лопатками ротора & $\delta_р$ & - & <-<.RotorDF.DeltaRel | Round2>-> \\ \hline
+		Относительная ширина зазора за лопатками статора & $\delta_с$ & - & <-<.StatorDF.DeltaRel | Round2>-> \\ \hline
+	\end{longtable}
+\end{center}
 
 
 \begin{enumerate}
+	\item Определим окружную скорость на периферии рабочих лопаток на входе в ступень:
+		$$
+			u_к = \frac{\pi D_1 n}{60} = \frac{\pi \cdot <-<.RotorDF.DOutIn | Round3>-> \cdot <-<.RPM | Round>->}{60} = <-<.UOut | Round2>-> \/\ м/с.
+		$$
 	\item Определим теоретический напор ступени:
 		$$
 			H_т = 
 				\overline{H_{тi}} \cdot u_{кi}^2 = 
-				\overline{
-					<-<.HtCoefCurr | Round3>->
-				} \cdot <-<.UOut | Round1>->^2 = <-<.Ht | Round1>-> Дж/кг.
+				<-<.HtCoefCurr | Round3>-> \cdot <-<.UOut | Round2>->^2 = <-<.Ht | DivideE5 | Round3>-> \cdot 10^5 \/\ Дж/кг.
 		$$ 
 	\item Определим действительную работу сжатия:
 		$$
 			L_z = 
 				k_H \cdot H_т = 
-				<-<.Kh | Round2>-> \cdot <-<.Ht | Round1>-> = <-<.Lz | Round1>-> Дж/кг.
+				<-<.Kh | Round2>-> \cdot <-<.Ht | DivideE5 | Round3>-> \cdot 10^5 = <-<.Lz | DivideE5 | Round3>-> \cdot 10^5 \/\ Дж/кг.
 		$$
 	\item Определим адиабатическую работу сжатия:
 		$$
 			H_{ад} = L_z \cdot \eta_{ад}^* = 
-				<-<.Lz | Round1>-> \cdot <-<.Eta | Round3>-> = <-<.HAd | Round1>-> Дж/кг.
+				<-<.Lz | DivideE5 | Round3>-> \cdot 10^5 \cdot <-<.Eta | Round3>-> = <-<.HAd | DivideE5 | Round3>-> \cdot 10^5 \/\ Дж/кг.
 		$$
 	\item Определим повышение полной температуры в ступени:
 		$$
 			\Delta T^* = L_z / c_{pв} = 
-				<-<.Lz | Round1>-> / <-<.CpAir | Round1>-> = <-<.DT | Round1>-> К.
+				<-<.Lz | DivideE5 | Round3>-> \cdot 10^5 / <-<.CpAir | Round1>-> = <-<.DT | Round1>-> \/\ К.
 		$$
 	\item Определим степень повышения полного давления:
 		$$
@@ -37,14 +64,14 @@
 				1 + \frac{H_{ад}}{c_{pв} T_1^*}
 			\right]^\frac{k_в}{k_в - 1} = 
 			\left[ 
-				1 + \frac{<-<.Ht | Round1>->}{<-<.CpAir | Round1>-> \cdot <-<.T1 | Round1>->}
+				1 + \frac{<-<.HAd | DivideE5 | Round3>-> \cdot 10^5}{<-<.CpAir | Round1>-> \cdot <-<.T1 | Round1>->}
 			\right]^\frac{<-<.KAir | Round2>->}{<-<.KAir | Round2>-> - 1} = <-<.Pi | Round2>->.
 		$$
 	\item Определим полное давление на выходе из ступени:
 		$$
 			p_3^* = p_1^* \cdot \pi^* = 
-				<-<.P1 | DivideE6 | Round3>-> \cdot 10^6 \cdot <-<.P1 | Round2>-> = 
-				<-<.P3 | DivideE6 | Round3>-> \cdot 10^6  Па.
+				<-<.P1 | DivideE6 | Round3>-> \cdot 10^6 \cdot <-<.Pi | Round2>-> = 
+				<-<.P3 | DivideE6 | Round3>-> \cdot 10^6  \/\ Па.
 		$$
 	\item Определим критическую скорость потока на входе в ступень:
 		$$
@@ -56,8 +83,7 @@
 				}{
 					<-<.KAir | Round2>-> + 1
 				} \cdot <-<.RAir | Round1>-> \cdot <-<.T1 | Round1>->
-			} = <-<.ACrit1 | Round2>-> м/с.
-
+			} = <-<.ACrit1 | Round2>-> \/\ м/с.
 		$$ 	
 	\item Определим критическую скорость потока на выходе из ступени:
 		$$
@@ -69,7 +95,7 @@
 				}{
 					<-<.KAir | Round2>-> + 1
 				} \cdot <-<.RAir | Round1>-> \cdot <-<.T3 | Round1>->
-			} = <-<.ACrit3 | Round2>-> м/с.
+			} = <-<.ACrit3 | Round2>-> \/\ м/с.
 		$$ 	
 	\item Определим относительный средний радиус на входе в ступень:
 		$$
@@ -80,7 +106,7 @@
 	\item Определим безразмерную окружную составляющую абсолютной скорости на входе в ступень:
 		$$
 			\overline{c_{u1}} = 
-				\overline{r_{ср1}} \left( 
+				\overline{r_{ср1}} \cdot \left( 
 					1 - R_{ср \ i}
 				\right) - 
 				\frac{
@@ -88,7 +114,7 @@
 				}{
 					2 \overline{r_{ср1}}
 				} = 
-				<-<.RotorDF.RRelIn | Round2>-> 
+				<-<.RotorDF.RRelIn | Round2>-> \cdot
 				\left( 
 					1 - <-<.ReactivityCurr | Round2>->
 				\right) - 
@@ -96,7 +122,7 @@
 					<-<.HtCoefCurr | Round2>->
 				}{
 					2 \cdot <-<.RotorDF.RRelIn | Round2>->
-				} = <-<.CURel1>->.
+				} = <-<.CURel1 | Round2>->.
 		$$
 	\item Определим направление абсолютной скорости на входе в ступень:
 		$$
@@ -107,8 +133,12 @@
 			}} = \arctan{\frac{
 				<-<.CARel1 | Round2>->
 			}{
-				<-<.CURel1 | Round1>->
+				<-<.CURel1 | Round2>->
 			}} = <-<.Triangle1.Alpha | Degree | Round1>-> \degree.
+		$$
+	\item Определим величину осевой скорости на входе в ступень:
+		$$
+			c_{a1} = u_к \cdot \overline{c_a} = <-<.UOut | Round2>-> \cdot <-<.CARel1 | Round2>-> = <-<.Triangle1.CA | Round2>-> \/\ м/с.
 		$$
 	\item Определим приведенную скорость на входе в ступень:
 		$$
@@ -116,7 +146,7 @@
 				\frac{
 					c_{a1}
 				}{
-					\sin{\alpha_1} a_{кр1}
+					\sin{\alpha_1} \cdot a_{кр1}
 				} = 
 				\frac{
 					<-<.Triangle1.CA | Round2>->
@@ -145,13 +175,13 @@
 				p_1^* Q\left( \lambda_1, k_в, R_в\right) \sin{\alpha_1}
 			} = 
 			\frac{
-				<-<.MassRate | Round1>-> \sqrt{
+				<-<.MassRate | Round1>-> \cdot \sqrt{
 					<-<.T1 | Round1>->
 				}
 			}{
 				<-<.P1 | DivideE6 | Round2>-> \cdot 10^6 \cdot 
-				<-<.Q1 | Round2>-> \sin{<-<.Triangle1.Alpha | Degree | Round1>-> \degree}
-			} = <-<.RotorDF.AreaIn | Round2>-> м^2.
+				<-<.Q1 | Round2>-> \cdot \sin{<-<.Triangle1.Alpha | Degree | Round1>-> \degree}
+			} = <-<.RotorDF.AreaIn | Round2>-> \/\ м^2.
 		$$
 	\item Определим внешний и внутренний диаметры на входе в ступень:
 		$$
@@ -164,43 +194,61 @@
 				\frac{4}{\pi} \cdot 
 				\frac{1}{1 - <-<.RotorDF.DRelIn | Round2>->} \cdot
 				<-<.RotorDF.AreaIn | Round2>->
-			} = <-<.RotorDF.DOutIn | Round3>-> м,	
+			} = <-<.RotorDF.DOutIn | Round3>-> \/\ м,	
 		$$
 		$$
 			d_1 = D_1 \cdot \overline{d_1}^2 = 
 				<-<.RotorDF.DOutIn | Round3>-> \cdot <-<.RotorDF.DRelIn | Round3>-> = 
-				<-<.RotorDF.DInIn | Round3>-> м.
+				<-<.RotorDF.DInIn | Round3>-> \/\ м.
 		$$
 	\item Определим ширину ступени:
 		$$
 			x_{ступ} = 
-				b_{a \ р} \cdot \left( 
-					1 + \overline{\delta_{р}}
-				\right) +
-				b_{a \ с} \cdot \left( 
-					1 + \overline{\delta_{с}}
+				D_1 \cdot \frac{
+					1 - \overline{d_1}
+				}{2} \cdot \left(
+					\frac{
+						1 + \overline{\delta_р}
+					}{
+						\overline{b_{aр}}
+					} + 
+					\frac{
+						1 + \overline{\delta_с}
+					}{
+						\overline{b_{aс}}
+					}
 				\right) =
-				<-<.RotorDF.BladeWidth | Round3>-> \cdot \left( 
-					1 + <-<.RotorDF.DeltaRel | Round2>->
-				\right) +
-				<-<.StatorDF.BladeWidth | Round3>-> \cdot \left( 
-					1 + <-<.StatorDF.DeltaRel | Round2>->
-				\right) = <-<.BladeWidth | Round3>-> м.
+		$$
+		$$
+				= <-<.RotorDF.DOutIn | Round3>-> \cdot \frac{
+					1 - <-<.RotorDF.DRelIn | Round3>->
+				}{2} \cdot \left(
+					\frac{
+						1 + <-<.RotorDF.DeltaRel | Round2>->
+					}{
+						<-<.RotorDF.Elongation | Round1>->
+					} + 
+					\frac{
+						1 + <-<.StatorDF.DeltaRel | Round2>->
+					}{
+						<-<.StatorDF.Elongation | Round1>->
+					}
+				\right) = <-<.StageWidth | Round3>-> \/\ м.
 		$$
 	\item Определим внешний и внутренний диаметры на выходе из ступени:
 		$$
 			D_3 = 
 				D_1 + 2 \cdot x_{ступ} \tan{\gamma_{н}} = 
 				<-<.RotorDF.DOutIn | Round3>-> + 2 \cdot 
-				<-<.BladeWidth>-> \tan{<-<.RotorDF.GammaIn | Degree | Round1>-> \degree} = 
-				<-<.StatorDF.DOutOut | Round3>-> м, 
+				<-<.StageWidth | Round3>-> \cdot \tan{<-<.RotorDF.GammaOut | Degree | Round1>-> \degree} =
+				<-<.StatorDF.DOutOut | Round3>-> \/\ м, 
 		$$
 		$$
 			d_3 =
-				d_1 + 2 \cdot x_{ступ} \tan{\gamma_{н}} = 
+				d_1 + 2 \cdot x_{ступ} \tan{\gamma_{в}} = 
 				<-<.RotorDF.DInIn | Round3>-> + 2 \cdot 
-				<-<.BladeWidth>-> \tan{<-<.RotorDF.GammaOut | Degree | Round1>-> \degree} = 
-				<-<.StatorDF.DOutIn | Round3>-> м 
+				<-<.StageWidth | Round3>-> \cdot \tan{<-<.RotorDF.GammaIn | Degree | Round1>-> \degree} =
+				<-<.StatorDF.DInOut | Round3>-> м 
 		$$
 	\item Определим кольцевую площадь на выходе из ступени:
 		$$
@@ -208,12 +256,12 @@
 				\frac{\pi}{4} \left( D_3^2 - d_3^2 \right) = 
 				\frac{\pi}{4} \left( 
 					<-<.StatorDF.DOutOut | Round3>->^2 - <-<.StatorDF.DInOut | Round3>->^2
-				\right) = <-<.StatorDF.AreaOut | Round3>-> м^2.
+				\right) = <-<.StatorDF.AreaOut | Round3>-> \/\ м^2.
 		$$
 	\item Определим относительный диаметр втулки на выходе из ступени:
 		$$
-			\overline{d_3} = \frac{D_3}{d_3} = 
-			\frac{<-<.StatorDF.DOutOut | Round3>->}{<-<.StatorDF.DInOut | Round3>->} = .
+			\overline{d_3} = \frac{d_3}{D_3} = 
+			\frac{<-<.StatorDF.DInOut | Round3>->}{<-<.StatorDF.DOutOut | Round3>->} = <-<.StatorDF.DRelOut | Round3>->.
 		$$
 	\item Определим относительный средний радиус на выходе из ступени:
 		$$
@@ -221,8 +269,8 @@
 				\frac{1 + \overline{d_3}^2}{2}
 			} = 
 			\sqrt{
-				\frac{1 + <-<.StatorDF.DInOut | Round3>->^2}{2}
-			} = .
+				\frac{1 + <-<.StatorDF.DRelOut | Round3>->^2}{2}
+			} = <-<.StatorDF.RRelOut | Round3>->.
 		$$ 
 	\item Определим безразмерную окружную составлющую абсолютной скорости на выходе из ступени:
 		$$
@@ -242,7 +290,7 @@
 					<-<.HtCoefNext | Round2>->
 				}{
 					2 \cdot <-<.StatorDF.RRelOut | Round2>->
-				} = . 
+				} = <-<.CURel3 | Round3>->. 
 		$$
 	\item Для определения приведенной скорости на выходе из ступени, численно решим уравнение:
 		$$
@@ -251,7 +299,7 @@
 				\lambda_3, k_в, R_в
 			\right)
 			}{
-				\lambda
+				\lambda_3
 			} = \frac{
 				a_{кр3}
 			}{
@@ -284,7 +332,7 @@
 				}{
 					<-<.Lambda3 | Round2>-> \cdot <-<.ACrit3 | Round2>->
 				}
-			} = \degree.
+			} = <-<.Triangle3.Alpha | Degree | Round1>-> \degree.
 		$$
 	\item Определим безразмерную окружную составляющую абсолютной скорости на выходе из рабочего колеса:
 		$$
@@ -315,7 +363,7 @@
 					<-<.RotorDF.RRelIn | Round2>-> - 
 					<-<.CURel1 | Round2>->
 				}
-			} = <-<.Triangle1.Beta | Degree | Round1>-> \degree,
+			} = <-<.Triangle1.Beta | Degree | Round1>-> \degree.
 		$$
 		$$
 			\beta_2 = \arctan{
@@ -356,7 +404,7 @@
 					<-<.Triangle1.CA | Round1>->
 				}{\sin{
 					<-<.Triangle1.Beta | Degree | Round1>->
-				}} = <-<.Triangle1.W | Round1>-> м/с. 
+				}} = <-<.Triangle1.W | Round1>-> \/\ м/с. 
 		$$
 	\item Определим относительную скорость на среднем радиусе на входе в НА:
 		$$
@@ -368,13 +416,11 @@
 				<-<.Triangle2.CA | Round1>->
 			}{
 				\sin{
-					<-<.Triangle2.Alpha | Degree | Round1>->
+					<-<.Triangle2.Alpha | Degree | Round1>-> \degree
 				}
-			} = <-<.Triangle2.C | Round2>-> м/с.
+			} = <-<.Triangle2.C | Round2>-> \/\ м/с.
 		$$
 \end{enumerate}
-
-Сводная таблица параметров КНД:
 
 
 

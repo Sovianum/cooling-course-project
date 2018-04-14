@@ -61,6 +61,12 @@ const (
 	compressorStageTemplate = "compressor_calc_template.tex"
 	compressorStageOut      = "compressor_calc.tex"
 
+	lpcTotalTableTemplate = "lpc_total_table_template.tex"
+	lpcTotalTableOut      = "lpc_total_table.tex"
+
+	hpcTotalTableTemplate = "hpc_total_table_template.tex"
+	hpcTotalTableOut      = "hpc_total_table.tex"
+
 	profilingTemplate = "profiling_template.tex"
 	profilingOut      = "profiling.tex"
 
@@ -100,6 +106,7 @@ func Entry() {
 	var scheme = getScheme(lowPiStag, highPiStag)
 
 	saveInputTemplates()
+	saveCompressorTotalTableTemplates()
 
 	var schemeData = getSchemeData(scheme)
 	saveSchemeData(schemeData)
