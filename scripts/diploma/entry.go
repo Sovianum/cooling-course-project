@@ -125,7 +125,7 @@ func Entry() {
 	saveTurbineStageTemplate(stage)
 	saveTurbineTotalTableTemplates()
 
-	var statorProfiler = getStatorProfiler(stage)
+	statorProfiler := getStatorProfiler(stage)
 	saveProfiles(
 		statorProfiler,
 		stage.StageGeomGen().StatorGenerator(),
@@ -138,13 +138,13 @@ func Entry() {
 		false,
 	)
 
-	var rotorProfiler = getRotorProfiler(stage)
+	rotorProfiler := getRotorProfiler(stage)
 	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
-		var triangle = profiler.InletTriangle(hRel)
+		triangle := profiler.InletTriangle(hRel)
 		return triangle
 	}, inletAngleData)
 	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
-		var triangle = profiler.OutletTriangle(hRel)
+		triangle := profiler.OutletTriangle(hRel)
 		return triangle
 	}, outletAngleData)
 	saveProfiles(
@@ -159,39 +159,37 @@ func Entry() {
 		true,
 	)
 
-	var inletGasProfiler, outletGasProfiler = getGasProfilers(stage, rotorProfiler)
+	inletGasProfiler, outletGasProfiler := getGasProfilers(stage, rotorProfiler)
 	fmt.Println(profilers.Reactivity(0, 0.5, inletGasProfiler, outletGasProfiler))
 	fmt.Println(profilers.Reactivity(0.5, 0.5, inletGasProfiler, outletGasProfiler))
 	fmt.Println(profilers.Reactivity(1, 0.5, inletGasProfiler, outletGasProfiler))
 
-	//panic("stop")
-
 	saveProfilingTemplate()
 
-	var statorMidProfile = profiles.NewBladeProfileFromProfiler(
+	statorMidProfile := profiles.NewBladeProfileFromProfiler(
 		0.5,
 		0.01, 0.01,
 		0.2, 0.2,
 		statorProfiler,
 	)
-	var stagePack = stage.GetDataPack()
+	stagePack := stage.GetDataPack()
 	statorMidProfile.Transform(geom.Scale(geometry.ChordProjection(stagePack.StageGeometry.StatorGeometry())))
 
-	var gapCalculator = getGapCalculator(stage, statorMidProfile)
-	var gapPack = gapCalculator.GetPack(coolAirMassRate)
+	gapCalculator := getGapCalculator(stage, statorMidProfile)
+	gapPack := gapCalculator.GetPack(coolAirMassRate)
 
-	var gapCalcDF = getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
+	gapCalcDF := getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
 	saveCooling1Template(gapCalcDF)
 
-	var psTemperatureSystem = getPSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
-	var psSolution = psTemperatureSystem.Solve(0, theta0, 1, 0.001)
+	psTemperatureSystem := getPSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	psSolution := psTemperatureSystem.Solve(0, theta0, 1, 0.001)
 	saveCoolingSolution(psSolution, cooling2PSData)
 
-	var ssTemperatureSystem = getSSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
-	var ssSolution = ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
+	ssTemperatureSystem := getSSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	ssSolution := ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
 	saveCoolingSolution(ssSolution, cooling2SSData)
 
-	var tempProfileDF = getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
+	tempProfileDF := getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
 	saveCooling2Template(tempProfileDF)
 
 	saveRootTemplate()
