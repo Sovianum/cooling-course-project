@@ -90,7 +90,7 @@ func getSchemeData(scheme schemes.ThreeShaftsScheme) []core.DoubleCompressorData
 		scheme,
 		power/etaR,
 		startPi, piStep, piStepNum,
-		0.5, 0, 1,
+		0.3, 0.1, 4,
 	); err != nil {
 		panic(err)
 	} else {

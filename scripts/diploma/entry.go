@@ -98,19 +98,19 @@ func Entry() {
 
 	saveCompressorStageTemplate()
 
-	//var scheme = getScheme(lowPiStag, highPiStag)
+	var scheme = getScheme(lowPiStag, highPiStag)
 
 	saveInputTemplates()
 	saveCompressorTotalTableTemplates()
 	saveTurbineTotalTableTemplates()
 
-	//var schemeData = getSchemeData(scheme)
-	//saveSchemeData(schemeData)
-	//saveVariantTemplate(schemeData)
-	//
-	//solveParticularScheme(scheme, lowPiStag, highPiStag)
-	//saveCycleTemplate(scheme)
-	//
+	var schemeData = getSchemeData(scheme)
+	saveSchemeData(schemeData)
+	saveVariantTemplate(schemeData)
+
+	solveParticularScheme(scheme, lowPiStag, highPiStag)
+	saveCycleTemplate(scheme)
+
 	//var stage = midline.GetInitedStageNode(scheme)
 	//solveParticularStage(stage)
 	//saveTurbineStageTemplate(stage)
