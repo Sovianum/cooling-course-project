@@ -5,7 +5,7 @@ import (
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/material/gases"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling"
-	"github.com/Sovianum/turbocycle/utils/turbine/cooling/ode"
+	"github.com/Sovianum/turbocycle/utils/turbine/cooling/ode/forward"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 	"github.com/Sovianum/turbocycle/utils/turbine/geom"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
@@ -25,7 +25,7 @@ func GetInitedStatorConvTemperatureSystem(
 	var tGas = stage.TemperatureInput().GetState().(states.TemperaturePortState).TStag
 
 	return profile.NewConvectiveTemperatureSystem(
-		ode.NewEulerSolver(),
+		forward.NewEulerSolver(),
 		airMassRate,
 		gases.GetAir().Cp,
 		func(x float64) float64 {
@@ -61,7 +61,7 @@ func GetInitedStatorConvFilmTemperatureSystem(
 	var pGas = stage.PressureInput().GetState().(states.PressurePortState).PStag
 
 	return profile.NewConvFilmTemperatureSystem(
-		ode.NewEulerSolver(),
+		forward.NewEulerSolver(),
 		coolerMassRate0,
 		gases.GetAir(), gas,
 		func(x float64) float64 {
