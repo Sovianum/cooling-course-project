@@ -1,42 +1,97 @@
 package dataframes
 
 import (
+	"github.com/Sovianum/turbocycle/common"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/impl/stage/geometry"
 	"github.com/Sovianum/turbocycle/impl/stage/states"
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 )
 
-func NewTurbineBladingGeometryDF(relGen turbine.BladingGeometryGenerator, geom geometry.BladingGeometry) TurbineBladingGeometryDF {
-	return TurbineBladingGeometryDF{
-		LRelOut:    relGen.LRelOut(),
-		Elongation: relGen.Elongation(),
-		DeltaRel:   relGen.DeltaRel(),
-		GammaIn:    relGen.GammaIn(),
-		GammaOut:   relGen.GammaOut(),
-		AreaOut:    geometry.Area(geom.XBladeOut(), geom),
-		DMeanOut:   geom.MeanProfile().Diameter(geom.XBladeOut()),
-		DMeanIn:    geom.MeanProfile().Diameter(geom.XBladeOut()),
-		LOut:       geometry.Height(geom.XBladeOut(), geom),
+func NewStagedTurbineDF(node turbine.StagedTurbineNode) StagedTurbineDF {
+	result := StagedTurbineDF{StageDFS: make([]TurbineStageDF, len(node.Stages()))}
+	for i, stage := range node.Stages() {
+		df, err := NewTurbineStageDF(stage)
+		if err != nil {
+			panic(err)
+		}
+		result.StageDFS[i] = df
 	}
+	return result
 }
 
-type TurbineBladingGeometryDF struct {
-	LRelOut    float64 `json:"l_rel_out"`
-	Elongation float64 `json:"elongation"`
-	DeltaRel   float64 `json:"delta_rel"`
-	GammaIn    float64 `json:"gamma_in"`
-	GammaOut   float64 `json:"gamma_out"`
-	AreaOut    float64 `json:"area_out"`
-	DMeanOut   float64 `json:"d_mean_out"`
-	DMeanIn    float64 `json:"d_mean_in"`
-	LOut       float64 `json:"l_out"`
+type StagedTurbineDF struct {
+	StageDFS []TurbineStageDF
+	rows     []StageRow
 }
 
-func NewTurbineStageDF(node turbine.StageNode) (StageDF, error) {
+func (df StagedTurbineDF) Join(another StagedTurbineDF) StagedTurbineDF {
+	return StagedTurbineDF{StageDFS: append(df.StageDFS, another.StageDFS...)}
+}
+
+func (df StagedTurbineDF) Rows() []StageRow {
+	if df.rows == nil {
+		getRow := func(name, dim string, f func(df TurbineStageDF) float64) StageRow {
+			return NewTurbineStageRow(name, dim, df.StageDFS, f)
+		}
+		df.rows = []StageRow{
+			getRow("$H_с$", "$10^6 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.Hs }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$c_{1ад}$", "$м/с$", func(df TurbineStageDF) float64 { return df.C1Ad }).FormatString(Round1),
+			getRow("$c_{1}$", "$м/с$", func(df TurbineStageDF) float64 { return df.InletTriangle.C() }).FormatString(Round1),
+			getRow("$T_1$", "$К$", func(df TurbineStageDF) float64 { return df.T1 }).FormatString(Round1),
+			getRow("$T_1^\\prime$", "$К$", func(df TurbineStageDF) float64 { return df.T1Prime }).FormatString(Round1),
+			getRow("$p_1$", "$МПа$", func(df TurbineStageDF) float64 { return df.P1 }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$\\rho_1$", "$кг/м^3$", func(df TurbineStageDF) float64 { return df.Rho1 }).FormatString(Round2),
+			getRow("$\\alpha_1$", "$\\degree$", func(df TurbineStageDF) float64 { return df.InletTriangle.Alpha() }).FormatFloat(common.ToDegrees).FormatString(Round1),
+			getRow("$c_{1a}$", "$м/с$", func(df TurbineStageDF) float64 { return df.InletTriangle.CA() }).FormatString(Round1),
+			getRow("$A_1$", "$м^2$", func(df TurbineStageDF) float64 { return df.StatorGeom.AreaOut }).FormatString(Round2),
+			getRow("$D_1$", "$м$", func(df TurbineStageDF) float64 { return df.StatorGeom.DMeanOut }).FormatString(Round3),
+			getRow("$u_1$", "$м/с$", func(df TurbineStageDF) float64 { return df.InletTriangle.U() }).FormatString(Round1),
+			getRow("$w_1$", "$м/с$", func(df TurbineStageDF) float64 { return df.InletTriangle.W() }).FormatString(Round1),
+			getRow("$T_{w1}$", "$К$", func(df TurbineStageDF) float64 { return df.Tw1 }).FormatString(Round1),
+			getRow("$p_{w1}$", "$МПа$", func(df TurbineStageDF) float64 { return df.Pw1 }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$H_л$", "$10^6 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.Hr }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$x$", "$м$", func(df TurbineStageDF) float64 { return df.X }).FormatString(Round3),
+			getRow("$D_2$", "$м$", func(df TurbineStageDF) float64 { return df.RotorGeom.DMeanOut }).FormatString(Round3),
+			getRow("$l_2$", "$м$", func(df TurbineStageDF) float64 { return df.RotorGeom.LOut }).FormatString(Round3),
+			getRow("$\\left( \\frac{l}{D} \\right)_2$", "$-$", func(df TurbineStageDF) float64 { return df.RotorGeom.LRelOut }).FormatString(Round3),
+			getRow("$u_2$", "$м/с$", func(df TurbineStageDF) float64 { return df.OutletTriangle.U() }).FormatString(Round1),
+			getRow("$w_{2ад}$", "$м/с$", func(df TurbineStageDF) float64 { return df.W2Ad }).FormatString(Round1),
+			getRow("$w_2$", "$м/с$", func(df TurbineStageDF) float64 { return df.OutletTriangle.W() }).FormatString(Round1),
+			getRow("$T_2$", "$К$", func(df TurbineStageDF) float64 { return df.T2 }).FormatString(Round1),
+			getRow("$T_2^\\prime$", "$К$", func(df TurbineStageDF) float64 { return df.T2Prime }).FormatString(Round1),
+			getRow("$p_2$", "$МПа$", func(df TurbineStageDF) float64 { return df.P2 }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$\\beta_2$", "$\\degree$", func(df TurbineStageDF) float64 { return df.OutletTriangle.Beta() }).FormatFloat(common.ToDegrees).FormatString(Round1),
+			getRow("$\\alpha_2$", "$\\degree$", func(df TurbineStageDF) float64 { return df.OutletTriangle.Alpha() }).FormatFloat(common.ToDegrees).FormatString(Round1),
+			getRow("$c_2$", "$м/с$", func(df TurbineStageDF) float64 { return df.OutletTriangle.CU() }).FormatString(Round1),
+			getRow("$\\pi_т$", "$-$", func(df TurbineStageDF) float64 { return df.Pi }).FormatString(Round2),
+			getRow("$c_{2a}$", "$м/с$", func(df TurbineStageDF) float64 { return df.OutletTriangle.U() }).FormatString(Round2),
+			getRow("$\\rho_2$", "$кг/м^3$", func(df TurbineStageDF) float64 { return df.Rho2 }).FormatString(Round2),
+			getRow("$L_u$", "$10^6 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.Lu }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$\\eta_u$", "$-$", func(df TurbineStageDF) float64 { return df.EtaU }).FormatString(Round2),
+			getRow("$h_с$", "$10^3 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.LossStator }).FormatFloat(DivideE3).FormatString(Round2),
+			getRow("$h_р$", "$10^3 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.LossRotor }).FormatFloat(DivideE3).FormatString(Round2),
+			getRow("$h_{вых}$", "$10^3 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.LossOutflow }).FormatFloat(DivideE3).FormatString(Round2),
+			getRow("$h_з$", "$10^3 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.LossRadial }).FormatFloat(DivideE3).FormatString(Round2),
+			getRow("$h_{вент}$", "$10^3 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.LossVent }).FormatFloat(DivideE3).FormatString(Round2),
+			getRow("$T_2^*$", "$К$", func(df TurbineStageDF) float64 { return df.T2Stag }).FormatString(Round1),
+			getRow("$p_2^*$", "$МПа$", func(df TurbineStageDF) float64 { return df.PStagOut }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$\\eta_{т \\/\\ мощн}$", "$-$", func(df TurbineStageDF) float64 { return df.EtaPower }).FormatString(Round2),
+			getRow("$L_т$", "$10^6 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.Lt }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$H_т^*$", "$10^6 \\cdot Дж/кг$", func(df TurbineStageDF) float64 { return df.HtStag }).FormatFloat(DivideE6).FormatString(Round3),
+			getRow("$\\eta_т^*$", "$-$", func(df TurbineStageDF) float64 { return df.EtaTStag }).FormatString(Round2),
+		}
+	}
+	for i := range df.rows {
+		df.rows[i].ID = i + 1
+	}
+	return df.rows
+}
+
+func NewTurbineStageDF(node turbine.StageNode) (TurbineStageDF, error) {
 	var pack = node.GetDataPack()
 	if pack.Err != nil {
-		return StageDF{}, nil
+		return TurbineStageDF{}, nil
 	}
 
 	var xBladeStatorOut = pack.StageGeometry.StatorGeometry().XBladeOut()
@@ -44,7 +99,7 @@ func NewTurbineStageDF(node turbine.StageNode) (StageDF, error) {
 	var xBladeRotorOut = pack.StageGeometry.RotorGeometry().XBladeOut()
 	var x = xStatorOut - xBladeStatorOut + xBladeRotorOut
 
-	return StageDF{
+	return TurbineStageDF{
 		Reactivity: pack.Reactivity,
 
 		Ht:     node.Ht(),
@@ -129,7 +184,7 @@ func NewTurbineStageDF(node turbine.StageNode) (StageDF, error) {
 	}, nil
 }
 
-type StageDF struct {
+type TurbineStageDF struct {
 	Reactivity float64 `json:"reactivity"`
 
 	Ht     float64 `json:"ht"`
@@ -191,4 +246,30 @@ type StageDF struct {
 
 	InletTriangle  states.VelocityTriangle `json:"inlet_triangle"`
 	OutletTriangle states.VelocityTriangle `json:"outlet_triangle"`
+}
+
+func NewTurbineBladingGeometryDF(relGen turbine.BladingGeometryGenerator, geom geometry.BladingGeometry) TurbineBladingGeometryDF {
+	return TurbineBladingGeometryDF{
+		LRelOut:    relGen.LRelOut(),
+		Elongation: relGen.Elongation(),
+		DeltaRel:   relGen.DeltaRel(),
+		GammaIn:    relGen.GammaIn(),
+		GammaOut:   relGen.GammaOut(),
+		AreaOut:    geometry.Area(geom.XBladeOut(), geom),
+		DMeanOut:   geom.MeanProfile().Diameter(geom.XBladeOut()),
+		DMeanIn:    geom.MeanProfile().Diameter(geom.XBladeOut()),
+		LOut:       geometry.Height(geom.XBladeOut(), geom),
+	}
+}
+
+type TurbineBladingGeometryDF struct {
+	LRelOut    float64 `json:"l_rel_out"`
+	Elongation float64 `json:"elongation"`
+	DeltaRel   float64 `json:"delta_rel"`
+	GammaIn    float64 `json:"gamma_in"`
+	GammaOut   float64 `json:"gamma_out"`
+	AreaOut    float64 `json:"area_out"`
+	DMeanOut   float64 `json:"d_mean_out"`
+	DMeanIn    float64 `json:"d_mean_in"`
+	LOut       float64 `json:"l_out"`
 }

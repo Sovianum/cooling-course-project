@@ -158,6 +158,24 @@ func saveTurbineStageTemplate(stage turbine.StageNode) {
 	}
 }
 
+func saveTurbineTotalTableTemplates() {
+	initedMachines, err := inited.GetInitedStagedNodes()
+	if err != nil {
+		panic(err)
+	}
+
+	hptDF := dataframes.NewStagedTurbineDF(initedMachines.HPT)
+	lptDF := dataframes.NewStagedTurbineDF(initedMachines.LPT)
+	ftDF := dataframes.NewStagedTurbineDF(initedMachines.FT)
+	inserter := templ.NewDataInserter(
+		templatesDir+"/"+turbineTotalTableTemplate,
+		buildDir+"/"+turbineTotalTableOut,
+	)
+	if err := inserter.Insert(hptDF.Join(lptDF).Join(ftDF)); err != nil {
+		panic(err)
+	}
+}
+
 func saveCompressorTotalTableTemplates() {
 	initedMachines, err := inited.GetInitedStagedNodes()
 	if err != nil {

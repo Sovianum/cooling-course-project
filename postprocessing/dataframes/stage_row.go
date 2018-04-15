@@ -2,6 +2,14 @@ package dataframes
 
 import "fmt"
 
+func NewTurbineStageRow(name, dimension string, dfs []TurbineStageDF, extractor func(df TurbineStageDF) float64) StageRow {
+	result := StageRow{Name: name, Dimension: dimension, Values: make([]float64, len(dfs))}
+	for i, df := range dfs {
+		result.Values[i] = extractor(df)
+	}
+	return result
+}
+
 func NewCompressorStageRow(name, dimension string, dfs []CompressorStageDF, extractor func(df CompressorStageDF) float64) StageRow {
 	result := StageRow{Name: name, Dimension: dimension, Values: make([]float64, len(dfs))}
 	for i, df := range dfs {

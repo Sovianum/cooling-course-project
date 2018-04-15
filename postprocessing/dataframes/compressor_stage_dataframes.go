@@ -19,8 +19,7 @@ func NewStagedCompressorDF(c compressor.StagedCompressorNode) StagedCompressorDF
 
 type StagedCompressorDF struct {
 	StageDFS []CompressorStageDF
-
-	rows []StageRow
+	rows     []StageRow
 }
 
 func (df StagedCompressorDF) Rows() []StageRow {

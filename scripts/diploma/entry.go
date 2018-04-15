@@ -1,17 +1,9 @@
 package diploma
 
 import (
-	"fmt"
-	"github.com/Sovianum/cooling-course-project/core/midline"
 	"github.com/Sovianum/cooling-course-project/io"
 	"github.com/Sovianum/cooling-course-project/postprocessing/builder"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
-	"github.com/Sovianum/turbocycle/common"
-	"github.com/Sovianum/turbocycle/impl/stage/geometry"
-	"github.com/Sovianum/turbocycle/impl/stage/states"
-	"github.com/Sovianum/turbocycle/utils/turbine/geom"
-	"github.com/Sovianum/turbocycle/utils/turbine/radial/profilers"
-	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
 	"os"
 	"os/exec"
 )
@@ -67,6 +59,9 @@ const (
 	hpcTotalTableTemplate = "hpc_total_table_template.tex"
 	hpcTotalTableOut      = "hpc_total_table.tex"
 
+	turbineTotalTableTemplate = "turbine_total_table_template.tex"
+	turbineTotalTableOut      = "turbine_total_table.tex"
+
 	profilingTemplate = "profiling_template.tex"
 	profilingOut      = "profiling.tex"
 
@@ -103,90 +98,91 @@ func Entry() {
 
 	saveCompressorStageTemplate()
 
-	var scheme = getScheme(lowPiStag, highPiStag)
+	//var scheme = getScheme(lowPiStag, highPiStag)
 
 	saveInputTemplates()
 	saveCompressorTotalTableTemplates()
+	saveTurbineTotalTableTemplates()
 
-	var schemeData = getSchemeData(scheme)
-	saveSchemeData(schemeData)
-	saveVariantTemplate(schemeData)
-
-	solveParticularScheme(scheme, lowPiStag, highPiStag)
-	saveCycleTemplate(scheme)
-
-	var stage = midline.GetInitedStageNode(scheme)
-	solveParticularStage(stage)
-	saveTurbineStageTemplate(stage)
-
-	var statorProfiler = getStatorProfiler(stage)
-	saveProfiles(
-		statorProfiler,
-		stage.StageGeomGen().StatorGenerator(),
-		[]float64{0, 0.5, 1.0},
-		[][]string{
-			{"stator_root_1.csv", "stator_root_2.csv"},
-			{"stator_mid_1.csv", "stator_mid_2.csv"},
-			{"stator_top_1.csv", "stator_top_2.csv"},
-		},
-		false,
-	)
-
-	var rotorProfiler = getRotorProfiler(stage)
-	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
-		var triangle = profiler.InletTriangle(hRel)
-		return triangle
-	}, inletAngleData)
-	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
-		var triangle = profiler.OutletTriangle(hRel)
-		return triangle
-	}, outletAngleData)
-	saveProfiles(
-		rotorProfiler,
-		stage.StageGeomGen().RotorGenerator(),
-		[]float64{0, 0.5, 1},
-		[][]string{
-			{"rotor_root_1.csv", "rotor_root_2.csv"},
-			{"rotor_mid_1.csv", "rotor_mid_2.csv"},
-			{"rotor_top_1.csv", "rotor_top_2.csv"},
-		},
-		true,
-	)
-
-	var inletGasProfiler, outletGasProfiler = getGasProfilers(stage, rotorProfiler)
-	fmt.Println(profilers.Reactivity(0, 0.5, inletGasProfiler, outletGasProfiler))
-	fmt.Println(profilers.Reactivity(0.5, 0.5, inletGasProfiler, outletGasProfiler))
-	fmt.Println(profilers.Reactivity(1, 0.5, inletGasProfiler, outletGasProfiler))
-
-	//panic("stop")
-
-	saveProfilingTemplate()
-
-	var statorMidProfile = profiles.NewBladeProfileFromProfiler(
-		0.5,
-		0.01, 0.01,
-		0.2, 0.2,
-		statorProfiler,
-	)
-	var stagePack = stage.GetDataPack()
-	statorMidProfile.Transform(geom.Scale(geometry.ChordProjection(stagePack.StageGeometry.StatorGeometry())))
-
-	var gapCalculator = getGapCalculator(stage, statorMidProfile)
-	var gapPack = gapCalculator.GetPack(coolAirMassRate)
-
-	var gapCalcDF = getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
-	saveCooling1Template(gapCalcDF)
-
-	var psTemperatureSystem = getPSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
-	var psSolution = psTemperatureSystem.Solve(0, theta0, 1, 0.001)
-	saveCoolingSolution(psSolution, cooling2PSData)
-
-	var ssTemperatureSystem = getSSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
-	var ssSolution = ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
-	saveCoolingSolution(ssSolution, cooling2SSData)
-
-	var tempProfileDF = getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
-	saveCooling2Template(tempProfileDF)
+	//var schemeData = getSchemeData(scheme)
+	//saveSchemeData(schemeData)
+	//saveVariantTemplate(schemeData)
+	//
+	//solveParticularScheme(scheme, lowPiStag, highPiStag)
+	//saveCycleTemplate(scheme)
+	//
+	//var stage = midline.GetInitedStageNode(scheme)
+	//solveParticularStage(stage)
+	//saveTurbineStageTemplate(stage)
+	//
+	//var statorProfiler = getStatorProfiler(stage)
+	//saveProfiles(
+	//	statorProfiler,
+	//	stage.StageGeomGen().StatorGenerator(),
+	//	[]float64{0, 0.5, 1.0},
+	//	[][]string{
+	//		{"stator_root_1.csv", "stator_root_2.csv"},
+	//		{"stator_mid_1.csv", "stator_mid_2.csv"},
+	//		{"stator_top_1.csv", "stator_top_2.csv"},
+	//	},
+	//	false,
+	//)
+	//
+	//var rotorProfiler = getRotorProfiler(stage)
+	//saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
+	//	var triangle = profiler.InletTriangle(hRel)
+	//	return triangle
+	//}, inletAngleData)
+	//saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
+	//	var triangle = profiler.OutletTriangle(hRel)
+	//	return triangle
+	//}, outletAngleData)
+	//saveProfiles(
+	//	rotorProfiler,
+	//	stage.StageGeomGen().RotorGenerator(),
+	//	[]float64{0, 0.5, 1},
+	//	[][]string{
+	//		{"rotor_root_1.csv", "rotor_root_2.csv"},
+	//		{"rotor_mid_1.csv", "rotor_mid_2.csv"},
+	//		{"rotor_top_1.csv", "rotor_top_2.csv"},
+	//	},
+	//	true,
+	//)
+	//
+	//var inletGasProfiler, outletGasProfiler = getGasProfilers(stage, rotorProfiler)
+	//fmt.Println(profilers.Reactivity(0, 0.5, inletGasProfiler, outletGasProfiler))
+	//fmt.Println(profilers.Reactivity(0.5, 0.5, inletGasProfiler, outletGasProfiler))
+	//fmt.Println(profilers.Reactivity(1, 0.5, inletGasProfiler, outletGasProfiler))
+	//
+	////panic("stop")
+	//
+	//saveProfilingTemplate()
+	//
+	//var statorMidProfile = profiles.NewBladeProfileFromProfiler(
+	//	0.5,
+	//	0.01, 0.01,
+	//	0.2, 0.2,
+	//	statorProfiler,
+	//)
+	//var stagePack = stage.GetDataPack()
+	//statorMidProfile.Transform(geom.Scale(geometry.ChordProjection(stagePack.StageGeometry.StatorGeometry())))
+	//
+	//var gapCalculator = getGapCalculator(stage, statorMidProfile)
+	//var gapPack = gapCalculator.GetPack(coolAirMassRate)
+	//
+	//var gapCalcDF = getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
+	//saveCooling1Template(gapCalcDF)
+	//
+	//var psTemperatureSystem = getPSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	//var psSolution = psTemperatureSystem.Solve(0, theta0, 1, 0.001)
+	//saveCoolingSolution(psSolution, cooling2PSData)
+	//
+	//var ssTemperatureSystem = getSSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	//var ssSolution = ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
+	//saveCoolingSolution(ssSolution, cooling2SSData)
+	//
+	//var tempProfileDF = getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
+	//saveCooling2Template(tempProfileDF)
 
 	saveRootTemplate()
 	saveTitleTemplate()

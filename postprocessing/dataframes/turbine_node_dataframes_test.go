@@ -47,7 +47,7 @@ type StageDFTestSuite struct {
 	suite.Suite
 	node turbine.StageNode
 	gen  turbine.StageGeometryGenerator
-	df   StageDF
+	df   TurbineStageDF
 }
 
 func (suite *StageDFTestSuite) SetupTest() {

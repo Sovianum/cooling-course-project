@@ -103,7 +103,7 @@ func getCycleDf() dataframes.ThreeShaftsDF {
 	return dataframes.NewThreeShaftsDF(nE, etaR, scheme)
 }
 
-func getStageDf() dataframes.StageDF {
+func getStageDf() dataframes.TurbineStageDF {
 	var gen = turbine.NewStageGeometryGenerator(
 		lRelOut,
 		turbine.NewIncompleteGenerator(baRel, deltaRel, gammaIn, gammaOut, statorApproxTRel),
