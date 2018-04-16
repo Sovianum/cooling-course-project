@@ -13,47 +13,50 @@ func GetInitedStatorProfiler(
 	meanInletTriangle, meanOutletTriangle states.VelocityTriangle,
 ) profilers.Profiler {
 	return profilers.NewProfiler(
-		1,
-		0.7,
+		profilers.ProfilerConfig{
+			Windage:    1,
+			ApproxTRel: 0.7,
 
-		profilers.NewStatorProfilingBehavior(),
-		geomGen,
+			Behavior: profilers.NewStatorProfilingBehavior(),
+			GeomGen:  geomGen,
 
-		meanInletTriangle, meanOutletTriangle,
-		laws.NewConstantAbsoluteAngleLaw(),
-		laws.NewConstantAbsoluteAngleLaw(),
+			MeanInletTriangle:  meanInletTriangle,
+			MeanOutletTriangle: meanOutletTriangle,
+			InletVelocityLaw:   laws.NewConstantAbsoluteAngleLaw(),
+			OutletVelocityLaw:  laws.NewConstantAbsoluteAngleLaw(),
 
-		func(characteristicAngle, hRel float64) float64 {
-			return characteristicAngle
-		},
-		func(characteristicAngle, hRel float64) float64 {
-			return characteristicAngle
-		},
+			InletProfileAngleFunc: func(characteristicAngle, hRel float64) float64 {
+				return characteristicAngle
+			},
+			OutletProfileAngleFunc: func(characteristicAngle, hRel float64) float64 {
+				return characteristicAngle
+			},
 
-		func(hRel float64) float64 {
-			return common.InterpTolerate(
-				hRel,
-				[]float64{0, 1},
-				[]float64{common.ToRadians(50), common.ToRadians(50)},
-			)
-		},
+			InstallationAngleFunc: func(hRel float64) float64 {
+				return common.InterpTolerate(
+					hRel,
+					[]float64{0, 1},
+					[]float64{common.ToRadians(50), common.ToRadians(50)},
+				)
+			},
 
-		func(hRel float64) float64 {
-			return common.InterpTolerate(
-				hRel,
-				[]float64{0, 1},
-				[]float64{common.ToRadians(15), common.ToRadians(30)},
-			)
-		},
-		func(hRel float64) float64 {
-			return common.ToRadians(5)
-		},
+			InletExpansionAngleFunc: func(hRel float64) float64 {
+				return common.InterpTolerate(
+					hRel,
+					[]float64{0, 1},
+					[]float64{common.ToRadians(15), common.ToRadians(30)},
+				)
+			},
+			OutletExpansionAngleFunc: func(hRel float64) float64 {
+				return common.ToRadians(5)
+			},
 
-		func(hRel float64) float64 {
-			return 0.5
-		},
-		func(hRel float64) float64 {
-			return 1 / 3
+			InletPSAngleFractionFunc: func(hRel float64) float64 {
+				return 0.5
+			},
+			OutletPSAngleFractionFunc: func(hRel float64) float64 {
+				return 1 / 3
+			},
 		},
 	)
 }
@@ -66,59 +69,62 @@ func GetInitedRotorProfiler(
 	var outletLaw = laws.NewConstantLabourLaw(inletLaw, meanInletTriangle)
 
 	return profilers.NewProfiler(
-		1,
-		0.7,
+		profilers.ProfilerConfig{
+			Windage:    1,
+			ApproxTRel: 0.7,
 
-		profilers.NewRotorProfilingBehavior(),
-		geomGen,
+			Behavior: profilers.NewRotorProfilingBehavior(),
+			GeomGen:  geomGen,
 
-		meanInletTriangle, meanOutletTriangle,
-		inletLaw,
-		outletLaw,
+			MeanInletTriangle:  meanInletTriangle,
+			MeanOutletTriangle: meanOutletTriangle,
+			InletVelocityLaw:   inletLaw,
+			OutletVelocityLaw:  outletLaw,
 
-		func(characteristicAngle, hRel float64) float64 {
-			return characteristicAngle
-		},
-		func(characteristicAngle, hRel float64) float64 {
-			return characteristicAngle
-		},
+			InletProfileAngleFunc: func(characteristicAngle, hRel float64) float64 {
+				return characteristicAngle
+			},
+			OutletProfileAngleFunc: func(characteristicAngle, hRel float64) float64 {
+				return characteristicAngle
+			},
 
-		func(hRel float64) float64 {
-			return common.InterpTolerate(
-				hRel,
-				[]float64{0, 0.5, 1},
-				[]float64{
-					common.ToRadians(68),
-					common.ToRadians(55),
-					common.ToRadians(50),
-				},
-			)
-		},
+			InstallationAngleFunc: func(hRel float64) float64 {
+				return common.InterpTolerate(
+					hRel,
+					[]float64{0, 0.5, 1},
+					[]float64{
+						common.ToRadians(68),
+						common.ToRadians(55),
+						common.ToRadians(50),
+					},
+				)
+			},
 
-		func(hRel float64) float64 {
-			return common.InterpTolerate(
-				hRel,
-				[]float64{0, 1},
-				[]float64{common.ToRadians(25), common.ToRadians(15)},
-			)
-		},
-		func(hRel float64) float64 {
-			return common.ToRadians(5)
-		},
+			InletExpansionAngleFunc: func(hRel float64) float64 {
+				return common.InterpTolerate(
+					hRel,
+					[]float64{0, 1},
+					[]float64{common.ToRadians(25), common.ToRadians(15)},
+				)
+			},
+			OutletExpansionAngleFunc: func(hRel float64) float64 {
+				return common.ToRadians(5)
+			},
 
-		func(hRel float64) float64 {
-			return common.InterpTolerate(
-				hRel,
-				[]float64{0, 1},
-				[]float64{0.7, 0.9},
-			)
-		},
-		func(hRel float64) float64 {
-			return common.InterpTolerate(
-				hRel,
-				[]float64{0, 1},
-				[]float64{1 / 3, 1},
-			)
+			InletPSAngleFractionFunc: func(hRel float64) float64 {
+				return common.InterpTolerate(
+					hRel,
+					[]float64{0, 1},
+					[]float64{0.7, 0.9},
+				)
+			},
+			OutletPSAngleFractionFunc: func(hRel float64) float64 {
+				return common.InterpTolerate(
+					hRel,
+					[]float64{0, 1},
+					[]float64{1 / 3, 1},
+				)
+			},
 		},
 	)
 }

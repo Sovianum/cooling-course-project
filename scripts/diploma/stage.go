@@ -37,8 +37,8 @@ func saveProfiles(
 	for i, hRel := range hRelArr {
 		profileArr[i] = profiles.NewBladeProfileFromProfiler(
 			hRel,
-			0.01, 0.01,
-			0.2, 0.2,
+			0.05, 0.03,
+			0.35, 0.3,
 			profiler,
 		)
 	}
