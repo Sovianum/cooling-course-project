@@ -11,8 +11,8 @@ import (
 
 const (
 	RPMHigh = 12e3
-	RPMLow  = 7e3
-	RPMFree = 5.3e3
+	RPMLow  = 8.5e3
+	RPMFree = 7.8e3
 
 	precision  = 1e-3
 	relaxCoef  = 0.1
@@ -211,7 +211,7 @@ func getLPTConfig() midall.TurbineConfig {
 	return midall.TurbineConfig{
 		StageNum: 2,
 		RPM:      RPMLow,
-		Alpha1:   common.ToRadians(16),
+		Alpha1:   common.ToRadians(14),
 
 		TotalHeatDrop: math.NaN(), // heat drop will be set wile fitting
 
@@ -248,9 +248,9 @@ func getLPTConfig() midall.TurbineConfig {
 
 func getFTConfig() midall.TurbineConfig {
 	return midall.TurbineConfig{
-		StageNum: 3,
+		StageNum: 2,
 		RPM:      RPMFree,
-		Alpha1:   common.ToRadians(22),
+		Alpha1:   common.ToRadians(14),
 
 		TotalHeatDrop: math.NaN(), // heat drop will be set wile fitting
 
