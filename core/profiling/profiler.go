@@ -82,7 +82,7 @@ func GetInitedRotorProfiler(
 			OutletVelocityLaw:  outletLaw,
 
 			InletProfileAngleFunc: func(characteristicAngle, hRel float64) float64 {
-				return characteristicAngle
+				return characteristicAngle + common.ToRadians(2)
 			},
 			OutletProfileAngleFunc: func(characteristicAngle, hRel float64) float64 {
 				return characteristicAngle
@@ -104,7 +104,7 @@ func GetInitedRotorProfiler(
 				return common.InterpTolerate(
 					hRel,
 					[]float64{0, 1},
-					[]float64{common.ToRadians(25), common.ToRadians(15)},
+					[]float64{common.ToRadians(20), common.ToRadians(15)},
 				)
 			},
 			OutletExpansionAngleFunc: func(hRel float64) float64 {
