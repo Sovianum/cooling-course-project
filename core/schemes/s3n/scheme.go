@@ -20,9 +20,9 @@ const (
 	piCompTotal           = 30
 	piCompFactor          = 0.18
 
-	piDiplomaTotal = 20.
-	piDiplomaHigh  = 3.5
-	piDiplomaLow   = piDiplomaTotal / piDiplomaHigh
+	PiDiplomaTotal = 19.
+	PiDiplomaHigh  = 4
+	PiDiplomaLow   = PiDiplomaTotal / PiDiplomaHigh
 
 	etaMiddlePressureTurbine = 0.90
 	etaMMiddleCascade        = 0.99
@@ -60,7 +60,7 @@ func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 	var gasSource = source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	var inletPressureDrop = constructive.NewPressureLossNode(sigmaInlet)
 	var middlePressureCascade = compose.NewTurboCascadeNode(
-		etaMiddlePressureComp, piDiplomaLow,
+		etaMiddlePressureComp, PiDiplomaLow,
 		etaMiddlePressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
 			return -lptLeakMassRate
@@ -74,7 +74,7 @@ func GetDiplomaInitedThreeShaftsScheme() schemes.ThreeShaftsScheme {
 		etaMMiddleCascade, precision,
 	)
 	var gasGenerator = compose.NewGasGeneratorNode(
-		etaHighPressureComp, piDiplomaHigh, fuel.GetCH4(),
+		etaHighPressureComp, PiDiplomaHigh, fuel.GetCH4(),
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
 		etaHighPressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {

@@ -11,7 +11,7 @@ import (
 
 const (
 	RPMHigh = 12e3
-	RPMLow  = 8.5e3
+	RPMLow  = 9e3
 	RPMFree = 7.8e3
 
 	precision  = 1e-3
@@ -68,24 +68,32 @@ func getLPCConfig() midall.CompressorConfig {
 		StageNum: 7,
 		RPM:      RPMLow,
 
-		DRelIn: 0.55,
+		DRelIn: 0.43,
 
-		RotorElongationArr: []float64{4, 3.75, 3.5, 3.25, 3, 2.75, 2.5},
+		RotorElongationArr: []float64{3.65, 3.56, 3.14, 3.17, 3.1, 3.16, 3.04},
 		DeltaRotorRelArr:   []float64{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
 
-		StatorElongationArr: []float64{4, 3.75, 3.5, 3.25, 3, 2.75, 2.5},
+		StatorElongationArr: []float64{4.36, 3.75, 3.0, 3.00, 2.85, 3.13, 2.95},
 		DeltaStatorRelArr:   []float64{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
 
 		GammaInArr: []float64{
-			common.ToRadians(22),
-			common.ToRadians(20),
-			common.ToRadians(16),
-			common.ToRadians(12),
-			common.ToRadians(11),
-			common.ToRadians(9),
-			common.ToRadians(6),
+			common.ToRadians(8),
+			common.ToRadians(8),
+			common.ToRadians(8),
+			common.ToRadians(5),
+			common.ToRadians(5),
+			common.ToRadians(5),
+			common.ToRadians(5),
 		},
-		GammaOutArr: []float64{0, 0, 0, 0, 0, 0, 0},
+		GammaOutArr: []float64{
+			common.ToRadians(-8),
+			common.ToRadians(-8),
+			common.ToRadians(-8),
+			common.ToRadians(-5),
+			common.ToRadians(-5),
+			common.ToRadians(-4),
+			common.ToRadians(-4),
+		},
 
 		HtLossStart: 0.1,
 		HtLossEnd:   0.01,

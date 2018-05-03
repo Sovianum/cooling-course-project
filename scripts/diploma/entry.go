@@ -3,6 +3,7 @@ package diploma
 import (
 	"fmt"
 	"github.com/Sovianum/cooling-course-project/core/midall/inited"
+	"github.com/Sovianum/cooling-course-project/core/schemes/s3n"
 	"github.com/Sovianum/cooling-course-project/io"
 	"github.com/Sovianum/cooling-course-project/postprocessing/builder"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
@@ -26,10 +27,6 @@ const (
 	startPi   = 10
 	piStep    = 0.5
 	piStepNum = 100
-
-	totalPiStag = 20
-	lowPiStag   = 5.7
-	highPiStag  = 3.5
 
 	templatesDir = "postprocessing/templates"
 
@@ -106,12 +103,12 @@ func Entry() {
 
 	saveInputTemplates()
 
-	scheme := getScheme(lowPiStag, highPiStag)
+	scheme := getScheme(s3n.PiDiplomaLow, s3n.PiDiplomaHigh)
 	schemeData := getSchemeData(scheme)
 	saveSchemeData(schemeData)
 	saveVariantTemplate(schemeData)
 
-	solveParticularScheme(scheme, lowPiStag, highPiStag)
+	solveParticularScheme(scheme, s3n.PiDiplomaLow, s3n.PiDiplomaHigh)
 	saveCycleTemplate(scheme)
 
 	saveCompressorStageTemplate()

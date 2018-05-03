@@ -44,9 +44,9 @@ func saveVariantTemplate(schemeData []core.DoubleCompressorDataPoint) {
 	var df = dataframes.VariantDF{
 		MaxEta:    core.EtaOptimalPoint(schemeData),
 		MaxLabour: core.LabourOptimalPoint(schemeData),
-		PiLow:     lowPiStag,
-		PiHigh:    highPiStag,
-		PiTotal:   totalPiStag,
+		PiLow:     s3n.PiDiplomaLow,
+		PiHigh:    s3n.PiDiplomaHigh,
+		PiTotal:   s3n.PiDiplomaTotal,
 	}
 	if err := inserter.Insert(df); err != nil {
 		panic(err)
