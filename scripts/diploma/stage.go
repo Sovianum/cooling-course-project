@@ -1,6 +1,7 @@
 package diploma
 
 import (
+	"fmt"
 	"github.com/Sovianum/cooling-course-project/core/midall/inited"
 	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
@@ -122,6 +123,19 @@ func getGasProfilers(stage turbine.StageNode, rotorProfiler profilers.Profiler) 
 	inletProfiler = profilers.InletGasProfiler(gas, tIn, pIn, reactivity, triangleIn, rotorProfiler)
 	outletProfiler = profilers.OutletGasProfiler(gas, tOut, pOut, reactivity, triangleOut, rotorProfiler)
 	return
+}
+
+func getProfileMsg(profiler profilers.Profiler, hRel float64) string {
+	return fmt.Sprintf(
+		"inlet_angle: %.1f, inlet_exp: %.1f, inlet_ps_frac: %.1f, inst_angle: %.1f, outlet_angle: %.1f, outlet_exp: %.1f, outlet_ps_frac: %.1f",
+		common.ToDegrees(profiler.InletProfileAngle(hRel)),
+		common.ToDegrees(profiler.InletExpansionAngle(hRel)),
+		profiler.InletPSAngleFraction(hRel),
+		common.ToDegrees(profiler.InstallationAngle(hRel)),
+		common.ToDegrees(profiler.OutletProfileAngle(hRel)),
+		common.ToDegrees(profiler.OutletExpansionAngle(hRel)),
+		profiler.OutletPSAngleFraction(hRel),
+	)
 }
 
 func getRotorProfiler(stage turbine.StageNode) profilers.Profiler {

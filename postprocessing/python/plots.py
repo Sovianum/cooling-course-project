@@ -44,8 +44,9 @@ def plot_cooling_temperature(ps_data, ss_data):
     plt.plot(data.l * 1e3, data.t_wall, color='green')
     plt.plot(data.l * 1e3, data.t_air, color='blue')
     plt.plot(data.l * 1e3, data.t_film, color='red')
+    plt.plot(data.l * 1e3, data.t_wall_smooth)
 
-    plt.legend(['$T_{ст}$', '$T_{возд}$', '$T_{пл}$'], loc='best')
+    plt.legend(['$T_{ст}$', '$T_{возд}$', '$T_{пл}$', '$T_{ст \/\ гладк}$'], loc='best')
 
     x_min = min(data.l) * 1e3
     x_max = max(data.l) * 1e3

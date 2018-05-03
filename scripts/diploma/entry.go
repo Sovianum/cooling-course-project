@@ -79,8 +79,8 @@ const (
 	cooling2Template = "cooling_calc2_template.tex"
 	cooling2Out      = "cooling_calc2.tex"
 
-	cooling2PSData = "cooling_2_ps.csv"
-	cooling2SSData = "cooling_2_ss.csv"
+	cooling2PSData = "cooling_2_ps.json"
+	cooling2SSData = "cooling_2_ss.json"
 
 	inletAngleData  = "inlet_angle.csv"
 	outletAngleData = "outlet_angle.csv"
@@ -139,6 +139,10 @@ func Entry() {
 	)
 
 	rotorProfiler := getRotorProfiler(stage)
+	fmt.Println(fmt.Sprintf("profile %.1f", 0.5), getProfileMsg(rotorProfiler, 0.5))
+	fmt.Println(fmt.Sprintf("profile %.1f", 0.0), getProfileMsg(rotorProfiler, 0.0))
+	fmt.Println(fmt.Sprintf("profile %.1f", 1.0), getProfileMsg(rotorProfiler, 1.0))
+
 	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
 		triangle := profiler.InletTriangle(hRel)
 		return triangle
@@ -181,11 +185,32 @@ func Entry() {
 	gapCalcDF := getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
 	saveCooling1Template(gapCalcDF)
 
-	psTemperatureSystem := getPSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	psTemperatureSystem := getPSConvFilmTemperatureSystem(
+		gapPack.AlphaGas,
+		stage,
+		statorMidProfile,
+		[]SlitGeom{
+			{3e-3, 0.4e-3},
+			{27e-3, 0.5e-3},
+			{37e-3, 0.5e-3},
+		},
+	)
 	psSolution := psTemperatureSystem.Solve(0, theta0, 1, 0.001)
 	saveCoolingSolution(psSolution, cooling2PSData)
 
-	ssTemperatureSystem := getSSConvFilmTemperatureSystem(gapPack.AlphaGas, stage, statorMidProfile)
+	ssTemperatureSystem := getSSConvFilmTemperatureSystem(
+		gapPack.AlphaGas,
+		stage,
+		statorMidProfile,
+		[]SlitGeom{
+			{3e-3, 0.4e-3},
+			{16e-3, 0.25e-3},
+			{22e-3, 0.25e-3},
+			{27e-3, 0.3e-3},
+			{31e-3, 0.35e-3},
+			{36.5e-3, 0.40e-3},
+		},
+	)
 	ssSolution := ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
 	saveCoolingSolution(ssSolution, cooling2SSData)
 
@@ -206,12 +231,7 @@ func buildReport() {
 }
 
 func buildPlots() {
-	var arguments = []string{
-		imgDir,
-		dataDir,
-	}
-
-	var cmd = exec.Command("./plot_all.py", arguments...)
+	var cmd = exec.Command("./plot_all.py", imgDir, dataDir)
 	cmd.Stdout = os.Stdout
 	var err = cmd.Run()
 	if err != nil {

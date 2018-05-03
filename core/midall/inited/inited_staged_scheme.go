@@ -237,7 +237,7 @@ func getLPTConfig() midall.TurbineConfig {
 		PhiStartLoss: 0, PhiEndLoss: 0, PhiMax: 0.97, PhiMaxCoord: 0,
 		PsiStartLoss: 0, PsiEndLoss: 0, PsiMax: 0.97, PsiMaxCoord: 0,
 
-		HtStartLoss: 0, HtEndLoss: 0, HtMaxCoord: 0,
+		HtStartLoss: 0, HtEndLoss: 0.07, HtMaxCoord: 0,
 
 		ReactivityStart: 0.5, ReactivityEnd: 0.5,
 		AirGapRelStart: 0.001, AirGapRelEnd: 0.001,
@@ -250,7 +250,7 @@ func getFTConfig() midall.TurbineConfig {
 	return midall.TurbineConfig{
 		StageNum: 2,
 		RPM:      RPMFree,
-		Alpha1:   common.ToRadians(14),
+		Alpha1:   common.ToRadians(13),
 
 		TotalHeatDrop: math.NaN(), // heat drop will be set wile fitting
 
@@ -278,9 +278,9 @@ func getFTConfig() midall.TurbineConfig {
 		PhiStartLoss: 0, PhiEndLoss: 0, PhiMax: 0.97, PhiMaxCoord: 0,
 		PsiStartLoss: 0, PsiEndLoss: 0, PsiMax: 0.97, PsiMaxCoord: 0,
 
-		HtStartLoss: 0, HtEndLoss: 0, HtMaxCoord: 0,
+		HtStartLoss: 0.1, HtEndLoss: 0, HtMaxCoord: 1,
 
-		ReactivityStart: 0.4, ReactivityEnd: 0.4,
+		ReactivityStart: 0.42, ReactivityEnd: 0.42,
 		AirGapRelStart: 0.001, AirGapRelEnd: 0.001,
 
 		Precision: precision,

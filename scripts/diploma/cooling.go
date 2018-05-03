@@ -16,6 +16,7 @@ import (
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/gap"
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
+	"github.com/gin-gonic/gin/json"
 	"math"
 )
 
@@ -36,7 +37,11 @@ func saveCooling2Template(df dataframes.TProfileCalcDF) {
 }
 
 func saveCoolingSolution(solution profile.TemperatureSolution, fileName string) {
-	if err := profiling.SaveMatrix(dataDir+"/"+fileName, solution.ToMatrix()); err != nil {
+	b, err := json.Marshal(solution)
+	if err != nil {
+		panic(err)
+	}
+	if err := profiling.SaveString(dataDir+"/"+fileName, string(b)); err != nil {
 		panic(err)
 	}
 }
@@ -124,33 +129,27 @@ func getPSConvTemperatureSystem(
 	}
 }
 
+type SlitGeom struct {
+	Coord float64
+	D     float64
+}
+
 func getSSConvFilmTemperatureSystem(
 	meanAlphaGas float64,
 	stage turbine.StageNode,
 	bladeProfile profiles.BladeProfile,
+	slitGeomData []SlitGeom,
 ) profile.TemperatureSystem {
 	var segment = profiles.SSSegment(bladeProfile, 0.5, 0.5)
 	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.SSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.SSLambdaLaw)
 
-	var slitGeomData = []struct {
-		coord float64
-		d     float64
-	}{
-		{3e-3, 0.4e-3},
-		{27e-3, 0.5e-3},
-		{37e-3, 0.5e-3},
-		//{41e-3, 0.3e-3},
-		//{30e-3, 0.5e-3},
-		//{35e-3, 0.3e-3},
-	}
-
 	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
 	for i, item := range slitGeomData {
 		slitInfoArr[i] = profile.SlitInfo{
-			Coord:        item.coord,
-			Thickness:    getSlitThk(item.d),
-			Area:         getSlitArea(item.d),
+			Coord:        item.Coord,
+			Thickness:    getSlitThk(item.D),
+			Area:         getSlitArea(item.D),
 			VelocityCoef: velocityCoef,
 			MassRateCoef: massRateCoef,
 		}
@@ -169,29 +168,18 @@ func getPSConvFilmTemperatureSystem(
 	meanAlphaGas float64,
 	stage turbine.StageNode,
 	bladeProfile profiles.BladeProfile,
+	slitGeomData []SlitGeom,
 ) profile.TemperatureSystem {
 	var segment = profiles.PSSegment(bladeProfile, 0.5, 0.5)
 	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.PSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.PSLambdaLaw)
 
-	var slitGeomData = []struct {
-		coord float64
-		d     float64
-	}{
-		{3e-3, 0.4e-3},
-		{16e-3, 0.25e-3},
-		{22e-3, 0.25e-3},
-		{27e-3, 0.3e-3},
-		{31e-3, 0.35e-3},
-		{36.5e-3, 0.40e-3},
-	}
-
 	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
 	for i, item := range slitGeomData {
 		slitInfoArr[i] = profile.SlitInfo{
-			Coord:        item.coord,
-			Thickness:    getSlitThk(item.d),
-			Area:         getSlitArea(item.d),
+			Coord:        item.Coord,
+			Thickness:    getSlitThk(item.D),
+			Area:         getSlitArea(item.D),
 			VelocityCoef: velocityCoef,
 			MassRateCoef: massRateCoef,
 		}

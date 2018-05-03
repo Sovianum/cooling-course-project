@@ -56,7 +56,7 @@ func getCompressorMessage(compressor compressor.StagedCompressorNode) string {
 		outletTriangle := pack.OutletTriangle
 
 		result += fmt.Sprintf(
-			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, alpha3: %.3f, pi: %.3f, u: %.1f, ca1: %.3f, ca3: %.3f, ht: %.3f, t1: %.1f, dOut1: %.3f, dIn1: %.3f, dx: %.3f, dxr: %.3f, dxs: %.3f, dRelIn: %.3f\n",
+			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, alpha3: %.3f, pi: %.3f, u: %.1f, ca1: %.3f, ca3: %.3f, ht: %.3f, t1: %.1f, dOut1: %.3f, dIn1: %.3f, dx: %.3f, dxr: %.3f, dxs: %.3f, dRelIn: %.3f, gamma_out: %.1f, gamma_in: %.1f\n",
 			common.ToDegrees(inletTriangle.Alpha()),
 			common.ToDegrees(inletTriangle.Beta()),
 			common.ToDegrees(midTriangle.Alpha()),
@@ -74,6 +74,8 @@ func getCompressorMessage(compressor compressor.StagedCompressorNode) string {
 			pack.StageGeometry.RotorGeometry().XGapOut(),
 			pack.StageGeometry.StatorGeometry().XGapOut(),
 			geometry.DRel(0, pack.StageGeometry.RotorGeometry()),
+			common.ToDegrees(pack.StageGeometry.RotorGeometry().OuterProfile().Angle()),
+			common.ToDegrees(pack.StageGeometry.RotorGeometry().InnerProfile().Angle()),
 		)
 	}
 	return result
@@ -94,7 +96,7 @@ func getTurbineMessage(turbine turbine.StagedTurbineNode) string {
 			return l / dMean
 		}
 		result += fmt.Sprintf(
-			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, pi: %.3f, eta: %.3f, u1: %.1f, ca1: %.3f, ca2: %.3f, dMean: %.3f, dOut: %.3f, dIn: %.3f, dx: %.3f, lRelOut: %.3f\n",
+			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, pi: %.3f, eta: %.3f, u1: %.1f, ca1: %.3f, ca2: %.3f, dMean: %.3f, dOut: %.3f, dIn: %.3f, dx: %.3f, lRelOut: %.3f, gamma_out: %.1f, gamma_in: %.1f\n",
 			common.ToDegrees(rotorInletTriangle.Alpha()),
 			common.ToDegrees(rotorInletTriangle.Beta()),
 			common.ToDegrees(rotorOutletTriangle.Alpha()),
@@ -109,6 +111,8 @@ func getTurbineMessage(turbine turbine.StagedTurbineNode) string {
 			pack.StageGeometry.RotorGeometry().InnerProfile().Diameter(0),
 			pack.StageGeometry.StatorGeometry().XGapOut()+pack.StageGeometry.RotorGeometry().XGapOut(),
 			lRelOutFunc(pack.StageGeometry.RotorGeometry()),
+			common.ToDegrees(pack.StageGeometry.StatorGeometry().OuterProfile().Angle()),
+			common.ToDegrees(pack.StageGeometry.StatorGeometry().InnerProfile().Angle()),
 		)
 	}
 	return result

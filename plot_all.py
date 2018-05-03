@@ -58,8 +58,8 @@ if __name__ == '__main__':
     plt.savefig(os.path.join(img_dir, "outlet_angle.png"))
     plt.close()
 
-    ss_profile_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_ss.csv"))
-    ps_profile_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_ps.csv"))
+    ss_profile_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_ss.json"))
+    ps_profile_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_ps.json"))
 
     plots.plot_cooling_temperature(ps_profile_df, ss_profile_df)
     plt.savefig(os.path.join(img_dir, "cooling_2_t.png"))
