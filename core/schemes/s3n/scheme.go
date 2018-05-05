@@ -22,7 +22,7 @@ const (
 
 	PiDiplomaTotal = 19.
 	PiDiplomaHigh  = 4
-	PiDiplomaLow   = PiDiplomaTotal / PiDiplomaHigh
+	PiDiplomaLow   = PiDiplomaTotal / PiDiplomaHigh // proto value: 19/4
 
 	etaMiddlePressureTurbine = 0.90
 	etaMMiddleCascade        = 0.99
