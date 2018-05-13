@@ -19,13 +19,13 @@ func TestGetInitedStagedNodes(t *testing.T) {
 		return
 	}
 
-	lpc := data.LPC
-	fmt.Println("LPC")
-	fmt.Println(getCompressorMessage(lpc))
-
-	hpc := data.HPC
-	fmt.Println("HPC")
-	fmt.Println(getCompressorMessage(hpc))
+	//lpc := data.LPC
+	//fmt.Println("LPC")
+	//fmt.Println(getCompressorMessage(lpc))
+	//
+	//hpc := data.HPC
+	//fmt.Println("HPC")
+	//fmt.Println(getCompressorMessage(hpc))
 
 	hpt := data.HPT
 	fmt.Println("HPT")
@@ -98,7 +98,7 @@ func getTurbineMessage(turbine turbine.StagedTurbineNode) string {
 		statorGeom := pack.StageGeometry.StatorGeometry()
 		rotorGeom := pack.StageGeometry.RotorGeometry()
 		result += fmt.Sprintf(
-			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, pi: %.3f, eta: %.3f, u1: %.1f, ca1: %.3f, ca2: %.3f, dInS: %.3f, dMS: %.3f, dOutS: %.3f, dInR: %.3f, dMR: %.3f, dOutR: %.3f, dx: %.3f, lRelOut: %.3f, gamma_out: %.1f, gamma_in: %.1f\n",
+			"alpha1: %.3f, beta1: %.3f, alpha2: %.3f, beta2: %.3f, pi: %.3f, eta: %.3f, u1: %.1f, ca1: %.3f, ca2: %.3f, dInS: %.4f, dMS: %.4f, dOutS: %.4f, dInR: %.4f, dMR: %.4f, dOutR: %.4f, dxS: %.3f, dxR: %.3f, dx: %.3f, lRelOut: %.3f, gamma_out: %.1f, gamma_in: %.1f\n",
 			common.ToDegrees(rotorInletTriangle.Alpha()),
 			common.ToDegrees(rotorInletTriangle.Beta()),
 			common.ToDegrees(rotorOutletTriangle.Alpha()),
@@ -114,6 +114,8 @@ func getTurbineMessage(turbine turbine.StagedTurbineNode) string {
 			rotorGeom.InnerProfile().Diameter(rotorGeom.XGapOut()),
 			rotorGeom.MeanProfile().Diameter(rotorGeom.XGapOut()),
 			rotorGeom.OuterProfile().Diameter(rotorGeom.XGapOut()),
+			statorGeom.XGapOut(),
+			rotorGeom.XGapOut(),
 			statorGeom.XGapOut()+rotorGeom.XGapOut(),
 			lRelOutFunc(pack.StageGeometry.RotorGeometry()),
 			common.ToDegrees(pack.StageGeometry.StatorGeometry().OuterProfile().Angle()),
