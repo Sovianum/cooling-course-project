@@ -125,10 +125,10 @@ func getLPCConfig() midall.CompressorConfig {
 
 func getHPCConfig() midall.CompressorConfig {
 	return midall.CompressorConfig{
-		StageNum: 7,
+		StageNum: 5,
 		RPM:      RPMHigh,
 
-		DRelIn: 0.734,
+		DRelIn: 0.85, // fitted value DRelIn: 0.734,
 
 		RotorElongationArr: []float64{3.63, 3.68, 3.16, 2.5, 2.15, 2.16, 2.13},
 		DeltaRotorRelArr:   []float64{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
@@ -219,7 +219,7 @@ func getLPTConfig() midall.TurbineConfig {
 	return midall.TurbineConfig{
 		StageNum: 1,
 		RPM:      RPMLow,
-		Alpha1:   common.ToRadians(17.5),
+		Alpha1:   common.ToRadians(15.5),
 
 		TotalHeatDrop: math.NaN(), // heat drop will be set wile fitting
 

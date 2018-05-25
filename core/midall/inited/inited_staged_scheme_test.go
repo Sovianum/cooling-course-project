@@ -19,13 +19,13 @@ func TestGetInitedStagedNodes(t *testing.T) {
 		return
 	}
 
-	//lpc := data.LPC
-	//fmt.Println("LPC")
-	//fmt.Println(getCompressorMessage(lpc))
-	//
-	//hpc := data.HPC
-	//fmt.Println("HPC")
-	//fmt.Println(getCompressorMessage(hpc))
+	lpc := data.LPC
+	fmt.Println("LPC")
+	fmt.Println(getCompressorMessage(lpc))
+
+	hpc := data.HPC
+	fmt.Println("HPC")
+	fmt.Println(getCompressorMessage(hpc))
 
 	hpt := data.HPT
 	fmt.Println("HPT")
