@@ -76,8 +76,11 @@ const (
 	cooling2Template = "cooling_calc2_template.tex"
 	cooling2Out      = "cooling_calc2.tex"
 
-	cooling2PSData = "cooling_2_ps.json"
-	cooling2SSData = "cooling_2_ss.json"
+	cooling2NoFrontPSData = "cooling_2_no_front_ps.json"
+	cooling2NoFrontSSData = "cooling_2_no_front_ss.json"
+
+	cooling2FrontPSData = "cooling_2_front_ps.json"
+	cooling2FrontSSData = "cooling_2_front_ss.json"
 
 	inletAngleData  = "inlet_angle.csv"
 	outletAngleData = "outlet_angle.csv"
@@ -104,15 +107,15 @@ func Entry() {
 	saveInputTemplates()
 
 	scheme := getScheme(s3n.PiDiplomaLow, s3n.PiDiplomaHigh)
-	schemeData := getSchemeData(scheme)
-	saveSchemeData(schemeData)
-	saveVariantTemplate(schemeData)
+	//schemeData := getSchemeData(scheme)
+	//saveSchemeData(schemeData)
+	//saveVariantTemplate(schemeData)
 
 	solveParticularScheme(scheme, s3n.PiDiplomaLow, s3n.PiDiplomaHigh)
-	saveCycleTemplate(scheme)
+	//saveCycleTemplate(scheme)
 
-	saveCompressorStageTemplate()
-	saveCompressorTotalTableTemplates()
+	//saveCompressorStageTemplate()
+	//saveCompressorTotalTableTemplates()
 
 	initedMachines, err := inited.GetInitedStagedNodes()
 	if err != nil {
@@ -134,11 +137,28 @@ func Entry() {
 		},
 		false,
 	)
-
 	rotorProfiler := getRotorProfiler(stage)
-	fmt.Println(fmt.Sprintf("profile %.1f", 0.5), getProfileMsg(rotorProfiler, 0.5))
+	fmt.Println("stator")
+	fmt.Println(fmt.Sprintf("profile %.1f", 0.0), getProfileMsg(statorProfiler, 0.0))
+	fmt.Println(fmt.Sprintf("profile %.1f", 0.5), getProfileMsg(statorProfiler, 0.5))
+	fmt.Println(fmt.Sprintf("profile %.1f", 1.0), getProfileMsg(statorProfiler, 1.0))
+
+	fmt.Println("rotor")
 	fmt.Println(fmt.Sprintf("profile %.1f", 0.0), getProfileMsg(rotorProfiler, 0.0))
+	fmt.Println(fmt.Sprintf("profile %.1f", 0.5), getProfileMsg(rotorProfiler, 0.5))
 	fmt.Println(fmt.Sprintf("profile %.1f", 1.0), getProfileMsg(rotorProfiler, 1.0))
+
+	for _, hRel := range []float64{0, 0.5, 1} {
+		fmt.Println(fmt.Sprintf("triangle %.1f\n", hRel), getTrianglesMsg(
+			rotorProfiler.InletTriangle(hRel), rotorProfiler.OutletTriangle(hRel),
+		))
+	}
+	rotorGeom := stage.GetDataPack().StageGeometry.RotorGeometry()
+	fmt.Println(
+		rotorGeom.InnerProfile().Diameter(0)*1000,
+		rotorGeom.MeanProfile().Diameter(0)*1000,
+		rotorGeom.OuterProfile().Diameter(0)*1000,
+	)
 
 	saveAngleData(rotorProfiler, func(hRel float64, profiler profilers.Profiler) states.VelocityTriangle {
 		triangle := profiler.InletTriangle(hRel)
@@ -177,48 +197,86 @@ func Entry() {
 	statorMidProfile.Transform(geom.Scale(geometry.ChordProjection(stagePack.StageGeometry.StatorGeometry())))
 
 	gapCalculator := getGapCalculator(stage, statorMidProfile)
-	gapPack := gapCalculator.GetPack(coolAirMassRate)
 
+	noFrontGapPack := gapCalculator.GetPack(coolAirMassRate)
 	gapCalcDF := getGapDF(common.LinSpace(0.01, 0.10, 10), gapCalculator)
 	saveCooling1Template(gapCalcDF)
 
-	psTemperatureSystem := getPSConvFilmTemperatureSystem(
-		gapPack.AlphaGas,
+	psTemperatureSystemNoFront := getPSConvFilmTemperatureSystem(
+		coolAirMassRate,
+		noFrontGapPack.AlphaGas,
 		stage,
 		statorMidProfile,
 		[]SlitGeom{
-			{3e-3, 0.4e-3},
-			{27e-3, 0.5e-3},
-			{37e-3, 0.5e-3},
+			{4e-3, 0.45e-3},
+			{18e-3, 0.4e-3},
+			{30e-3, 0.5e-3},
+			{37e-3, 0.40e-3},
 		},
 	)
-	psSolution := psTemperatureSystem.Solve(0, theta0, 1, 0.001)
-	saveCoolingSolution(psSolution, cooling2PSData)
+	psSolutionNoFront := psTemperatureSystemNoFront.Solve(0, theta0, 1, 0.001)
+	saveCoolingSolution(psSolutionNoFront, cooling2NoFrontPSData)
 
-	ssTemperatureSystem := getSSConvFilmTemperatureSystem(
-		gapPack.AlphaGas,
+	ssTemperatureSystemNoFront := getSSConvFilmTemperatureSystem(
+		coolAirMassRate,
+		noFrontGapPack.AlphaGas,
 		stage,
 		statorMidProfile,
 		[]SlitGeom{
-			{3e-3, 0.4e-3},
-			{16e-3, 0.25e-3},
+			{7e-3, 0.45e-3},
 			{22e-3, 0.25e-3},
-			{27e-3, 0.3e-3},
-			{31e-3, 0.35e-3},
-			{36.5e-3, 0.40e-3},
+			{27e-3, 0.25e-3},
+			{32e-3, 0.32e-3},
+			{38e-3, 0.35e-3},
+			{43e-3, 0.45e-3},
 		},
 	)
-	ssSolution := ssTemperatureSystem.Solve(0, theta0, 1, 0.001)
-	saveCoolingSolution(ssSolution, cooling2SSData)
+	ssSolutionNoFront := ssTemperatureSystemNoFront.Solve(0, theta0, 1, 0.001)
+	saveCoolingSolution(ssSolutionNoFront, cooling2NoFrontSSData)
 
-	tempProfileDF := getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolution, ssSolution)
+	minCoolAirMassRate := coolAirMassRate * 0.91
+	frontGapPack := gapCalculator.GetPack(minCoolAirMassRate)
+	tempProfileDF := getTempProfileDF(gapCalcDF, stage, statorMidProfile, psSolutionNoFront, ssSolutionNoFront)
 	saveCooling2Template(tempProfileDF)
+
+	psTemperatureSystemFront := getPSConvFilmTemperatureSystem(
+		minCoolAirMassRate,
+		frontGapPack.AlphaGas,
+		stage,
+		statorMidProfile,
+		[]SlitGeom{
+			{0, 0.15e-3},
+			{10e-3, 0.30e-3},
+			{18e-3, 0.30e-3},
+			{25e-3, 0.55e-3},
+			{36.5e-3, 0.53e-3},
+		},
+	)
+	psSolutionFront := psTemperatureSystemFront.Solve(0, theta0, 1, 0.001)
+	saveCoolingSolution(psSolutionFront, cooling2FrontPSData)
+
+	ssTemperatureSystemFront := getSSConvFilmTemperatureSystem(
+		minCoolAirMassRate,
+		frontGapPack.AlphaGas,
+		stage,
+		statorMidProfile,
+		[]SlitGeom{
+			{0, 0.115e-3},
+			{18e-3, 0.25e-3},
+			{24e-3, 0.25e-3},
+			{30e-3, 0.3e-3},
+			{35e-3, 0.55e-3},
+			{43.5e-3, 0.55e-3},
+		},
+	)
+	ssSolutionFront := ssTemperatureSystemFront.Solve(0, theta0, 1, 0.001)
+	saveCoolingSolution(ssSolutionFront, cooling2FrontSSData)
 
 	saveRootTemplate()
 	saveTitleTemplate()
 
 	buildPlots()
-	buildReport()
+	//buildReport()
 }
 
 func buildReport() {

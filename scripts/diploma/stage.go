@@ -125,6 +125,16 @@ func getGasProfilers(stage turbine.StageNode, rotorProfiler profilers.Profiler) 
 	return
 }
 
+func getTrianglesMsg(riTriangle, roTriangle states.VelocityTriangle) string {
+	return fmt.Sprintf(
+		"alpha_1 = %.1f\talpha_2 = %.1f\tbeta_1 = %.1f\tbeta_2 = %.1f\tc_a1 = %.2f\tc_a2 = %.2f\tu = %.2f\tc_1 = %.2f\tw_1 = %.2f\tc_2 = %.2f\tw_2 = %.2f",
+		common.ToDegrees(riTriangle.Alpha()), common.ToDegrees(roTriangle.Alpha()),
+		common.ToDegrees(riTriangle.Beta()), common.ToDegrees(roTriangle.Beta()),
+		riTriangle.CA(), roTriangle.CA(), riTriangle.U(),
+		riTriangle.C(), riTriangle.W(), roTriangle.C(), roTriangle.W(),
+	)
+}
+
 func getProfileMsg(profiler profilers.Profiler, hRel float64) string {
 	return fmt.Sprintf(
 		"inlet_angle: %.1f, inlet_exp: %.1f, inlet_ps_frac: %.1f, inst_angle: %.1f, outlet_angle: %.1f, outlet_exp: %.1f, outlet_ps_frac: %.1f",

@@ -58,18 +58,29 @@ if __name__ == '__main__':
     plt.savefig(os.path.join(img_dir, "outlet_angle.png"))
     plt.close()
 
-    ss_profile_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_ss.json"))
-    ps_profile_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_ps.json"))
+    ss_profile_no_front_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_no_front_ss.json"))
+    ps_profile_no_front_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_no_front_ps.json"))
 
-    plots.plot_cooling_temperature(ps_profile_df, ss_profile_df)
+    plots.plot_cooling_temperature(ps_profile_no_front_df, ss_profile_no_front_df)
     plt.savefig(os.path.join(img_dir, "cooling_2_t.png"))
     plt.close()
 
-    plots.plot_cooling_alpha(ps_profile_df, ss_profile_df)
-    plt.savefig(os.path.join(img_dir, "cooling_2_alpha.png"))
+    ss_profile_front_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_front_ss.json"))
+    ps_profile_front_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_front_ps.json"))
+
+    plots.plot_cooling_temperature(ps_profile_front_df, ss_profile_front_df)
+    plt.savefig(os.path.join(img_dir, "cooling_2_t_front.png"))
     plt.close()
 
-    inventor_data = savers.get_temperature_df(ps_profile_df, ss_profile_df)
+    plots.plot_cooling_alpha(ps_profile_no_front_df, ss_profile_no_front_df)
+    plt.savefig(os.path.join(img_dir, "cooling_2_alpha_no_front.png"))
+    plt.close()
+
+    plots.plot_cooling_alpha(ps_profile_front_df, ss_profile_front_df)
+    plt.savefig(os.path.join(img_dir, "cooling_2_alpha_front.png"))
+    plt.close()
+
+    inventor_data = savers.get_temperature_df(ps_profile_no_front_df, ss_profile_no_front_df)
     # savers.to_csv_air(os.path.join(data_dir, "cooling_t_air.csv"), inventor_data)
     # savers.to_csv_wall(os.path.join(data_dir, "cooling_t_wall.csv"), inventor_data)
     # savers.to_csv_film(os.path.join(data_dir, "cooling_t_film.csv"), inventor_data)

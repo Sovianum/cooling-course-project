@@ -8,11 +8,13 @@ import (
 
 func Entry() error {
 	scheme := s3nsc.GetInitedThreeShaftsSubCompressScheme()
+	//scheme := s3n.GetDiplomaInitedThreeShaftsScheme()
 	data := getSchemeDataTemplate(
-		common.Arange(12, 0.5, 30),
-		[]float64{0.5},
-		[]float64{1.01, 2},
-		common.Arange(0.1, 0.01, 7),
+		//common.Arange(12, 0.5, 30),
+		[]float64{19},
+		[]float64{0.529},
+		[]float64{1.01, 1.2, 2},
+		common.Arange(0.09, 0.01, 7),
 	)
 	if e := updateSchemeData(scheme, data); e != nil {
 		return e

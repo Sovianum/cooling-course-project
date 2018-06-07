@@ -6,7 +6,10 @@ import (
 	"github.com/Sovianum/cooling-course-project/core/profiling"
 	"github.com/Sovianum/cooling-course-project/postprocessing/dataframes"
 	"github.com/Sovianum/cooling-course-project/postprocessing/templ"
+	"github.com/Sovianum/turbocycle/common"
 	"github.com/Sovianum/turbocycle/common/gdf"
+	"github.com/Sovianum/turbocycle/core/math/opt"
+	"github.com/Sovianum/turbocycle/core/math/solvers/newton"
 	states2 "github.com/Sovianum/turbocycle/impl/engine/states"
 	"github.com/Sovianum/turbocycle/impl/stage/geometry"
 	"github.com/Sovianum/turbocycle/impl/stage/states"
@@ -17,6 +20,7 @@ import (
 	"github.com/Sovianum/turbocycle/utils/turbine/cooling/profile"
 	"github.com/Sovianum/turbocycle/utils/turbine/radial/profiles"
 	"github.com/gin-gonic/gin/json"
+	"gonum.org/v1/gonum/mat"
 	"math"
 )
 
@@ -44,6 +48,25 @@ func saveCoolingSolution(solution profile.TemperatureSolution, fileName string) 
 	if err := profiling.SaveString(dataDir+"/"+fileName, string(b)); err != nil {
 		panic(err)
 	}
+}
+
+func optimizeCoolingSystem(
+	sysFunc func(posVec *mat.VecDense) profile.TemperatureSystem,
+	posVec0 *mat.VecDense,
+	step, precision, relaxCoef float64,
+	iterLimit int,
+	logFunc newton.LogFunc,
+) (*mat.VecDense, error) {
+	optFunc := func(posVec *mat.VecDense) (float64, error) {
+		system := sysFunc(posVec)
+		solution := system.Solve(0, theta0, 1, 0.001)
+		resultID := common.MaxID(solution.SmoothWallTemperature)
+
+		fmt.Printf("x = %.5f\ty = %.2f\n", solution.LengthCoord[resultID], solution.SmoothWallTemperature[resultID])
+
+		return solution.SmoothWallTemperature[resultID], nil
+	}
+	return opt.NewOptimizer(optFunc, step, logFunc).Minimize(posVec0, precision, relaxCoef, iterLimit)
 }
 
 func getTempProfileDF(
@@ -98,14 +121,15 @@ func getTempProfileDF(
 }
 
 func getSSConvTemperatureSystem(
+	coolMassRate,
 	meanAlphaGas float64,
 	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.SSSegment(profile, 0.5, 0.5)
-	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, profile, cooling2.SSProfileGasAlphaLaw)
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(coolMassRate, meanAlphaGas, stage, profile, cooling2.SSProfileGasAlphaLaw)
 	if system, err := cooling2.GetInitedStatorConvTemperatureSystem(
-		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
+		coolMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
 	); err != nil {
 		panic(err)
 	} else {
@@ -114,14 +138,15 @@ func getSSConvTemperatureSystem(
 }
 
 func getPSConvTemperatureSystem(
+	coolMassRate,
 	meanAlphaGas float64,
 	stage turbine.StageNode,
 	profile profiles.BladeProfile,
 ) profile.TemperatureSystem {
 	var segment = profiles.PSSegment(profile, 0.5, 0.5)
-	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, profile, cooling2.PSProfileGasAlphaLaw)
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(coolMassRate, meanAlphaGas, stage, profile, cooling2.PSProfileGasAlphaLaw)
 	if system, err := cooling2.GetInitedStatorConvTemperatureSystem(
-		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
+		coolMassRate, stage, segment, alphaAirFunc, alphaGasFunc,
 	); err != nil {
 		panic(err)
 	} else {
@@ -135,13 +160,14 @@ type SlitGeom struct {
 }
 
 func getSSConvFilmTemperatureSystem(
+	coolMassRate,
 	meanAlphaGas float64,
 	stage turbine.StageNode,
 	bladeProfile profiles.BladeProfile,
 	slitGeomData []SlitGeom,
 ) profile.TemperatureSystem {
 	var segment = profiles.SSSegment(bladeProfile, 0.5, 0.5)
-	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.SSProfileGasAlphaLaw)
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(coolMassRate, meanAlphaGas, stage, bladeProfile, cooling2.SSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.SSLambdaLaw)
 
 	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
@@ -156,7 +182,7 @@ func getSSConvFilmTemperatureSystem(
 	}
 
 	if system, err := cooling2.GetInitedStatorConvFilmTemperatureSystem(
-		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc, lambdaLaw, slitInfoArr,
+		coolMassRate, stage, segment, alphaAirFunc, alphaGasFunc, lambdaLaw, slitInfoArr,
 	); err != nil {
 		panic(err)
 	} else {
@@ -165,13 +191,14 @@ func getSSConvFilmTemperatureSystem(
 }
 
 func getPSConvFilmTemperatureSystem(
+	coolMassRate,
 	meanAlphaGas float64,
 	stage turbine.StageNode,
 	bladeProfile profiles.BladeProfile,
 	slitGeomData []SlitGeom,
 ) profile.TemperatureSystem {
 	var segment = profiles.PSSegment(bladeProfile, 0.5, 0.5)
-	var alphaGasFunc, alphaAirFunc = getAlphaLaws(meanAlphaGas, stage, bladeProfile, cooling2.PSProfileGasAlphaLaw)
+	var alphaGasFunc, alphaAirFunc = getAlphaLaws(coolMassRate, meanAlphaGas, stage, bladeProfile, cooling2.PSProfileGasAlphaLaw)
 	var lambdaLaw = getLambdaLaw(stage, cooling.PSLambdaLaw)
 
 	var slitInfoArr = make([]profile.SlitInfo, len(slitGeomData))
@@ -186,7 +213,7 @@ func getPSConvFilmTemperatureSystem(
 	}
 
 	if system, err := cooling2.GetInitedStatorConvFilmTemperatureSystem(
-		coolAirMassRate, stage, segment, alphaAirFunc, alphaGasFunc, lambdaLaw, slitInfoArr,
+		coolMassRate, stage, segment, alphaAirFunc, alphaGasFunc, lambdaLaw, slitInfoArr,
 	); err != nil {
 		panic(err)
 	} else {
@@ -214,6 +241,7 @@ func getLambdaLaw(stage turbine.StageNode, lambdaGenerator func(float64, float64
 }
 
 func getAlphaLaws(
+	coolMassRate,
 	meanAlphaGas float64,
 	stage turbine.StageNode,
 	profile profiles.BladeProfile,
@@ -237,7 +265,7 @@ func getAlphaLaws(
 	alphaAir = cooling.DefaultAirAlphaLaw(
 		stage.GasInput().GetState().(states2.GasPortState).Gas,
 		geometry.Height(0, pack.StageGeometry.StatorGeometry()),
-		gapWidth, coolAirMassRate,
+		gapWidth, coolMassRate,
 	)
 	return
 }

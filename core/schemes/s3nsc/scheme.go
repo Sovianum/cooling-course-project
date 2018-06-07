@@ -16,13 +16,14 @@ const (
 
 	sigmaInlet = 0.98
 
-	etaMiddlePressureComp    = 0.86
-	piCompTotal              = 30
-	piCompFactor             = 0.18
-	etaMiddlePressureTurbine = 0.88
+	etaMiddlePressureComp    = 0.84
+	piCompTotal              = 19
+	piCompHigh               = 4
+	piCompLow                = piCompTotal / piCompHigh
+	etaMiddlePressureTurbine = 0.90
 	etaMMiddleCascade        = 0.99
 
-	etaHighPressureComp = 0.86
+	etaHighPressureComp = 0.82
 
 	tGas                   = 1450
 	tFuel                  = 300
@@ -39,16 +40,16 @@ const (
 	middlePressureTurbinePipeSigma    = 0.98
 
 	etaFreeTurbine               = 0.92
-	dgFreeTurbine                = -0.00
+	dgFreeTurbine                = -0.01
 	freeTurbinePressureLossSigma = 0.93
 
 	lptCoolMassRate = 0
 
-	hptLeakMassRate = 0.00
-	lptLeakMassRate = 0.00
+	hptLeakMassRate = -0.01
+	lptLeakMassRate = -0.01
 
-	subCompressorEta = 0.80
-	subCompressorPi  = 2.
+	subCompressorEta = 0.85
+	subCompressorPi  = 1.5
 
 	splitFraction     = 0.1
 	subCoolerTStagOut = 350
@@ -61,7 +62,7 @@ func GetInitedThreeShaftsSubCompressScheme() schemes.ThreeShaftsSubCompressSchem
 	gasSource := source.NewComplexGasSourceNode(gases.GetAir(), tAtm, pAtm, 1)
 	inletPressureDrop := constructive.NewPressureLossNode(sigmaInlet)
 	middlePressureCascade := compose.NewTurboCascadeNode(
-		etaMiddlePressureComp, piCompTotal*piCompFactor,
+		etaMiddlePressureComp, piCompLow,
 		etaMiddlePressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
 			return -lptLeakMassRate
@@ -75,7 +76,7 @@ func GetInitedThreeShaftsSubCompressScheme() schemes.ThreeShaftsSubCompressSchem
 		etaMMiddleCascade, precision,
 	)
 	gasGenerator := compose.NewGasGeneratorNode(
-		etaHighPressureComp, 1/piCompFactor, fuel.GetCH4(),
+		etaHighPressureComp, piCompHigh, fuel.GetCH4(),
 		tGas, tFuel, sigmaBurn, etaBurn, initAlpha, t0,
 		etaHighPressureTurbine, lambdaOut,
 		func(node constructive.TurbineNode) float64 {
