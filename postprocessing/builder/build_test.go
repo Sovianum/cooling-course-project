@@ -9,6 +9,7 @@ import (
 	states2 "github.com/Sovianum/turbocycle/impl/stage/states"
 	"github.com/Sovianum/turbocycle/impl/stage/turbine"
 	"github.com/Sovianum/turbocycle/material/gases"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"math"
 	"testing"
@@ -132,4 +133,10 @@ func getStageDf() dataframes.TurbineStageDF {
 	}
 	var df, _ = dataframes.NewTurbineStageDF(stage)
 	return df
+}
+
+func TestBuildLatex(t *testing.T) {
+	buildDir := "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
+	fileName := "root.tex"
+	require.NoError(t, BuildLatex(buildDir, fileName))
 }
