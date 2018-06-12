@@ -103,6 +103,9 @@ func Entry() {
 	io.PrepareDirectories(
 		buildDir, dataDir, imgDir,
 	)
+	if err := copyPassiveFiles(); err != nil {
+		panic(err)
+	}
 
 	saveInputTemplates()
 
@@ -277,6 +280,41 @@ func Entry() {
 
 	buildPlots()
 	buildReport()
+}
+
+func copyPassiveFiles() error {
+	imgNames := []string{
+		"cost.png",
+		"cycle_2n_opt.png", "cycle_2n_part.png", "cycle_2n_scheme.png",
+		"cycle_3n_opt.png", "cycle_3n_part.png", "cycle_3n_scheme.png",
+		"cycle_2nr_opt.png", "cycle_2nr_part.png", "cycle_2nr_scheme.png",
+		"cycle_eta_comparison.png",
+		"ecology_bc.png", "ecology_cloud.png",
+		"ecology_plan.png", "ecology_result.png",
+		"lock_control.png", "profile_shape_control.png",
+		"profile_thk_control.png",
+	}
+	templateNames := []string{
+		"ecology.tex", "economics.tex", "ending.tex",
+		"referat.tex", "technology.tex", "intro.tex",
+		"literature.tex",
+	}
+
+	imgSrc := "postprocessing/media/img/"
+	templateSrc := "postprocessing/templates/"
+
+	for _, name := range imgNames {
+		if err := io.CopyFile(imgSrc+name, imgDir+"/"+name); err != nil {
+			return err
+		}
+	}
+
+	for _, name := range templateNames {
+		if err := io.CopyFile(templateSrc+name, "build/"+name); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func buildReport() {

@@ -14,7 +14,9 @@
 \usepackage{float}
 \usepackage{longtable}
 \usepackage{caption}
-\usepackage[singlelinecheck=off]{caption}
+%\usepackage[singlelinecheck=off]{caption}
+\captionsetup[table]{labelsep=space,
+justification=raggedright, singlelinecheck=off}
 
 \usepackage{chngcntr}
 \counterwithin{table}{section}
@@ -34,13 +36,17 @@
 \usepackage{multirow}
 \usepackage{booktabs}
 
+\setlength\LTcapwidth{\linewidth}
+
 \graphicspath{ {/home/img/} }
 
 \begin{document}
-
     \input{title}
+    \include{referat}
     \tableofcontents
-    \input{project_input_data}
+    \input{intro}
+%    \input{project_input_data}
+    \section{Расчетно-конструкторская часть}
     \input{cycle_input_data}
     \input{variant}
     \input{cycle_calc}
@@ -50,23 +56,17 @@
     \input{mean_line_calc}
     \input{turbine_total_table}
     \input{profiling}
+    \section{Научно-исследовательская часть}
+    \input{cycle_comparison}
     \input{cooling_calc1}
     \input{cooling_calc2}
-    \input{economics}
+    \section{Технологическая часть}
     \input{technology}
+    \section{Организационно-экономическая часть}
+    \input{economics}
+    \section{Охрана труда и экология}
     \input{ecology}
-
-    \section{Список литературы}
-        \begin{enumerate}
-            \item Голубовский Е.Р., Светлов И.Л., Хвацкий К.К. Длительная прочность никелевых сплавов для
-                монокристаллических лопаток газотурбинных установок // Журнал <<Конверсия в машиностроении>>. - 2005. - №3.
-            \item Теплообменные аппараты и системы охлаждения газотурбинных и комбинированных установок: учебник для
-                вузов / Иванов В. Л., Леонтьев А. И., Манушин Э. А., Осипов М. И. ; ред. Леонтьев А. И. - 2-е изд.,
-                стер. - М. : Изд-во МГТУ им. Н. Э. Баумана, 2004. - 591 с. : ил. - Библиогр.: с. 576-577. - ISBN 5-7038-2138-X.
-            \item Теория и проектирование газотурбинных и комбинированных
-                установок: учебник для вузов / Манушин Э.А., Михальцев В.Е., Чернобровкин А.П. - М. : Изд-во МГТУ им. Н.Э.
-                Баумана, 1997.
-
-        \end{enumerate}
+    \input{ending}
+    \input{literature}
 
 \end{document}

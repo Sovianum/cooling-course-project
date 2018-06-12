@@ -2,22 +2,27 @@ package dataframes
 
 import (
 	"fmt"
+	"strings"
 )
 
+func changeDecimal(string string) string {
+	return strings.Replace(string, ".", ",", -1)
+}
+
 func Round(value float64) string {
-	return fmt.Sprintf("%.0f", value)
+	return changeDecimal(fmt.Sprintf("%.0f", value))
 }
 
 func Round1(value float64) string {
-	return fmt.Sprintf("%.1f", value)
+	return changeDecimal(fmt.Sprintf("%.1f", value))
 }
 
 func Round2(value float64) string {
-	return fmt.Sprintf("%.2f", value)
+	return changeDecimal(fmt.Sprintf("%.2f", value))
 }
 
 func Round3(value float64) string {
-	return fmt.Sprintf("%.3f", value)
+	return changeDecimal(fmt.Sprintf("%.3f", value))
 }
 
 func DivideE3(value float64) float64 {
