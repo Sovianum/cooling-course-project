@@ -1,9 +1,15 @@
-\section{Поступенчатый расчет турбины}
+\subsection{Поступенчатый расчет турбины}
 Для данного проекта выбрана одноступенчатая турбина.
-Зададим параметры, необходимые для поступенчатого расчета турбины:
-
+Исходные параметры для поступенчатого расчета турбины приведены в табл. ~\ref{turbine:midline_inlet}.
 \begin{center}
 	\begin{longtable}{|p{4cm}|c|c|c|}
+		\caption{Исходные параметры поступенчатого расчета турбины}
+		\label{turbine:midline_inlet}
+		\endfirsthead
+		\caption*{\tabcapalign Продолжение таблицы~\thetable}\\[-0.45\onelineskip]
+		\hline
+		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+		\endhead
 		\hline
 		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
 			Реактивность ступени & $\rho$ & - & 0.3  \\ \hline
@@ -22,8 +28,7 @@
 	\end{longtable}
 \end{center}
 
-\clearpage
-
+Расчет параметров параметров ТВД приведен ниже. Параметры остальных турбин приведены в табл. ~\ref{tab:turbine-stage-total}.
 \begin{enumerate}
 	\item Определим теплоперепад на сопловом аппарате:
 		$$H_с = \left( 1 - \rho \right) H_т =
@@ -513,5 +518,4 @@
 	 	}{
 	 		0.318 \cdot 10^6
 	 	} = 0.88$$
-
 \end{enumerate}

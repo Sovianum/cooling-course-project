@@ -1,23 +1,27 @@
-\section{Расчет расхода охлаждающего воздуха}
+\subsection{Расчет расхода охлаждающего воздуха}
 
-% Добавить исходные данные
-Исходные данные:
-\begin{center}
-	\begin{tabular}{|p{7cm}|c|c|c|}
-		\hline
-		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
-		Температура газа & $T_г$ & К & $<-<.Gas.Tg | Round1>->$ \\ \hline
-		Начальная температура охлаждающего воздуха & $\theta_0$ & К & $<-<.Gas.Theta0 | Round1>->$ \\ \hline
-		Длина лопатки & $l$ & м & $<-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
-		Осевая проекция хорды & $b_a$ & м & $<-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
-		Поверхность лопатки, соприкасающаяся с газом & $f$ & $м^2$ & $<-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
-		Периметр профиля & $u$ & $м$ & $<-<.Geom.Perimeter | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
-		Толщина стенки & $\Delta$ & $м$ & $<-<.Geom.WallThk | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
-		Средняя температура наружной поверхности лопатки & $T_{ст}$ & $К$ & $<-<.Metal.TWallOuter | Round1>->$ \\ \hline
-		Плотность газа & $\rho_г$ & $кг/м^3$ & $<-<.Gas.DensityGas | Round2>->$ \\ \hline
-		Осевая скорость & $c_a$ & $м/с$ & $<-<.Gas.CaGas | Round1>->$ \\ \hline
-	\end{tabular}
-\end{center}
+Исходные данные для расчета количества охлаждаемого воздуха представлены в табл. ~\ref{cool1:cool1_inlet}.
+\begin{longtable}{|p{7cm}|c|c|c|}
+	\caption{Исходные данные расхода охлаждающего воздуха}
+	\label{cool1:cool1_inlet}
+	\endfirsthead
+	\caption*{\tabcapalign Продолжение таблицы~\thetable}\\[-0.45\onelineskip]
+	\hline
+	\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+	\endhead
+	\hline
+	\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+	Температура газа & $T_г$ & К & $<-<.Gas.Tg | Round1>->$ \\ \hline
+	Начальная температура охлаждающего воздуха & $\theta_0$ & К & $<-<.Gas.Theta0 | Round1>->$ \\ \hline
+	Длина лопатки & $l$ & м & $<-<.Geom.BladeLength | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+	Осевая проекция хорды & $b_a$ & м & $<-<.Geom.ChordProjection | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+	Поверхность лопатки, соприкасающаяся с газом & $f$ & $м^2$ & $<-<.Geom.BladeArea | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+	Периметр профиля & $u$ & $м$ & $<-<.Geom.Perimeter | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+	Толщина стенки & $\Delta$ & $м$ & $<-<.Geom.WallThk | MultiplyE3 | Round1>-> \cdot 10^{-3}$ \\ \hline
+	Средняя температура наружной поверхности лопатки & $T_{ст}$ & $К$ & $<-<.Metal.TWallOuter | Round1>->$ \\ \hline
+	Плотность газа & $\rho_г$ & $кг/м^3$ & $<-<.Gas.DensityGas | Round2>->$ \\ \hline
+	Осевая скорость & $c_a$ & $м/с$ & $<-<.Gas.CaGas | Round1>->$ \\ \hline
+\end{longtable}
 
 В качестве материала лопатки принимается сплав ЖС30, выдерживающий при данном уровне температур 250 МПа в течение 10000 ч [1].
 Данный уровень напряжений заведомо существенно выше напряжений, действующих в короткой двухопорной лопатке, нагруженной
@@ -125,14 +129,24 @@
 			\right)^{0.8}
 		$$
 
- 	Результаты расчета сведены в таблицу:
+ 	Результаты расчета расхода охлаждующего воздуха приведены в таблице ~\ref{cool1:mass_rate_result}.
 		\begin{center}
-			\begin{tabular}{|c|c|c|c|c|}
+			\begin{longtable}{|c|c|c|c|c|}
+				\caption{Результаты расчета расхода охлаждающего воздуха} \label{cool1:mass_rate_result}
+				\endfirsthead
+				\caption*{\tabcapalign Продолжение таблицы~\thetable}\\[-0.45\onelineskip]
 				\hline
-				\textbf{№} & 
-				\textbf{$G_в, \/\ кг/c$} & 
-				\textbf{$D$} & 
-				\textbf{$\epsilon$} & 
+				\textbf{№} &
+				\textbf{$G_в, \/\ кг/c$} &
+				\textbf{$D$} &
+				\textbf{$\epsilon$} &
+				\textbf{$\delta$} \\\hline
+				\endhead
+				\hline
+				\textbf{№} &
+				\textbf{$G_в, \/\ кг/c$} &
+				\textbf{$D$} &
+				\textbf{$\epsilon$} &
 				\textbf{$\delta$} \\\hline
 				<-<range .Gas.TableRows>->
 					<-<.Id>-> & 
@@ -142,7 +156,7 @@
 					$<-<.AirGap | MultiplyE3 | Round1>-> \cdot 10^-3$ 
 					\\\hline
 				<-<end>->
-			\end{tabular}
+			\end{longtable}
 		\end{center}
 
  \end{enumerate}

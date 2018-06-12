@@ -1,11 +1,18 @@
-
-\section{Исходные данные расчета цикла}
+\subsection{Исходные данные расчета цикла}
 В качестве расчетной схемы привода ГПА выбирается схема 3Н.
 
+Исходные данные для расчета цикла представлены в таблице ~\ref{cycle:input}.
 \begin{center}
 	\begin{longtable}{|p{7cm}|c|c|c|}
-		\hline
-		\textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+        \caption{Исходные данные расчета цикла}
+        \label{cycle:input}
+        \endfirsthead
+        \caption*{\tabcapalign Продолжение таблицы~\thetable}\\[-0.45\onelineskip]
+        \hline
+        \textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
+        \endhead
+        \hline
+        \textbf{Величина} & \textbf{Обозначение} & \textbf{Размерность} & \textbf{Значение} \\ \hline
 		Потребная мощность & $N_e$ & МВт & 16.0 \\ \hline
 		КПД редуктора & $\eta_р$ & & 0.98 \\ \hline
 		Давление атмосфеного воздуха & $p_a$ & Па & 0.100 \\ \hline
@@ -30,7 +37,6 @@
 		Приведенная скорость на выходе из силовой турбины & $\lambda_{тс}$ & - & 0.30 \\ \hline
 	\end{longtable}
 \end{center}
-\clearpage
 
 %	dgHighPressureTurbine = -0.01
 %	dgFreeTurbine                = -0.01

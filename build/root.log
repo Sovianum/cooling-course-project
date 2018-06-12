@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.4.28)  11 JUN 2018 17:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.4.28)  12 JUN 2018 11:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -765,6 +765,9 @@ Package: ltcaption 2013/06/09 v1.4-94 longtable captions (AR)
 )
 Package caption Info: wrapfig package is loaded.
 )
+(/usr/local/texlive/2017/texmf-dist/tex/latex/chngcntr/chngcntr.sty
+Package: chngcntr 2009/09/02 v1.0a change counter resetting
+)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/enumitem/enumitem.sty
 Package: enumitem 2011/09/28 v3.5.2 Customized lists
 \labelindent=\skip50
@@ -844,24 +847,120 @@ Package: booktabs 2016/04/27 v1.618033 publication quality tables
 \@lastruleclass=\count118
 \@thisrulewidth=\dimen156
 )
-(./root.aux)
+(./root.aux
+! Missing \endcsname inserted.
+<to be read again> 
+                   \T2A\cyrs 
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \T2A\cyrs 
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+LaTeX Font Info:    Try loading font information for U+msa on input line 5.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 5.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+wasy on input line 5.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/wasysym/uwasy.fd
+File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
+)
+! Extra \endcsname.
+\@namedef ...xpandafter \def \csname #1\endcsname 
+                                                  
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+! Extra }, or forgotten $.
+\@newl@bel ...ined}}\global \@namedef {#1@#2}{#3}}
+                                                  
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+LaTeX Warning: Label `img:cycle_2n_opt' multiply defined.
+
+
+LaTeX Warning: Label `img:cycle_2n_opt' multiply defined.
+
+)
+! Missing $ inserted.
+<inserted text> 
+                $
+l.39 \begin{document}
+                     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.39 \begin{document}
+                     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 \openout1 = `root.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count119
@@ -961,889 +1060,623 @@ e
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Info: Redefining \celsius on input line 34.
-Package gensymb Info: Faking symbols for \degree and \celsius on input line 34.
+LaTeX Info: Redefining \celsius on input line 39.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 39.
 
 
 Package gensymb Warning: Not defining \perthousand.
 
-LaTeX Info: Redefining \ohm on input line 34.
-Package gensymb Info: Using \Omega for \ohm on input line 34.
+LaTeX Info: Redefining \ohm on input line 39.
+Package gensymb Info: Using \Omega for \ohm on input line 39.
 
 Package gensymb Warning: Not defining \micro.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-(./project_input_data.tex
-LaTeX Font Info:    Try loading font information for U+msa on input line 4.
-
-(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 4.
-
-(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Try loading font information for U+wasy on input line 4.
-
-(/usr/local/texlive/2017/texmf-dist/tex/latex/wasysym/uwasy.fd
-File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
-))
-(./cycle_input_data.tex [1
-
+(./title.tex [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 1515) in paragraph at lines 13--13
-[]|\T2A/cmr/m/n/14.4 Потери дав-ле-ния во вход-ном
+Overfull \hbox (21.6814pt too wide) in paragraph at lines 34--37
+[]\T2A/cmr/bx/n/12 Выполнил(а) сту-дент(ка) [] А.Клюквин 
  []
 
 
-Underfull \hbox (badness 6412) in paragraph at lines 14--14
-[]|\T2A/cmr/m/n/14.4 Политропический КПД ком-
+Underfull \hbox (badness 10000) in paragraph at lines 34--37
+
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 14--14
-\T2A/cmr/m/n/14.4 прес-со-ра низ-ко-го дав-ле-ния
+Overfull \hbox (19.09843pt too wide) in paragraph at lines 38--41
+[]\T2A/cmr/bx/n/12 Руководитель [] С.Бурцев 
  []
 
 
-Underfull \hbox (badness 6412) in paragraph at lines 15--15
-[]|\T2A/cmr/m/n/14.4 Политропический КПД ком-
+Underfull \hbox (badness 10000) in paragraph at lines 38--41
+
  []
 
+[1]) (./root.toc)
+\tf@toc=\write3
+\openout3 = `root.toc'.
 
-Underfull \hbox (badness 10000) in paragraph at lines 15--15
-\T2A/cmr/m/n/14.4 прес-со-ра вы-со-ко-го дав-ле-ния
+ (./cycle_comparison.tex [1
+
+] [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 27.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <14.4> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 27.
+ [3] [4] [5]
+Overfull \hbox (12.55113pt too wide) in alignment at lines 92--95
+ [] [] [] [] 
  []
 
+! Undefined control sequence.
+<argument> \tabcapalign 
+                        РџСЂРѕРґРѕР»Р¶РµРЅРёРµ С‚Р°Р±Р»РёС†С‹~\thetable 
+l.96 ...РґРѕР»Р¶РµРЅРёРµ С‚Р°Р±Р»РёС†С‹~\thetable}
+                                                  \\[-0.45\onelineskip]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-Underfull \hbox (badness 1019) in paragraph at lines 21--21
-[]|\T2A/cmr/m/n/14.4 Температура га-за за ка-ме-рой
- []
+! Undefined control sequence.
+<argument> -0.45\onelineskip 
+                             
+l.96 ...Р±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   >
+l.96 ...Р±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+! Undefined control sequence.
+<argument> -0.45\onelineskip 
+                             
+l.96 ...Р±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   }
+l.96 ...Р±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
 
 
-Overfull \hbox (12.55113pt too wide) in alignment at lines 6--27
+Overfull \hbox (12.55113pt too wide) in alignment at lines 95--99
  [] [] [] [] 
  []
 
 
-Underfull \vbox (badness 10000) detected at line 27
+Underfull \hbox (badness 10000) in paragraph at lines 107--107
+[]|\T2A/cmr/m/n/14.4 Коэффициент со-хра-не-ния
  []
 
 
-Overfull \hbox (12.55113pt too wide) in alignment at lines 27--31
- [] [] [] [] 
- []
-
-[2
-
-] [3]) (./variant.tex
-</home/img/cycle_eta_plot.png, id=21, 462.528pt x 346.896pt>
-File: /home/img/cycle_eta_plot.png Graphic file (type png)
-<use /home/img/cycle_eta_plot.png>
-Package pdftex.def Info: /home/img/cycle_eta_plot.png  used on input line 12.
-(pdftex.def)             Requested size: 323.76738pt x 242.82553pt.
- [4
-
-
- </home/img/cycle_eta_plot.png>] [5])
-(./cycle_calc.tex [6
-
-
-] [7] [8] [9] [10] [11]
-Overfull \hbox (11.63489pt too wide) in paragraph at lines 386--387
-\T2A/cmr/m/n/14.4 ни-мая по-ка-за-тель адиа-ба-ты га-за на вы-хо-де из сво-бод-
-ной тур-би-ны $\OML/cmm/m/it/14.4 k[] \OT1/cmr/m/n/14.4 =
- []
-
-[12]) (./compressor_calc.tex [13]
-Overfull \hbox (9.25433pt too wide) in paragraph at lines 1--1
-|[]\T2A/cmr/bx/n/20.74 Расчет ком-прес-со-ра низ-ко-го дав-ле-ния по сред-
+Underfull \hbox (badness 5036) in paragraph at lines 108--108
+\T2A/cmr/m/n/14.4 но-го дав-ле-ния во вы-ход-ном
  []
 
 
-Overfull \hbox (12.55113pt too wide) in alignment at lines 8--11
+Underfull \hbox (badness 1412) in paragraph at lines 112--113
+[]|\T2A/cmr/m/n/14.4 hline Ча-сто-та вра-ще-ния ва-ла
+ []
+
+
+Overfull \hbox (12.55113pt too wide) in alignment at lines 99--114
  [] [] [] [] 
  []
 
 
-Underfull \hbox (badness 1210) in paragraph at lines 18--18
-[]|\T2A/cmr/m/n/14.4 Реактивность сле-ду-ю-щей сту-
+Underfull \vbox (badness 10000) detected at line 114
  []
 
+[6] [7]
 
-Overfull \hbox (12.55113pt too wide) in alignment at lines 11--29
- [] [] [] [] 
- []
-
-[14
-
-] [15] [16] [17] [18]) (./lpc_total_table.tex [19] [20
-
-] [21])
-(./hpc_total_table.tex
-Overfull \hbox (13.40639pt too wide) in alignment at lines 3--13
- [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (13.40639pt too wide) in alignment at lines 13--53
- [] [] [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (13.40639pt too wide) in alignment at lines 53--78
- [] [] [] [] [] [] [] [] 
- []
-
-[22
-
-]) (./mean_line_calc.tex [23]
-Underfull \hbox (badness 10000) in paragraph at lines 10--10
-[]|\T2A/cmr/m/n/14.4 Радиальный
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 11--11
-[]|\T2A/cmr/m/n/14.4 Относительная
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 11--11
-\T2A/cmr/m/n/14.4 дли-на ло-пат-ки
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 14--14
-[]|\T2A/cmr/m/n/14.4 Относительная
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 14--14
-\T2A/cmr/m/n/14.4 ши-ри-на за-зо-ра
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 15--15
-[]|\T2A/cmr/m/n/14.4 Угол рас-кры-тия
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 16--16
-[]|\T2A/cmr/m/n/14.4 Угол рас-кры-тия
- []
-
-
-Underfull \hbox (badness 5189) in paragraph at lines 17--17
-[]|\T2A/cmr/m/n/14.4 Удельная ра-бо-та
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 18--18
-[]|\T2A/cmr/m/n/14.4 Коэффициент
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 19--19
-[]|\T2A/cmr/m/n/14.4 Коэффициент
- []
-
-
-Underfull \hbox (badness 1540) in paragraph at lines 20--20
-\T2A/cmr/m/n/14.4 ро-сти на вы-хо-де
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 21--21
-[]|\T2A/cmr/m/n/14.4 Частота вра-ще-
- []
-
-
-Underfull \vbox (badness 10000) detected at line 22
- []
-
-[24
-
-] [25] [26
-
-] [27] [28] [29] [30] [31]) (./turbine_total_table.tex [32]
-[33
-
-] [34] [35]) (./profiling.tex [36
-
-
-]
-</home/img/inlet_angle.png, id=134, 462.528pt x 346.896pt>
-File: /home/img/inlet_angle.png Graphic file (type png)
-<use /home/img/inlet_angle.png>
-Package pdftex.def Info: /home/img/inlet_angle.png  used on input line 104.
-(pdftex.def)             Requested size: 277.51894pt x 208.13919pt.
-</home/img/outlet_angle.png, id=135, 462.528pt x 346.896pt>
-File: /home/img/outlet_angle.png Graphic file (type png)
-<use /home/img/outlet_angle.png>
-Package pdftex.def Info: /home/img/outlet_angle.png  used on input line 110.
-(pdftex.def)             Requested size: 277.51894pt x 208.13919pt.
- [37 </home/img/inlet_angle.png>])
-(./cooling_calc1.tex [38 </home/img/outlet_angle.png>]
-Underfull \hbox (badness 1210) in paragraph at lines 10--10
-[]|\T2A/cmr/m/n/14.4 Начальная тем-пе-ра-ту-ра охла-
- []
-
-
-Underfull \hbox (badness 1902) in paragraph at lines 16--16
-[]|\T2A/cmr/m/n/14.4 Средняя тем-пе-ра-ту-ра на-руж-
- []
-
-
-Overfull \hbox (12.55113pt too wide) in paragraph at lines 6--20
- [] 
- []
-
-[39
-
-] [40]) (./cooling_calc2.tex [41]
-Overfull \hbox (1.29004pt too wide) in paragraph at lines 3--5
-[]\T2A/cmr/m/n/14.4 Для рас-че-та про-фи-ля тем-пе-ра-тур ло-пат-ки при-ни-ма-е
-м рас-ход воз-ду-ха $\OML/cmm/m/it/14.4 G[] \OT1/cmr/m/n/14.4 =
- []
-
-
-Overfull \hbox (3.77997pt too wide) in paragraph at lines 6--8
-[]\T2A/cmr/m/n/14.4 При рас-че-те про-фи-ля тем-пе-ра-тур ло-пат-ки при конвект
-ивно-пленочно охла-
- []
-
-[42
-
-] [43] [44]
-Underfull \vbox (badness 10000) detected at line 266
- []
-
-
-Underfull \vbox (badness 10000) detected at line 348
- []
-
-[45]
-Overfull \hbox (21.27605pt too wide) in paragraph at lines 380--381
-[]\T2A/cmr/m/n/14.4 Определим ко-эф-фи-ци-ент теп-ло-от-да-чи на спин-ке на рас
--сто-я-нии $[]\OML/cmm/m/it/14.4 b[]$ $[]$\T2A/cmr/m/n/14.4 : 
- []
-
-[46]
-</home/img/no_spline.png, id=170, 601.4972pt x 543.53062pt>
-File: /home/img/no_spline.png Graphic file (type png)
-<use /home/img/no_spline.png>
-Package pdftex.def Info: /home/img/no_spline.png  used on input line 416.
-(pdftex.def)             Requested size: 360.9011pt x 326.12088pt.
-</home/img/spline.png, id=171, 541.27219pt x 542.025pt>
-File: /home/img/spline.png Graphic file (type png)
-<use /home/img/spline.png>
-Package pdftex.def Info: /home/img/spline.png  used on input line 422.
-(pdftex.def)             Requested size: 324.76581pt x 325.2175pt.
- [47 </home/img/no_spline.png>]
-Underfull \vbox (badness 10000) detected at line 614
- []
-
-[48 </home/img/spline.png>]
-Underfull \vbox (badness 10000) detected at line 787
- []
-
-[49]
-</home/img/cooling_2_t.png, id=184, 1445.4pt x 1156.32pt>
-File: /home/img/cooling_2_t.png Graphic file (type png)
-<use /home/img/cooling_2_t.png>
-Package pdftex.def Info: /home/img/cooling_2_t.png  used on input line 804.
-(pdftex.def)             Requested size: 1156.3216pt x 925.05727pt.
-
-Overfull \hbox (670.06398pt too wide) in paragraph at lines 804--805
- [][] 
- []
-
-[50]
-Overfull \vbox (279.39827pt too high) has occurred while \output is active []
-
-
-[51 </home/img/cooling_2_t.png>]
-
-! LaTeX Error: File `cooling_2_t_hot' not found.
+! LaTeX Error: File `cycle_2n_scheme' not found.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.812 ...cludegraphics[scale=0.8]{cooling_2_t_hot}
+l.138 ...cludegraphics[scale=0.4]{cycle_2n_scheme}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-) (./economics.tex [52]
-Overfull \hbox (117.6403pt too wide) in paragraph at lines 1--1
-|[]\T2A/cmr/bx/n/20.74 ЧАСТЬ 4. ОРГАНИЗАЦИОННО-ЭКОНОМИЧЕСКАЯ
+
+Overfull \hbox (12.55113pt too wide) in alignment at lines 145--148
+ [] [] [] [] 
  []
 
-[53
+! Undefined control sequence.
+<argument> \tabcapalign 
+                        РџСЂРѕРґРѕР»Р¶РµРЅРёРµ С‚Р°Р±Р»РёС†С‹~\thetable 
+l.149 ...ґРѕР»Р¶РµРЅРёРµ С‚Р°Р±Р»РёС†С‹~\thetable}
+                                                  \\[-0.45\onelineskip]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-]
-Overfull \hbox (10.98196pt too wide) in alignment at lines 22--31
- [] [] [] [] [] [] [] 
+! Undefined control sequence.
+<argument> -0.45\onelineskip 
+                             
+l.149 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   >
+l.149 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+! Undefined control sequence.
+<argument> -0.45\onelineskip 
+                             
+l.149 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   }
+l.149 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+Overfull \hbox (12.55113pt too wide) in alignment at lines 148--152
+ [] [] [] [] 
  []
 
 
-Overfull \hbox (10.98196pt too wide) in alignment at lines 31--35
- [] [] [] [] [] [] [] 
- []
-
-[54]
-Underfull \hbox (badness 1221) in paragraph at lines 72--72
-[]|\T2A/cmr/m/n/14.4 Единовременные за-тра-ты,
- []
-
-[55]
-Overfull \hbox (2.52507pt too wide) detected at line 104
-\T2A/cmr/m/n/14.4 С[] \OT1/cmr/m/n/14.4 = \T2A/cmr/m/n/14.4 К[] \OMS/cmsy/m/n/1
-4.4 ^^A \T2A/cmr/m/n/14.4 С[] \OMS/cmsy/m/n/14.4 ^^A \OT1/cmr/m/n/14.4 87602500
-0 = 0\OML/cmm/m/it/14.4 ; \OT1/cmr/m/n/14.4 8 \OMS/cmsy/m/n/14.4 ^^A \OT1/cmr/m
-/n/14.4 124\OML/cmm/m/it/14.4 ; \OT1/cmr/m/n/14.4 69 \OMS/cmsy/m/n/14.4 ^^A \OT
-1/cmr/m/n/14.4 876025000 = 34\OML/cmm/m/it/14.4 ; \OT1/cmr/m/n/14.4 95\T2A/cmr/
-m/n/14.4 млн\OML/cmm/m/it/14.4 :\T2A/cmr/m/n/14.4 руб 
- []
-
-</home/img/cost.png, id=207, 737.75626pt x 519.9425pt>
-File: /home/img/cost.png Graphic file (type png)
-<use /home/img/cost.png>
-Package pdftex.def Info: /home/img/cost.png  used on input line 111.
-(pdftex.def)             Requested size: 516.42586pt x 363.95728pt.
-
-Overfull \hbox (30.16824pt too wide) in paragraph at lines 111--112
- [][] 
- []
-
-[56]) (./technology.tex [57 </home/img/cost.png>] [58] [59] [60]
-Overfull \hbox (1.66959pt too wide) in paragraph at lines 76--77
-\T2A/cmr/m/n/14.4 пре-де-ле-ния га-зо-ди-на-ми-че-ских сил. Ре-зуль-та-том та-к
-о-го из-ме-не-ния мо-жет стать
+Underfull \hbox (badness 3058) in paragraph at lines 158--158
+[]|\T2A/cmr/m/n/14.4 Номинальная ча-сто-та вра-ще-
  []
 
 
-Overfull \hbox (6.44374pt too wide) in paragraph at lines 78--80
-[]\T2A/cmr/m/n/14.4 Требования обес-пе-чи-ва-ют при окон-ча-тель-ной об-ра-бот-
-ке по-верх-но-стей спин-
+Overfull \hbox (12.55113pt too wide) in alignment at lines 152--159
+ [] [] [] [] 
  []
 
-</home/img/profile_shape_control.png, id=224, 337.26pt x 327.2225pt>
-File: /home/img/profile_shape_control.png Graphic file (type png)
-<use /home/img/profile_shape_control.png>
-Package pdftex.def Info: /home/img/profile_shape_control.png  used on input lin
-e 83.
-(pdftex.def)             Requested size: 337.25917pt x 327.2217pt.
-[61 </home/img/profile_shape_control.png>]
-</home/img/profile_thk_control.png, id=229, 255.95625pt x 162.6075pt>
-File: /home/img/profile_thk_control.png Graphic file (type png)
-<use /home/img/profile_thk_control.png>
-Package pdftex.def Info: /home/img/profile_thk_control.png  used on input line 
-100.
-(pdftex.def)             Requested size: 255.95561pt x 162.6071pt.
- [62 </home/img/profile_thk_control.png>]
-</home/img/lock_control.png, id=233, 248.93pt x 427.5975pt>
-File: /home/img/lock_control.png Graphic file (type png)
-<use /home/img/lock_control.png>
-Package pdftex.def Info: /home/img/lock_control.png  used on input line 116.
-(pdftex.def)             Requested size: 248.92938pt x 427.59645pt.
- [63 </home/img/lock_control.png>] [64] [65] [66]) (./ecology.tex [67]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 26.
 
-(/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+Underfull \vbox (badness 10000) detected at line 159
+ []
+
+[8]
+</home/img/cycle_2n_opt.png, id=47, 954.56625pt x 608.2725pt>
+File: /home/img/cycle_2n_opt.png Graphic file (type png)
+<use /home/img/cycle_2n_opt.png>
+Package pdftex.def Info: /home/img/cycle_2n_opt.png  used on input line 165.
+(pdftex.def)             Requested size: 381.81973pt x 243.30469pt.
+
+! Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \penalty \@M \futurelet \@let@token \LT@@h...
+l.175 	\hline
+             
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Misplaced \omit.
+\multispan ->\omit 
+                   \@multispan 
+l.176 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+I expect to see \omit only after tab marks or the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Extra alignment tab has been changed to \cr.
+<template> \endtemplate 
+                        
+l.176 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+[9 </home/img/cycle_2n_opt.png>]
+! Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \penalty \@M \futurelet \@let@token \LT@@h...
+l.185 	\hline
+             
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Misplaced \omit.
+\multispan ->\omit 
+                   \@multispan 
+l.186 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+I expect to see \omit only after tab marks or the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Extra alignment tab has been changed to \cr.
+<template> \endtemplate 
+                        
+l.186 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+</home/img/cycle_2n_part.png, id=53, 944.52875pt x 616.3025pt>
+File: /home/img/cycle_2n_part.png Graphic file (type png)
+<use /home/img/cycle_2n_part.png>
+Package pdftex.def Info: /home/img/cycle_2n_part.png  used on input line 196.
+(pdftex.def)             Requested size: 377.80481pt x 246.51663pt.
+[10]
+</home/img/cycle_2nr_scheme.png, id=57, 727.71875pt x 439.6425pt>
+File: /home/img/cycle_2nr_scheme.png Graphic file (type png)
+<use /home/img/cycle_2nr_scheme.png>
+Package pdftex.def Info: /home/img/cycle_2nr_scheme.png  used on input line 205
+.
+(pdftex.def)             Requested size: 291.08234pt x 175.85388pt.
+ [11 </home/img/cycle_2n_part.png> </home/img/cycle_2nr_scheme.png>]
+
+LaTeX Warning: Reference `img:cycle_2nr_opt' on page 12 undefined on input line
+ 212.
+
+</home/img/cycle_2nr_opt.png, id=63, 954.56625pt x 608.2725pt>
+File: /home/img/cycle_2nr_opt.png Graphic file (type png)
+<use /home/img/cycle_2nr_opt.png>
+Package pdftex.def Info: /home/img/cycle_2nr_opt.png  used on input line 216.
+(pdftex.def)             Requested size: 381.81973pt x 243.30469pt.
+! Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \penalty \@M \futurelet \@let@token \LT@@h...
+l.226 	\hline
+             
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Misplaced \omit.
+\multispan ->\omit 
+                   \@multispan 
+l.227 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+I expect to see \omit only after tab marks or the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Extra alignment tab has been changed to \cr.
+<template> \endtemplate 
+                        
+l.227 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+! Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \penalty \@M \futurelet \@let@token \LT@@h...
+l.236 	\hline
+             
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Misplaced \omit.
+\multispan ->\omit 
+                   \@multispan 
+l.237 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+I expect to see \omit only after tab marks or the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Extra alignment tab has been changed to \cr.
+<template> \endtemplate 
+                        
+l.237 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+[12 </home/img/cycle_2nr_opt.png>]
+</home/img/cycle_2nr_part.png, id=68, 944.52875pt x 616.3025pt>
+File: /home/img/cycle_2nr_part.png Graphic file (type png)
+<use /home/img/cycle_2nr_part.png>
+Package pdftex.def Info: /home/img/cycle_2nr_part.png  used on input line 247.
+(pdftex.def)             Requested size: 377.80481pt x 246.51663pt.
+</home/img/cycle_3n_scheme.png, id=69, 740.7675pt x 514.92375pt>
+File: /home/img/cycle_3n_scheme.png Graphic file (type png)
+<use /home/img/cycle_3n_scheme.png>
+Package pdftex.def Info: /home/img/cycle_3n_scheme.png  used on input line 256.
+
+(pdftex.def)             Requested size: 296.30174pt x 205.96585pt.
+ [13 </home/img/cycle_2nr_part.png>]
+Overfull \hbox (3.77606pt too wide) in paragraph at lines 261--262
+[]\T2A/cmr/m/n/14.4 Параметры, ха-рак-тер-ные для трех-валь-ной уста-нов-ки, пр
+ед-став-ле-ны в табл.
+ []
+
+
+Overfull \hbox (12.55113pt too wide) in alignment at lines 263--266
+ [] [] [] [] 
+ []
+
+! Undefined control sequence.
+<argument> \tabcapalign 
+                        РџСЂРѕРґРѕР»Р¶РµРЅРёРµ С‚Р°Р±Р»РёС†С‹~\thetable 
+l.267 ...ґРѕР»Р¶РµРЅРёРµ С‚Р°Р±Р»РёС†С‹~\thetable}
+                                                  \\[-0.45\onelineskip]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+<argument> -0.45\onelineskip 
+                             
+l.267 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   >
+l.267 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+! Undefined control sequence.
+<argument> -0.45\onelineskip 
+                             
+l.267 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   }
+l.267 ...±Р»РёС†С‹~\thetable}\\[-0.45\onelineskip]
+                                                  
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+
+Overfull \hbox (12.55113pt too wide) in alignment at lines 266--270
+ [] [] [] [] 
+ []
+
+
+Underfull \hbox (badness 3058) in paragraph at lines 278--278
+[]|\T2A/cmr/m/n/14.4 Номинальная ча-сто-та вра-ще-
+ []
+
+
+Underfull \hbox (badness 3058) in paragraph at lines 279--279
+[]|\T2A/cmr/m/n/14.4 Номинальная ча-сто-та вра-ще-
+ []
+
+
+Overfull \hbox (12.55113pt too wide) in alignment at lines 270--280
+ [] [] [] [] 
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 280
+ []
+
+[14 </home/img/cycle_3n_scheme.png>]
+
+LaTeX Warning: Reference `img:cycle_3n_opt' on page 15 undefined on input line 
+282.
+
+File: /home/img/cycle_2n_opt.png Graphic file (type png)
+<use /home/img/cycle_2n_opt.png>
+Package pdftex.def Info: /home/img/cycle_2n_opt.png  used on input line 286.
+(pdftex.def)             Requested size: 381.81973pt x 243.30469pt.
+! Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \penalty \@M \futurelet \@let@token \LT@@h...
+l.296 	\hline
+             
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Misplaced \omit.
+\multispan ->\omit 
+                   \@multispan 
+l.297 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+I expect to see \omit only after tab marks or the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Extra alignment tab has been changed to \cr.
+<template> \endtemplate 
+                        
+l.297 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+[15]
+! Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \penalty \@M \futurelet \@let@token \LT@@h...
+l.306 	\hline
+             
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Misplaced \omit.
+\multispan ->\omit 
+                   \@multispan 
+l.307 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+I expect to see \omit only after tab marks or the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+! Extra alignment tab has been changed to \cr.
+<template> \endtemplate 
+                        
+l.307 	\textbf
+              {$\pi_Рє$} & \textbf{$L_e, \ РњР”Р¶/РєРі$} & \textbf{$\eta_e$}...
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+</home/img/cycle_3n_part.png, id=80, 944.52875pt x 616.3025pt>
+File: /home/img/cycle_3n_part.png Graphic file (type png)
+<use /home/img/cycle_3n_part.png>
+Package pdftex.def Info: /home/img/cycle_3n_part.png  used on input line 317.
+(pdftex.def)             Requested size: 377.80481pt x 246.51663pt.
+[16 </home/img/cycle_3n_part.png>]
+</home/img/cycle_eta_comparison.png, id=85, 944.52875pt x 616.3025pt>
+File: /home/img/cycle_eta_comparison.png Graphic file (type png)
+<use /home/img/cycle_eta_comparison.png>
+Package pdftex.def Info: /home/img/cycle_eta_comparison.png  used on input line
+ 327.
+(pdftex.def)             Requested size: 377.80481pt x 246.51663pt.
+ [17 </home/img/cycle_eta_comparison.png>])
+[18] [19
+
+] (./root.aux
+! Missing \endcsname inserted.
+<to be read again> 
+                   \T2A\cyrs 
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.5 ...cyrt }\IeC {\cyro }\IeC {\cyrv }}{{0.1}{1}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <14.4> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 26.
- [68
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
-[]|\T2A/cmr/bx/n/14.4 Вредные и
- []
+LaTeX Warning: There were undefined references.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
-\T2A/cmr/bx/n/14.4 опас-ные про-
- []
+LaTeX Warning: There were multiply-defined labels.
 
+! Missing $ inserted.
+<inserted text> 
+                $
+l.73 \end{document}
+                   
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
 
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
-\T2A/cmr/bx/n/14.4 из-вод-ствен-ные
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
-\T2A/cmr/bx/n/14.4 12.2.003-74,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 38--38
-[]|\T2A/cmr/bx/n/14.4 Источник
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 38--38
-\T2A/cmr/bx/n/14.4 про-из-вод-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 38--38
-\T2A/cmr/bx/n/14.4 ствен-но-го
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 39--39
-[]|\T2A/cmr/bx/n/14.4 Нормативное зна-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 40--40
-[]|\T2A/cmr/bx/n/14.4 Нормативный
- []
-
-
-Overfull \hbox (18.98643pt too wide) in alignment at lines 35--41
- [] [] [] [] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 44--44
-[]|\T2A/cmr/m/n/14.4 Вентилятор,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 44--44
-\T2A/cmr/m/n/14.4 Ком-прес-сор,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 44--44
-\T2A/cmr/m/n/14.4 Тур-би-на,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 44--44
-\T2A/cmr/m/n/14.4 Вы-ход-ное
- []
-
-
-Underfull \hbox (badness 1168) in paragraph at lines 45--45
-\T2A/cmr/m/n/14.4 пуль-та-ми ре-гу-ли-ро-ва-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--46
-[]|\T2A/cmr/m/n/14.4 СН
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--46
-\T2A/cmr/m/n/14.4 2.2.4/2.1.8.562-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--48
-[]|\T2A/cmr/m/n/14.4 Повышенный
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--48
-\T2A/cmr/m/n/14.4 уро-вень про-дук-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--48
-\T2A/cmr/m/n/14.4 тов сго-ра-ния в
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--48
-\T2A/cmr/m/n/14.4 воз-ду-хе ра-бо-чей
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 49--49
-[]|\T2A/cmr/m/n/14.4 Камера сго-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 50--50
-[]|\T2A/cmr/m/n/14.4 Максимальные
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 50--50
-\T2A/cmr/m/n/14.4 ра-зо-вые ПДК:
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 50--50
-\OML/cmm/m/it/14.4 CO[] \OT1/cmr/m/n/14.4 (2 \T2A/cmr/m/n/14.4 мг\OML/cmm/m/it/
-14.4 =\T2A/cmr/m/n/14.4 м[]\OT1/cmr/m/n/14.4 )$\T2A/cmr/m/n/14.4 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 50--50
-\OML/cmm/m/it/14.4 CO \OT1/cmr/m/n/14.4 (5 \T2A/cmr/m/n/14.4 мг\OML/cmm/m/it/14
-.4 =\T2A/cmr/m/n/14.4 м[]\OT1/cmr/m/n/14.4 )$\T2A/cmr/m/n/14.4 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 50--50
-\OML/cmm/m/it/14.4 NO[] \OT1/cmr/m/n/14.4 (10 \T2A/cmr/m/n/14.4 мг\OML/cmm/m/it
-/14.4 =\T2A/cmr/m/n/14.4 м[]\OT1/cmr/m/n/14.4 )$\T2A/cmr/m/n/14.4 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 51--51
-[]|\T2A/cmr/m/n/14.4 ГН2.2.5.3532-18
- []
-
-
-Underfull \hbox (badness 2229) in paragraph at lines 51--51
-\T2A/cmr/m/n/14.4 ги-е-ни-че-ские нор-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 51--51
-\T2A/cmr/m/n/14.4 но до-пу-сти-мые
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 51--51
-\T2A/cmr/m/n/14.4 кон-цен-тра-ции
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 51--51
-\T2A/cmr/m/n/14.4 (ПДК) вред-ных
- []
-
-
-Underfull \hbox (badness 2142) in paragraph at lines 54--54
-\T2A/cmr/m/n/14.4 го дав-ле-ния;
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 54--54
-\T2A/cmr/m/n/14.4 Ро-тор сред-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 54--54
-\T2A/cmr/m/n/14.4 не-го дав-ле-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 54--54
-\T2A/cmr/m/n/14.4 ния; Ро-тор
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 54--54
-\T2A/cmr/m/n/14.4 вы-со-ко-го
- []
-
-
-Underfull \hbox (badness 3058) in paragraph at lines 55--55
-\T2A/cmr/m/n/14.4 о-нар-ных ма-шин или
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--56
-[]|\T2A/cmr/m/n/14.4 СН
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--56
-\T2A/cmr/m/n/14.4 2.2.4/2.1.8.566-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--56
-\T2A/cmr/m/n/14.4 96(таблица 6)
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--56
-\T2A/cmr/m/n/14.4 "Про-из-вод-ствен-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--56
-\T2A/cmr/m/n/14.4 ная виб-ра-ция.
- []
-
-
-Underfull \hbox (badness 2142) in paragraph at lines 56--56
-\T2A/cmr/m/n/14.4 Виб-ра-ции в жи-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 59--59
-[]|\T2A/cmr/m/n/14.4 Камера сго-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
-[]|\T2A/cmr/m/n/14.4 Производственное
- []
-
-
-Underfull \hbox (badness 5345) in paragraph at lines 60--60
-\T2A/cmr/m/n/14.4 Тем-пе-ра-ту-ра воз-ду-ха
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
-\T2A/cmr/m/n/14.4 по-верх-но-стей 19-23
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
-[]$\T2A/cmr/m/n/14.4 С, От-но-си-тель-ная
- []
-
-
-Underfull \hbox (badness 7047) in paragraph at lines 60--60
-\T2A/cmr/m/n/14.4 влаж-ность 60-40 %,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
-\T2A/cmr/m/n/14.4 Ско-рость дви-же-ния
- []
-
-
-Underfull \hbox (badness 1533) in paragraph at lines 61--61
-[]|\T2A/cmr/m/n/14.4 СП 60.13330.2016
- []
-
-
-Underfull \hbox (badness 2221) in paragraph at lines 61--61
-\T2A/cmr/m/n/14.4 "Отоп-ле-ние, вен-
- []
-
-
-Underfull \hbox (badness 1859) in paragraph at lines 63--63
-\T2A/cmr/m/n/14.4 пе-ра-ту-ра по-верх-
- []
-
-
-Underfull \hbox (badness 5741) in paragraph at lines 64--64
-[]|\T2A/cmr/m/n/14.4 Корпус тур-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--64
-\T2A/cmr/m/n/14.4 ка-ме-ры
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--64
-\T2A/cmr/m/n/14.4 сго-ра-ния;
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--64
-\T2A/cmr/m/n/14.4 Кор-пус вы-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--64
-\T2A/cmr/m/n/14.4 ход-но-го
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 66--66
-\T2A/cmr/m/n/14.4 тре-бо-ва-ния к
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 66--66
-\T2A/cmr/m/n/14.4 мик-ро-кли-ма-ту
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 66--66
-\T2A/cmr/m/n/14.4 про-из-вод-ствен-
- []
-
-
-Overfull \hbox (18.98643pt too wide) in alignment at lines 41--69
- [] [] [] [] 
- []
-
-[69] [70] [71]
-</home/img/ecology_plan.png, id=263, 846.16125pt x 416.55624pt>
-File: /home/img/ecology_plan.png Graphic file (type png)
-<use /home/img/ecology_plan.png>
-Package pdftex.def Info: /home/img/ecology_plan.png  used on input line 80.
-(pdftex.def)             Requested size: 423.07959pt x 208.2776pt.
-</home/img/ecology_bc.png, id=264, 850.17625pt x 793.96625pt>
-File: /home/img/ecology_bc.png Graphic file (type png)
-<use /home/img/ecology_bc.png>
-Package pdftex.def Info: /home/img/ecology_bc.png  used on input line 88.
-(pdftex.def)             Requested size: 425.08708pt x 396.98215pt.
- [72 </home/img/ecology_plan.png>]
-Underfull \vbox (badness 10000) detected at line 102
- []
-
-[73 </home/img/ecology_bc.png>]
-</home/img/ecology_result.png, id=272, 746.79pt x 761.84625pt>
-File: /home/img/ecology_result.png Graphic file (type png)
-<use /home/img/ecology_result.png>
-Package pdftex.def Info: /home/img/ecology_result.png  used on input line 109.
-(pdftex.def)             Requested size: 373.39407pt x 380.9222pt.
-
-Underfull \vbox (badness 10000) detected at line 124
- []
-
-[74 </home/img/ecology_result.png>]
-Overfull \hbox (18.98643pt too wide) in alignment at lines 135--141
- [] [] [] [] 
- []
-
-
-Underfull \hbox (badness 5533) in paragraph at lines 143--143
-[]|\T2A/cmr/m/n/14.4 Температура ки-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 144--144
-[]|\T2A/cmr/m/n/14.4 Теплоемкость
- []
-
-
-Underfull \hbox (badness 3375) in paragraph at lines 146--146
-[]|\T2A/cmr/m/n/14.4 Газовая по-сто-ян-
- []
-
-
-Underfull \hbox (badness 3375) in paragraph at lines 147--147
-[]|\T2A/cmr/m/n/14.4 Газовая по-сто-ян-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 147--147
-\T2A/cmr/m/n/14.4 ная при-род-но-го
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 149--149
-[]|\T2A/cmr/m/n/14.4 Атмосферная
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 150--150
-[]|\T2A/cmr/m/n/14.4 Теплота па-ро-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 150--150
-\T2A/cmr/m/n/14.4 об-ра-зо-ва-ния
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 151--151
-[]|\T2A/cmr/m/n/14.4 Теплота па-ро-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 151--151
-\T2A/cmr/m/n/14.4 об-ра-зо-ва-ния
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 152--152
-[]|\T2A/cmr/m/n/14.4 Температура
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 152--152
-\T2A/cmr/m/n/14.4 под-сти-ла-ю-щей
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 153--153
-[]|\T2A/cmr/m/n/14.4 Относительная
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 156--156
-[]|\T2A/cmr/m/n/14.4 Диаметр тру-бо-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 157--157
-[]|\T2A/cmr/m/n/14.4 Длина участ-ка
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 157--157
-\T2A/cmr/m/n/14.4 тру-бо-про-во-да
- []
-
-
-Underfull \hbox (badness 2245) in paragraph at lines 158--158
-[]|\T2A/cmr/m/n/14.4 Давление га-за в
- []
-
-
-Overfull \hbox (18.98643pt too wide) in alignment at lines 141--160
- [] [] [] [] 
- []
-
-[75] [76] [77] [78]
-</home/img/ecology_cloud.png, id=288, 638.385pt x 497.86pt>
-File: /home/img/ecology_cloud.png Graphic file (type png)
-<use /home/img/ecology_cloud.png>
-Package pdftex.def Info: /home/img/ecology_cloud.png  used on input line 309.
-(pdftex.def)             Requested size: 478.78757pt x 373.39407pt.
- [79]) [80 </home/img/ecology_cloud.png>] [81
-
-] (./root.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+ )
+(\end occurred when \ifmmode on line 5 was incomplete)
+(\end occurred when \ifx on line 5 was incomplete) 
 Here is how much of TeX's memory you used:
- 7181 strings out of 492982
- 101421 string characters out of 6132512
- 202243 words of memory out of 5000000
- 10512 multiletter control sequences out of 15000+600000
- 17679 words of font info for 51 fonts, out of 8000000 for 9000
+ 7113 strings out of 492982
+ 100217 string characters out of 6132512
+ 185726 words of memory out of 5000000
+ 10483 multiletter control sequences out of 15000+600000
+ 14981 words of font info for 38 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,11n,46p,1698b,431s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2a.enc
-}</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></
-usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
-local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/lo
-cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/loca
-l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/
-2017/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/20
-17/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2017
-/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2017/t
-exmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2017/tex
-mf-dist/fonts/type1/public/wasy2-ps/wasy10.pfb>
-Output written on root.pdf (81 pages, 1258710 bytes).
+ 41i,9n,38p,2413b,289s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2017/texm
+f-dist/fonts/enc/dvips/cm-super/cm-super-t2a.enc}</usr/local/texlive/2017/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2017/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2017/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2017/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2017/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2017/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/texmf-dist/fo
+nts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2017/texmf-dist/font
+s/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2017/texmf-dist/fonts/
+type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2017/texmf-dist/fonts/ty
+pe1/public/cm-super/sfbx2074.pfb></usr/local/texlive/2017/texmf-dist/fonts/type
+1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/cm-super/sfrm1200.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pu
+blic/cm-super/sfrm1440.pfb>
+Output written on root.pdf (21 pages, 392098 bytes).
 PDF statistics:
- 359 PDF objects out of 1000 (max. 8388607)
- 234 compressed objects within 3 object streams
+ 140 PDF objects out of 1000 (max. 8388607)
+ 89 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

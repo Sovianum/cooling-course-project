@@ -107,15 +107,15 @@ func Entry() {
 	saveInputTemplates()
 
 	scheme := getScheme(s3n.PiDiplomaLow, s3n.PiDiplomaHigh)
-	//schemeData := getSchemeData(scheme)
-	//saveSchemeData(schemeData)
-	//saveVariantTemplate(schemeData)
+	schemeData := getSchemeData(scheme)
+	saveSchemeData(schemeData)
+	saveVariantTemplate(schemeData)
 
 	solveParticularScheme(scheme, s3n.PiDiplomaLow, s3n.PiDiplomaHigh)
-	//saveCycleTemplate(scheme)
+	saveCycleTemplate(scheme)
 
-	//saveCompressorStageTemplate()
-	//saveCompressorTotalTableTemplates()
+	saveCompressorStageTemplate()
+	saveCompressorTotalTableTemplates()
 
 	initedMachines, err := inited.GetInitedStagedNodes()
 	if err != nil {
@@ -276,7 +276,7 @@ func Entry() {
 	saveTitleTemplate()
 
 	buildPlots()
-	//buildReport()
+	buildReport()
 }
 
 func buildReport() {

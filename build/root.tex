@@ -14,6 +14,11 @@
 \usepackage{float}
 \usepackage{longtable}
 \usepackage{caption}
+\usepackage[singlelinecheck=off]{caption}
+
+\usepackage{chngcntr}
+\counterwithin{table}{section}
+\counterwithin{figure}{section}
 
 \usepackage{enumitem}
 \setlist[enumerate]{label*=\arabic*.}
@@ -34,21 +39,23 @@
 \begin{document}
 
     \input{title}
-    \input{project_input_data}
-    \input{cycle_input_data}
-    \input{variant}
-    \input{cycle_calc}
-    \input{compressor_calc}
-    \input{lpc_total_table}
-    \input{hpc_total_table}
-    \input{mean_line_calc}
-    \input{turbine_total_table}
-    \input{profiling}
-    \input{cooling_calc1}
-    \input{cooling_calc2}
-    \input{economics}
-    \input{technology}
-    \input{ecology}
+    \tableofcontents
+%    \input{project_input_data}
+%    \input{cycle_input_data}
+%    \input{variant}
+%    \input{cycle_calc}
+%    \input{compressor_calc}
+%    \input{lpc_total_table}
+%    \input{hpc_total_table}
+%    \input{mean_line_calc}
+%    \input{turbine_total_table}
+%    \input{profiling}
+%    \input{cooling_calc1}
+%    \input{cooling_calc2}
+%    \input{economics}
+%    \input{technology}
+%    \input{ecology}
+    \input{cycle_comparison}
 
     \section{Список литературы}
         \begin{enumerate}
