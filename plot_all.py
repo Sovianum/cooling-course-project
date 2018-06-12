@@ -62,7 +62,7 @@ if __name__ == '__main__':
     ps_profile_no_front_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_no_front_ps.json"))
 
     plots.plot_cooling_temperature(ps_profile_no_front_df, ss_profile_no_front_df)
-    plt.savefig(os.path.join(img_dir, "cooling_2_t.png"))
+    plt.savefig(os.path.join(img_dir, "cooling_2_t_no_front.png"))
     plt.close()
 
     ss_profile_front_df = loaders.read_cooling_data(os.path.join(data_dir, "cooling_2_front_ss.json"))

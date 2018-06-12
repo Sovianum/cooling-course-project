@@ -48,7 +48,7 @@ def plot_cooling_temperature(ps_data, ss_data):
     plt.plot(data.l * 1e3, data.t_wall, color='green', lw=4)
     plt.plot(data.l * 1e3, data.t_air, color='blue', lw=4)
     plt.plot(data.l * 1e3, data.t_film, color='red', lw=4)
-    plt.plot(data.l * 1e3, data.t_wall_smooth, lw=4)
+    plt.plot(data.l * 1e3, data.t_wall_smooth, lw=4, dashes=[6, 2], color='green')
 
     plt.legend(['$T_{ст\/пр}$', '$T_{в}$', '$T_{пл}$', '$T_{ст}$'], loc='best', fontsize=40)
 
@@ -88,7 +88,6 @@ def plot_profile_angles(data, angle_names):
 
 def plot_scheme_characteristics(data, y_min=0.8, y_max=1.02):
     local_data = data[data.pi <= 40]
-    plt.title('$Приведенные \ характеристики \ установки \ (\overline{f} = f / f_{max})$')
     plt.plot(local_data.pi, local_data.G / local_data.G.max(), '-bo', markevery=[20])
     plt.plot(local_data.pi, local_data.N_e / local_data.N_e.max(), '-go', markevery=[20])
     plt.plot(local_data.pi, local_data.eta / local_data.eta.max(), '-ro', markevery=[20])

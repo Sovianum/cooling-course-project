@@ -293,11 +293,13 @@ func copyPassiveFiles() error {
 		"ecology_plan.png", "ecology_result.png",
 		"lock_control.png", "profile_shape_control.png",
 		"profile_thk_control.png",
+		"sub_compress_scheme.png",
 	}
 	templateNames := []string{
 		"ecology.tex", "economics.tex", "ending.tex",
 		"referat.tex", "technology.tex", "intro.tex",
-		"literature.tex",
+		"literature.tex", "cycle_comparison.tex", "profiling_template.tex",
+		"cooling_optimization.tex",
 	}
 
 	imgSrc := "postprocessing/media/img/"
