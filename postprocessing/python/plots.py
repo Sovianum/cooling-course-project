@@ -82,18 +82,25 @@ def plot_profile_angles(data, angle_names):
     plt.plot(np.rad2deg(data.angle_in), data.h)
     plt.plot(np.rad2deg(data.angle_out), data.h)
     plt.grid()
-    plt.legend(angle_names, loc="best")
-    plt.ylabel('$\overline{h}$')
+    plt.legend(angle_names, loc="best", fontsize=20)
+    plt.xticks(fontsize=14)
+    plt.yticks(fontsize=14)
+
+    ax = plt.gca()
+    ylabel = ax.set_ylabel('$\overline{h}$', fontsize = 25)
+    ax.yaxis.set_label_coords(-0.12, 0.9)
+    ylabel.set_rotation(0)
 
 
 def plot_scheme_characteristics(data, y_min=0.8, y_max=1.02):
+    nom = 19
     local_data = data[data.pi <= 40]
-    plt.plot(local_data.pi, local_data.G / local_data.G.max(), '-bo', markevery=[20])
-    plt.plot(local_data.pi, local_data.N_e / local_data.N_e.max(), '-go', markevery=[20])
-    plt.plot(local_data.pi, local_data.eta / local_data.eta.max(), '-ro', markevery=[20])
-    plt.plot([20, 20], [y_min, y_max], color='black')
+    plt.plot(local_data.pi, local_data.G / local_data.G.max(), '-bo', markevery=[nom])
+    plt.plot(local_data.pi, local_data.N_e / local_data.N_e.max(), '-go', markevery=[nom])
+    plt.plot(local_data.pi, local_data.eta / local_data.eta.max(), '-ro', markevery=[nom])
+    plt.plot([nom, nom], [y_min, y_max], color='black')
     plt.ylim([y_min, y_max])
-    plt.xlabel('$\pi_\Sigma$', fontsize=20)
+    plt.xlabel('$\pi_\Sigma$', fontsize=20, position=(1, 0))
     plt.grid()
     plt.legend(['$\overline{G}$', '$\overline{L}$', '$\overline{\eta}$'], loc='lower right')
 

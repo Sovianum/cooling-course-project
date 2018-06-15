@@ -3,9 +3,16 @@
 import postprocessing.python.loaders as loaders
 import postprocessing.python.plots as plots
 import postprocessing.python.savers as savers
-import matplotlib.pyplot as plt
 import sys
 import os.path
+
+import locale
+locale.setlocale(locale.LC_ALL, "de_DE")
+
+import matplotlib.pyplot as plt
+plt.rcdefaults()
+# Tell matplotlib to use the locale we set above
+plt.rcParams['axes.formatter.use_locale'] = True
 
 
 if __name__ == '__main__':

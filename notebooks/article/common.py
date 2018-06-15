@@ -31,13 +31,13 @@ def plot_nom_characteristic(df, ymin=0.83, ymax=1.005):
     plt.plot(norm_df.pi, norm_df.mass_rate, color='red', linewidth=2.0)
     plt.plot(norm_df.pi, norm_df.efficiency, color='green', linewidth=2.0)
     plt.plot(norm_df.pi, norm_df.specific_power, color='blue', linewidth=2.0)
-    plt.xlabel('$\pi$', fontsize=30)
+    plt.xlabel('$\pi_\Sigma$', fontsize=35, position=(0.95, 0))
     plt.xticks(fontsize=25)
     plt.yticks(fontsize=25)
     plt.grid()
     plt.ylim([ymin, ymax])
     plt.legend(
-        ['$\overline{G}$', '$\overline{\eta_e}$', '$\overline{L_e}$'], fontsize=30, loc='lower right',
+        ['$\overline{G}$', '$\overline{\eta_e}$', '$\overline{L_e}$'], fontsize=30, loc='best',
     )
 
 

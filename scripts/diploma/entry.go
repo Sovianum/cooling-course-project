@@ -301,18 +301,24 @@ func copyPassiveFiles() error {
 		"literature.tex", "cycle_comparison.tex", "profiling_template.tex",
 		"cooling_optimization.tex",
 	}
+	docNames := []string{"title_page.pdf"}
 
 	imgSrc := "postprocessing/media/img/"
 	templateSrc := "postprocessing/templates/"
+	docSrc := "postprocessing/media/"
 
 	for _, name := range imgNames {
 		if err := io.CopyFile(imgSrc+name, imgDir+"/"+name); err != nil {
 			return err
 		}
 	}
-
 	for _, name := range templateNames {
 		if err := io.CopyFile(templateSrc+name, "build/"+name); err != nil {
+			return err
+		}
+	}
+	for _, name := range docNames {
+		if err := io.CopyFile(docSrc+name, "build/"+name); err != nil {
 			return err
 		}
 	}

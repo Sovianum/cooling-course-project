@@ -37,11 +37,21 @@ justification=raggedright, singlelinecheck=off}
 \usepackage{booktabs}
 
 \setlength\LTcapwidth{\linewidth}
+\setlength{\parindent}{1.25cm}
+
+\usepackage{titlesec}
+\titleformat{\section}[block]{\Large\bfseries\filcenter}{\thesection}{1em}{}
+
+\captionsetup[figure]{labelsep=endash,name={Рисунок}}
+%\addto\captionsrussian{\def\refname{\centering СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+
+\usepackage{pdfpages}
 
 \graphicspath{ {/home/img/} }
 
 \begin{document}
-    \input{title}
+    \includepdf[pages=1]{title_page}
+%    \input{title}
     \include{referat}
     \tableofcontents
     \input{intro}
