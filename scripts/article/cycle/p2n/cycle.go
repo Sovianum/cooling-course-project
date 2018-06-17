@@ -62,20 +62,26 @@ func SolveParametric(pScheme free2n.DoubleShaftFreeScheme) (Data2n, error) {
 	data := NewData2n()
 	step := 10.
 	r := 1.
-	for i := 0; i != 30; i++ {
-		//if i == 15 {
-		//	step = 1
-		//}
-		//if i == 19 {
-		//	step = 0.5
-		//}
 
-		data.Load(pScheme)
-		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - step)
-
-		fmt.Println(i)
+	makeStep := func(direction int, needLoad bool) error {
+		if needLoad {
+			data.Load(pScheme)
+		}
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() + step*float64(direction))
 		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 10000)
-		if sErr != nil {
+		return sErr
+	}
+	fmt.Println("start rising")
+	for i := 0; i != 10; i++ {
+		fmt.Println(i)
+		if err := makeStep(1, false); err != nil {
+			return Data2n{}, sErr
+		}
+	}
+	fmt.Println("start falling")
+	for i := 0; i != 40; i++ {
+		fmt.Println(i)
+		if err := makeStep(-1, true); err != nil {
 			return Data2n{}, sErr
 		}
 	}

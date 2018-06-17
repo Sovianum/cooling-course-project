@@ -279,7 +279,7 @@ func Entry() {
 	saveTitleTemplate()
 
 	buildPlots()
-	buildReport()
+	//buildReport()
 }
 
 func copyPassiveFiles() error {

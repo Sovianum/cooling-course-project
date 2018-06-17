@@ -38,7 +38,7 @@ const (
 	relaxCoef       = 1
 	schemeRelaxCoef = 0.5
 	iterNum         = 10000
-	precision       = 1e-7
+	precision       = 1e-5
 	schemePrecision = 1e-5
 
 	startPi   = 5
@@ -68,16 +68,28 @@ func SolveParametric(pScheme free2n.DoubleShaftRegFreeScheme) (Data2nr, error) {
 	}
 
 	data := NewData2nr()
-	for i := 0; i != 20; i++ {
-		data.Load(pScheme)
-		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 20)
 
-		r := 1.
+	makeStep := func(direction int, needLoad bool, step, r float64) error {
+		if needLoad {
+			data.Load(pScheme)
+		}
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() + step*float64(direction))
 		_, sErr = vSolver.Solve(vSolver.GetInit(), precision, r, 1000)
-		if sErr != nil {
+		return sErr
+	}
+	fmt.Println("start rising")
+	for i := 0; i != 10; i++ {
+		fmt.Println(i)
+		if err := makeStep(1, false, 10, 1); err != nil {
 			return Data2nr{}, sErr
 		}
+	}
+	fmt.Println("start falling")
+	for i := 0; i != 50; i++ {
 		fmt.Println(i)
+		if err := makeStep(-1, true, 10, 1); err != nil {
+			return Data2nr{}, sErr
+		}
 	}
 	return data, nil
 }

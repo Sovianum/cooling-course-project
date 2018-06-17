@@ -72,15 +72,27 @@ func SolveParametric(pScheme free3n.ThreeShaftFreeScheme) (Data3n, error) {
 	}
 
 	data := NewData3n()
-	for i := 0; i != 15; i++ {
-		data.Load(pScheme)
 
-		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() - 20)
+	makeStep := func(direction int, needLoad bool) error {
+		if needLoad {
+			data.Load(pScheme)
+		}
+		pScheme.TemperatureSource().SetTemperature(pScheme.TemperatureSource().GetTemperature() + 20*float64(direction))
+		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, 1, 10000)
+		return sErr
+	}
 
-		r := 1.
-		_, sErr = vSolver.Solve(vSolver.GetInit(), 1e-5, r, 1000)
-		if sErr != nil {
-			return Data3n{}, sErr
+	fmt.Println("start rising")
+	for i := 0; i != 5; i++ {
+		if err := makeStep(1, false); err != nil {
+			return Data3n{}, err
+		}
+		fmt.Println(i)
+	}
+	fmt.Println("start falling")
+	for i := 0; i != 20; i++ {
+		if err := makeStep(-1, true); err != nil {
+			return Data3n{}, err
 		}
 		fmt.Println(i)
 	}

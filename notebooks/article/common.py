@@ -28,9 +28,9 @@ def plot_nom_characteristic(df, ymin=0.83, ymax=1.005):
     #     '$Приведенная \ характеристика \ установки \ на \ номинальном \ режиме\ (\overline{f} = f / f_{max})$',
     #     fontsize=24
     # )
-    plt.plot(norm_df.pi, norm_df.mass_rate, color='red', linewidth=2.0)
-    plt.plot(norm_df.pi, norm_df.efficiency, color='green', linewidth=2.0)
-    plt.plot(norm_df.pi, norm_df.specific_power, color='blue', linewidth=2.0)
+    plt.plot(norm_df.pi, norm_df.mass_rate, color='red', linewidth=4.0)
+    plt.plot(norm_df.pi, norm_df.efficiency, color='green', linewidth=4.0)
+    plt.plot(norm_df.pi, norm_df.specific_power, color='blue', linewidth=4.0)
     plt.xlabel('$\pi_\Sigma$', fontsize=35, position=(0.95, 0))
     plt.xticks(fontsize=25)
     plt.yticks(fontsize=25)
@@ -43,15 +43,14 @@ def plot_nom_characteristic(df, ymin=0.83, ymax=1.005):
 
 # функция выводит зависимость относительного КПД и относительного расхода установки в зависимости от относительной
 # мощности установки
-def plot_common_characteristics(df, ymin=0.5, ymax=1.01):
-    norm_df = df / df.max()
+def plot_common_characteristics(norm_df, ymin=0.5, ymax=1.01):
     # plt.title('$Приведенные \ характеристики \ установки \ (\overline{f} = f / f_{max})$', fontsize=24)
-    plt.plot(norm_df.power, norm_df.mass_rate, color='red', linewidth=2.0)
-    plt.plot(norm_df.power, norm_df.eta, color='blue', linewidth=2.0)
+    plt.plot(norm_df.power, norm_df.mass_rate, color='red', linewidth=4.0)
+    plt.plot(norm_df.power, norm_df.eta, color='blue', linewidth=4.0)
     # plt.xlabel('$\overline{N_e}$', fontsize=30)
     plt.xticks(fontsize=25)
     plt.yticks(fontsize=25)
-    plt.xlim(0.3, 1.05)
+    plt.xlim(0.3, 1.2)
     plt.ylim(ymin, ymax)
     plt.grid()
     plt.legend(['$\overline{G}$', '$\overline{\eta_e}$'], loc='lower right', fontsize=30)
