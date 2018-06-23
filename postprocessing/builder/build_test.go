@@ -136,7 +136,7 @@ func getStageDf() dataframes.TurbineStageDF {
 }
 
 func TestBuildLatex(t *testing.T) {
-	buildDir := "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build"
+	buildDir := "/home/artem/gowork/src/github.com/Sovianum/cooling-course-project/build_alter"
 	fileName := "root.tex"
 	require.NoError(t, BuildLatex(buildDir, fileName))
 }

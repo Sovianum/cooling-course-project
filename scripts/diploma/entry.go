@@ -279,7 +279,7 @@ func Entry() {
 	saveTitleTemplate()
 
 	buildPlots()
-	//buildReport()
+	buildReport()
 }
 
 func copyPassiveFiles() error {
@@ -294,12 +294,15 @@ func copyPassiveFiles() error {
 		"lock_control.png", "profile_shape_control.png",
 		"profile_thk_control.png",
 		"sub_compress_scheme.png",
+		"axial_1.png", "axial_2.png", "axial_3.png", "axial_4.png", "axial_5.png",
+		"cross.png", "profile.png", "blade.png", "tech_1.png", "tech_2.png",
+		"cool.png", "comp.png", "cycles.png", "parameters.png", "eco.png",
 	}
 	templateNames := []string{
 		"ecology.tex", "economics.tex", "ending.tex",
 		"referat.tex", "technology.tex", "intro.tex",
 		"literature.tex", "cycle_comparison.tex", "profiling_template.tex",
-		"cooling_optimization.tex",
+		"cooling_optimization.tex", "application.tex",
 	}
 	docNames := []string{"title_page.pdf"}
 

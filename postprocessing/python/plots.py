@@ -95,9 +95,9 @@ def plot_profile_angles(data, angle_names):
 def plot_scheme_characteristics(data, y_min=0.8, y_max=1.02):
     nom = 19
     local_data = data[data.pi <= 40]
-    plt.plot(local_data.pi, local_data.G / local_data.G.max(), '-bo', markevery=[nom])
-    plt.plot(local_data.pi, local_data.N_e / local_data.N_e.max(), '-go', markevery=[nom])
-    plt.plot(local_data.pi, local_data.eta / local_data.eta.max(), '-ro', markevery=[nom])
+    plt.plot(local_data.pi, local_data.G / local_data.G.max(), '-bo', markevery=[18])
+    plt.plot(local_data.pi, local_data.N_e / local_data.N_e.max(), '-go', markevery=[18])
+    plt.plot(local_data.pi, local_data.eta / local_data.eta.max(), '-ro', markevery=[18])
     plt.plot([nom, nom], [y_min, y_max], color='black')
     plt.ylim([y_min, y_max])
     plt.xlabel('$\pi_\Sigma$', fontsize=20, position=(1, 0))
